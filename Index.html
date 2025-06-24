@@ -52,8 +52,14 @@
         
         /* Mobile Navigation Styles */
         @media (max-width: 768px) {
+            #admin-login {
+                top: 80px !important;
+                left: 8px !important;
+                z-index: 30 !important;
+            }
+            
             .admin-panel {
-                top: 72px !important;
+                top: 120px !important;
                 left: 8px !important;
                 right: 8px !important;
                 max-width: none !important;
@@ -435,9 +441,9 @@
             </div>
 
             <!-- Add Portfolio Buttons (Admin Only) -->
-            <div class="text-center mt-12 space-y-4">
+            <div class="admin-only text-center mt-12 space-y-4">
                 <p class="text-gray-600 mb-6" data-translate="portfolio-note">Upload your work here to show clients</p>
-                <div class="admin-only grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
                     <button onclick="openPortfolioModal('avatars')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
                         <i class="fas fa-user-circle mb-2 block"></i>
                         Add Avatar
