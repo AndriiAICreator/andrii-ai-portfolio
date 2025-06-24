@@ -508,18 +508,21 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-2 text-gray-300">File/URL</label>
-                    <input type="text" id="portfolio-url" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" placeholder="Image URL, YouTube, Google Drive, Dropbox, etc." required>
+                    <input type="text" id="portfolio-url" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" placeholder="Image URL, YouTube, Google Drive, Dropbox, etc.">
+                    <div class="mt-2">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Or upload file directly:</label>
+                        <input type="file" id="portfolio-file" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" accept="image/*,video/*">
+                    </div>
                     <div class="mt-2 text-xs text-gray-400">
-                        <strong class="text-gray-300">Supported:</strong><br>
-                        • Images: JPG, PNG, GIF, WebP<br>
+                        <strong class="text-gray-300">🔥 Firebase Upload (Recommended):</strong><br>
+                        • Select file directly - uploaded to secure cloud storage<br>
+                        • Images: JPG, PNG, GIF, WebP (max 10MB)<br>
+                        • Videos: MP4, MOV, WebM (max 10MB)<br><br>
+                        <strong class="text-gray-300">🌐 External URLs (Also supported):</strong><br>
                         • YouTube: youtube.com/watch?v=...<br>
                         • Google Drive: drive.google.com/file/d/.../view<br>
                         • Dropbox: dropbox.com/s/.../video.mp4<br>
-                        • Direct video: .mp4, .mov, .webm<br><br>
-                        <strong class="text-gray-300">📷 For Google Drive Photos:</strong><br>
-                        1. Upload photo to Google Drive<br>
-                        2. Right-click → Share → "Anyone with the link"<br>
-                        3. Copy the share link and paste here
+                        • Direct image/video URLs
                     </div>
                 </div>
                 <div class="flex gap-2">
@@ -1007,11 +1010,32 @@
     <div id="notification" class="notification"></div>
 
     <script type="module">
+        // Firebase Configuration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAbgw8IFJjilYi19EOsQy3qGgc0Wfx83ME",
+            authDomain: "andrii-ai-portfolio.firebaseapp.com",
+            projectId: "andrii-ai-portfolio",
+            storageBucket: "andrii-ai-portfolio.firebasestorage.app",
+            messagingSenderId: "674335796269",
+            appId: "1:674335796269:web:87eba7fdbc187cf55bdca4",
+            measurementId: "G-XQRX2YVR81"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        
+        console.log('🔥 Firebase initialized successfully!');
         // Admin Configuration
         const ADMIN_PASSWORD = 'andrii2025'; // Change this password!
         
-        // Data Storage Configuration - LocalStorage Mode
-        console.log('📱 Loading Andrii AI Portfolio...');
+        // Data Storage Configuration - Firebase Mode
+        console.log('🔥 Loading Andrii AI Portfolio with Firebase...');
         
         let isAdminMode = false;
         let technologies = [
@@ -1307,7 +1331,65 @@
             }, 3000);
         }
 
-        // LocalStorage Data Management
+        // Firebase Data Management
+        async function loadDataFromFirebase() {
+            try {
+                showNotification('🔥 Завантажую дані з Firebase...', 'success');
+                
+                // Load portfolio data
+                const portfolioDoc = await getDoc(doc(db, 'portfolio', 'data'));
+                if (portfolioDoc.exists()) {
+                    const data = portfolioDoc.data();
+                    portfolioItems = data.portfolioItems || [];
+                    technologies = data.technologies || technologies; // Keep defaults if empty
+                    contacts = data.contacts || contacts; // Keep defaults if empty
+                    console.log('🔥 Data loaded from Firebase:', portfolioItems.length, 'portfolio items');
+                } else {
+                    console.log('📝 No Firebase data found, using defaults');
+                }
+                
+                showNotification('✅ Дані завантажено з Firebase!', 'success');
+                return Promise.resolve();
+            } catch (error) {
+                console.error('❌ Error loading from Firebase:', error);
+                showNotification('⚠️ Помилка завантаження з Firebase, використовую локальні дані', 'error');
+                // Fallback to localStorage
+                await loadDataFromLocalStorage();
+                return Promise.reject(error);
+            }
+        }
+
+        async function saveDataToFirebase() {
+            if (!isAdminMode) return; // Only save in admin mode
+            
+            try {
+                console.log('🔥 Saving data to Firebase...');
+                showNotification('🔥 Зберігаю в Firebase...', 'success');
+                
+                const data = {
+                    portfolioItems,
+                    technologies,
+                    contacts,
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                await setDoc(doc(db, 'portfolio', 'data'), data);
+                
+                console.log('✅ Data saved to Firebase');
+                showNotification('✅ Дані збережено в Firebase! Зміни синхронізовані онлайн.', 'success');
+                
+                // Also save to localStorage as backup
+                await saveDataToLocalStorage();
+            } catch (error) {
+                console.error('❌ Error saving to Firebase:', error);
+                showNotification('⚠️ Помилка збереження в Firebase, збережено локально', 'error');
+                // Fallback to localStorage if Firebase fails
+                await saveDataToLocalStorage();
+                return Promise.reject(error);
+            }
+        }
+        
+        // Fallback localStorage functions
         async function loadDataFromLocalStorage() {
             try {
                 const savedPortfolio = localStorage.getItem('portfolioItems');
@@ -1325,7 +1407,7 @@
                     contacts = JSON.parse(savedContacts);
                 }
                 
-                console.log('📱 Data loaded from localStorage');
+                console.log('📱 Data loaded from localStorage backup');
                 return Promise.resolve();
             } catch (error) {
                 console.error('Error loading from localStorage:', error);
@@ -1334,27 +1416,46 @@
         }
 
         async function saveDataToLocalStorage() {
-            if (!isAdminMode) return; // Only save in admin mode
-            
             try {
                 localStorage.setItem('technologies', JSON.stringify(technologies));
                 localStorage.setItem('portfolioItems', JSON.stringify(portfolioItems));
                 localStorage.setItem('contacts', JSON.stringify(contacts));
                 localStorage.setItem('lastUpdated', new Date().toISOString());
                 
-                console.log('💾 Data saved to localStorage');
-                if (isAdminMode) {
-                    showNotification('💾 Зміни збережено локально!', 'success');
-                }
+                console.log('💾 Data backed up to localStorage');
             } catch (error) {
                 console.error('Error saving to localStorage:', error);
-                showNotification('Помилка збереження', 'error');
             }
         }
         
-        // Main save function - now uses localStorage only
+        // File Upload Functions
+        async function uploadFileToFirebase(file, category) {
+            try {
+                showNotification('📤 Завантажую файл...', 'success');
+                
+                // Create unique filename
+                const timestamp = Date.now();
+                const fileName = `${category}/${timestamp}-${file.name}`;
+                const storageRef = ref(storage, fileName);
+                
+                // Upload file
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                
+                console.log('📤 File uploaded to Firebase:', downloadURL);
+                showNotification('✅ Файл успішно завантажено!', 'success');
+                
+                return downloadURL;
+            } catch (error) {
+                console.error('❌ Error uploading file:', error);
+                showNotification('❌ Помилка завантаження файлу', 'error');
+                throw error;
+            }
+        }
+        
+        // Main save function - Firebase + localStorage backup
         async function saveData() {
-            await saveDataToLocalStorage();
+            await saveDataToFirebase();
         }
 
         // Contact Management Functions
@@ -1824,17 +1925,50 @@
 
         const portfolioForm = document.getElementById('portfolio-form');
         if (portfolioForm) {
-            portfolioForm.addEventListener('submit', function(e) {
+            portfolioForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                const category = document.getElementById('portfolio-category').value;
-                const mediaType = document.getElementById('portfolio-media-type').value;
-                const url = document.getElementById('portfolio-url').value;
                 
-                portfolioItems.push({ category, mediaType, url });
-                saveData();
-                renderPortfolio();
-                closePortfolioModal();
-                showNotification('Portfolio item added successfully', 'success');
+                try {
+                    const category = document.getElementById('portfolio-category').value;
+                    const mediaType = document.getElementById('portfolio-media-type').value;
+                    const urlInput = document.getElementById('portfolio-url').value;
+                    const fileInput = document.getElementById('portfolio-file');
+                    
+                    let finalUrl = urlInput;
+                    
+                    // If file is selected, upload it to Firebase
+                    if (fileInput.files && fileInput.files[0]) {
+                        const file = fileInput.files[0];
+                        
+                        // Validate file size (max 10MB)
+                        if (file.size > 10 * 1024 * 1024) {
+                            showNotification('❌ Файл занадто великий. Максимум 10MB.', 'error');
+                            return;
+                        }
+                        
+                        finalUrl = await uploadFileToFirebase(file, category);
+                    } else if (!urlInput) {
+                        showNotification('❌ Введіть URL або виберіть файл', 'error');
+                        return;
+                    }
+                    
+                    portfolioItems.push({ 
+                        category, 
+                        mediaType, 
+                        url: finalUrl,
+                        uploadedAt: new Date().toISOString(),
+                        isUploaded: !!fileInput.files[0] // Mark if uploaded vs URL
+                    });
+                    
+                    await saveData();
+                    renderPortfolio();
+                    closePortfolioModal();
+                    showNotification('✅ Портфоліо додано успішно!', 'success');
+                    
+                } catch (error) {
+                    console.error('Error adding portfolio item:', error);
+                    showNotification('❌ Помилка додавання портфоліо', 'error');
+                }
             });
         }
 
@@ -2334,12 +2468,48 @@
         // Start in user mode by default
         isAdminMode = false;
         
-        // Load data from localStorage on startup
-        loadDataFromLocalStorage();
-        renderTechnologies();
-        renderPortfolio();
-        renderContacts();
-        console.log('✅ Andrii AI Portfolio loaded');
+        // Real-time synchronization
+        function setupRealtimeSync() {
+            try {
+                const portfolioDoc = doc(db, 'portfolio', 'data');
+                onSnapshot(portfolioDoc, (doc) => {
+                    if (doc.exists() && !isAdminMode) { // Only sync if not in admin mode to avoid conflicts
+                        const data = doc.data();
+                        const hasChanges = JSON.stringify(portfolioItems) !== JSON.stringify(data.portfolioItems || []);
+                        
+                        if (hasChanges) {
+                            portfolioItems = data.portfolioItems || [];
+                            technologies = data.technologies || technologies;
+                            contacts = data.contacts || contacts;
+                            
+                            renderTechnologies();
+                            renderPortfolio();
+                            renderContacts();
+                            
+                            showNotification('🔄 Дані оновлено автоматично', 'success');
+                            console.log('🔄 Real-time data sync from Firebase');
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Real-time sync error:', error);
+            }
+        }
+        
+        // Load data from Firebase on startup
+        loadDataFromFirebase().then(() => {
+            renderTechnologies();
+            renderPortfolio();
+            renderContacts();
+            setupRealtimeSync(); // Start real-time sync
+            console.log('✅ Andrii AI Portfolio loaded with Firebase + Real-time sync');
+        }).catch((error) => {
+            console.error('Failed to load from Firebase:', error);
+            renderTechnologies();
+            renderPortfolio();
+            renderContacts();
+            console.log('✅ Andrii AI Portfolio loaded with fallback data');
+        });
     </script>
 </body>
 </html>
