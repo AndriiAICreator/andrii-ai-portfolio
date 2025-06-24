@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andrii - AI Creator | Professional AI Services</title>
+    <meta name="description" content="Professional AI services: avatars, voiceover, image and video generation, e-commerce creatives, virtual photoshoots">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .service-card:hover { transform: translateY(-10px); }
+        .floating { animation: floating 3s ease-in-out infinite; }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .admin-panel { display: none; }
+        .admin-mode .admin-panel { display: block; }
+        .admin-mode .admin-only { display: block !important; }
+        .admin-only { display: none; }
+        .portfolio-item { position: relative; }
+        .portfolio-item .delete-btn { 
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: none;
+            cursor: pointer;
+        }
+        .admin-mode .portfolio-item:hover .delete-btn { display: flex; align-items: center; justify-content: center; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; }
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .notification { position: fixed; top: 20px; right: 20px; z-index: 200; padding: 12px 24px; border-radius: 8px; color: white; font-weight: 500; transform: translateX(400px); transition: transform 0.3s ease; }
+        .notification.show { transform: translateX(0); }
+        .notification.success { background: #10b981; }
+        .notification.error { background: #ef4444; }
+        
+        /* Mobile Navigation Styles */
+        @media (max-width: 768px) {
+            .admin-panel {
+                top: 72px !important;
+                left: 8px !important;
+                right: 8px !important;
+                max-width: none !important;
+            }
+            
+            .hero-section {
+                padding-top: 80px !important;
+            }
+            
+            .gradient-bg {
+                margin-top: 0 !important;
+                padding-top: 100px !important;
+            }
+            
+            .service-card {
+                margin-bottom: 1rem;
+            }
+            
+            .tech-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Admin Login -->
+    <div id="admin-login" class="fixed top-4 left-4 z-50">
+        <button id="admin-toggle" class="bg-gray-800 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
+            <i class="fas fa-cog"></i>
+        </button>
+    </div>
+
+    <!-- Language Switcher -->
+    <div class="fixed top-20 right-4 z-50">
+        <div class="bg-white rounded-full shadow-lg p-2 flex items-center space-x-1">
+            <button id="lang-en" class="px-2 py-1 rounded-full text-xs font-medium transition-all duration-300 bg-blue-500 text-white">EN</button>
+            <button id="lang-ua" class="px-2 py-1 rounded-full text-xs font-medium transition-all duration-300 text-gray-600 hover:bg-gray-100">UA</button>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="admin-panel fixed top-16 left-4 bg-white rounded-lg shadow-lg p-4 z-40 max-w-sm">
+        <h3 class="font-bold mb-4">Admin Panel</h3>
+        <div class="space-y-2">
+            <button id="add-technology-btn" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                <i class="fas fa-plus mr-2"></i>Add Technology
+            </button>
+            <button id="clear-portfolio-btn" class="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                <i class="fas fa-trash mr-2"></i>Clear All Portfolio
+            </button>
+            <button id="export-data-btn" class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                <i class="fas fa-download mr-2"></i>Export Data
+            </button>
+        </div>
+    </div>
+
+    <!-- Technology Modal -->
+    <div id="tech-modal" class="modal">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 class="text-xl font-bold mb-4" data-translate="add-tech-title">Add Technology</h3>
+            <form id="tech-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Technology Name</label>
+                    <input type="text" id="tech-name" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Emoji/Icon</label>
+                    <input type="text" id="tech-emoji" class="w-full px-3 py-2 border rounded-lg" placeholder="🎨" required>
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" class="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Add</button>
+                    <button type="button" onclick="closeTechModal()" class="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Portfolio Upload Modal -->
+    <div id="portfolio-modal" class="modal">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 class="text-xl font-bold mb-4" data-translate="add-portfolio-title">Add Portfolio Item</h3>
+            <form id="portfolio-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Category</label>
+                    <select id="portfolio-category" class="w-full px-3 py-2 border rounded-lg" required>
+                        <option value="avatars">AI Avatars</option>
+                        <option value="images">Image Generation</option>
+                        <option value="videos">AI Video</option>
+                        <option value="audio">AI Audio</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Title</label>
+                    <input type="text" id="portfolio-title" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Description</label>
+                    <textarea id="portfolio-description" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">File/URL</label>
+                    <input type="text" id="portfolio-url" class="w-full px-3 py-2 border rounded-lg" placeholder="Image URL, YouTube link, etc." required>
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" class="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Add</button>
+                    <button type="button" onclick="closePortfolioModal()" class="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Password Modal -->
+    <div id="password-modal" class="modal">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 class="text-xl font-bold mb-4">Admin Access</h3>
+            <form id="password-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Password</label>
+                    <input type="password" id="admin-password" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" class="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Login</button>
+                    <button type="button" onclick="closePasswordModal()" class="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm fixed w-full top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="font-bold text-xl text-gray-900">Andrii AI</div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#about" data-translate="nav-about" class="text-gray-700 hover:text-blue-600 transition-colors">About</a>
+                    <a href="#services" data-translate="nav-services" class="text-gray-700 hover:text-blue-600 transition-colors">Services</a>
+                    <a href="#portfolio" data-translate="nav-portfolio" class="text-gray-700 hover:text-blue-600 transition-colors">Portfolio</a>
+                    <a href="#contact" data-translate="nav-contact" class="text-gray-700 hover:text-blue-600 transition-colors">Contact</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Navigation Menu -->
+            <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <a href="#about" data-translate="nav-about" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">About</a>
+                    <a href="#services" data-translate="nav-services" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Services</a>
+                    <a href="#portfolio" data-translate="nav-portfolio" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Portfolio</a>
+                    <a href="#contact" data-translate="nav-contact" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="floating mb-8">
+                    <div class="w-32 h-32 mx-auto bg-white rounded-full flex items-center justify-center shadow-2xl">
+                        <i class="fas fa-robot text-5xl text-blue-600"></i>
+                    </div>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                    <span data-translate="hero-greeting">Hi, I'm</span> <br>
+                    <span class="text-yellow-300">Andrii</span>
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 opacity-90" data-translate="hero-subtitle">
+                    AI Creator | Artificial Intelligence Creator
+                </p>
+                <p class="text-lg mb-10 max-w-3xl mx-auto opacity-80" data-translate="hero-description">
+                    I create incredible AI avatars, generate unique images and videos, voice content in 70+ languages. I bring your ideas to life using cutting-edge AI technologies.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#services" class="bg-yellow-500 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-yellow-400 transition-colors" data-translate="hero-services-btn">
+                        My Services
+                    </a>
+                    <a href="#contact" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-gray-900 transition-colors" data-translate="hero-contact-btn">
+                        Get in Touch
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-translate="about-title">About Me</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-translate="about-description">
+                    I specialize in creating high-quality AI content for business and creative projects. I use the best AI tools to achieve your goals.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-brain text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" data-translate="about-innovation">Innovation</h3>
+                    <p class="text-gray-600" data-translate="about-innovation-desc">Using the latest AI technologies</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-palette text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" data-translate="about-creativity">Creativity</h3>
+                    <p class="text-gray-600" data-translate="about-creativity-desc">Bringing any creative ideas to life</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-rocket text-2xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" data-translate="about-speed">Speed</h3>
+                    <p class="text-gray-600" data-translate="about-speed-desc">Fast project delivery</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-translate="services-title">My Services</h2>
+                <p class="text-xl text-gray-600" data-translate="services-subtitle">Professional AI solutions for your business</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- AI Avatars -->
+                <div class="service-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-user-circle text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4" data-translate="service-avatars-title">AI Avatars</h3>
+                    <p class="text-gray-600 mb-6" data-translate="service-avatars-desc">
+                        I create realistic AI avatars for business, advertising, presentations, social media, games, apps and any other needs.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li data-translate="service-avatars-1">• Corporate representatives</li>
+                        <li data-translate="service-avatars-2">• Social media characters</li>
+                        <li data-translate="service-avatars-3">• Gaming and app avatars</li>
+                        <li data-translate="service-avatars-4">• Virtual hosts</li>
+                    </ul>
+                </div>
+
+                <!-- Voice Services -->
+                <div class="service-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-microphone text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4" data-translate="service-voice-title">AI Voice</h3>
+                    <p class="text-gray-600 mb-6" data-translate="service-voice-desc">
+                        Professional voiceover for texts, avatars and audiobooks in 70+ languages. Video translation and voiceover.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li data-translate="service-voice-1">• 70+ world languages</li>
+                        <li data-translate="service-voice-2">• Audiobook narration</li>
+                        <li data-translate="service-voice-3">• Video translation</li>
+                        <li data-translate="service-voice-4">• Avatar voices</li>
+                    </ul>
+                </div>
+
+                <!-- Image Generation -->
+                <div class="service-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-600 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-image text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4" data-translate="service-images-title">Image Generation</h3>
+                    <p class="text-gray-600 mb-6" data-translate="service-images-desc">
+                        I create unique images using Midjourney, FLUX, Stable Diffusion, Krea and other AI services.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li data-translate="service-images-1">• Realistic photographs</li>
+                        <li data-translate="service-images-2">• Creative illustrations</li>
+                        <li data-translate="service-images-3">• Cartoon characters</li>
+                        <li data-translate="service-images-4">• Concept art</li>
+                    </ul>
+                </div>
+
+                <!-- Video Generation -->
+                <div class="service-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-video text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4" data-translate="service-video-title">AI Video</h3>
+                    <p class="text-gray-600 mb-6" data-translate="service-video-desc">
+                        I generate videos using Kling AI, Runway, Luma, PikaLabs, Google Veo 3, Minimax. I select the optimal service for each task.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li data-translate="service-video-1">• Promotional videos</li>
+                        <li data-translate="service-video-2">• Character animation</li>
+                        <li data-translate="service-video-3">• Presentation videos</li>
+                        <li data-translate="service-video-4">• Creative content</li>
+                    </ul>
+                </div>
+
+                <!-- E-commerce -->
+                <div class="service-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-shopping-cart text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4" data-translate="service-ecommerce-title">E-commerce Creatives</h3>
+                    <p class="text-gray-600 mb-6" data-translate="service-ecommerce-desc">
+                        I create advertising creatives with real products. Training separate AI models on your products for maximum quality.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li data-translate="service-ecommerce-1">• Product photos in various scenes</li>
+                        <li data-translate="service-ecommerce-2">• Clothing on real people</li>
+                        <li data-translate="service-ecommerce-3">• Advertising banners</li>
+                        <li data-translate="service-ecommerce-4">• Catalog images</li>
+                    </ul>
+                </div>
+
+                <!-- Virtual Photoshoot -->
+                <div class="service-card bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-camera text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4" data-translate="service-photoshoot-title">Virtual Photoshoots</h3>
+                    <p class="text-gray-600 mb-6" data-translate="service-photoshoot-desc">
+                        Training AI model on a specific person to create photos in different styles, locations and looks without a real photoshoot.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li data-translate="service-photoshoot-1">• Portraits in various styles</li>
+                        <li data-translate="service-photoshoot-2">• Professional photos</li>
+                        <li data-translate="service-photoshoot-3">• Creative looks</li>
+                        <li data-translate="service-photoshoot-4">• Social media content</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technologies Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-translate="tech-title">Technologies I Use</h2>
+                <button class="admin-only bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" onclick="openTechModal()">
+                    <i class="fas fa-plus mr-2"></i>Add Technology
+                </button>
+            </div>
+            
+            <div id="tech-grid" class="tech-grid">
+                <!-- Technologies will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-translate="portfolio-title">Portfolio</h2>
+                <p class="text-xl text-gray-600" data-translate="portfolio-subtitle">Examples of my work</p>
+            </div>
+
+            <!-- Portfolio Filter -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button class="portfolio-filter active px-6 py-2 rounded-full bg-blue-500 text-white" data-filter="all">All</button>
+                <button class="portfolio-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="avatars">AI Avatars</button>
+                <button class="portfolio-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="images">Images</button>
+                <button class="portfolio-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="videos">Videos</button>
+                <button class="portfolio-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="audio">Audio</button>
+            </div>
+
+            <div id="portfolio-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Portfolio items will be loaded here -->
+            </div>
+
+            <!-- Add Portfolio Buttons (Admin Only) -->
+            <div class="text-center mt-12 space-y-4">
+                <p class="text-gray-600 mb-6" data-translate="portfolio-note">Upload your work here to show clients</p>
+                <div class="admin-only grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+                    <button onclick="openPortfolioModal('avatars')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-user-circle mb-2 block"></i>
+                        Add Avatar
+                    </button>
+                    <button onclick="openPortfolioModal('images')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-image mb-2 block"></i>
+                        Add Image
+                    </button>
+                    <button onclick="openPortfolioModal('videos')" class="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition-colors">
+                        <i class="fas fa-video mb-2 block"></i>
+                        Add Video
+                    </button>
+                    <button onclick="openPortfolioModal('audio')" class="bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition-colors">
+                        <i class="fas fa-volume-up mb-2 block"></i>
+                        Add Audio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-translate="contact-title">Contact Me</h2>
+                <p class="text-xl text-gray-600" data-translate="contact-subtitle">Ready to bring your ideas to life</p>
+            </div>
+
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <form id="contact-form" name="contact" method="POST" data-netlify="true" class="space-y-6">
+                        <input type="hidden" name="form-name" value="contact">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2" data-translate="contact-name">Your Name</label>
+                                <input type="text" name="name" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2" data-translate="contact-email">Email</label>
+                                <input type="email" name="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2" data-translate="contact-service">Service</label>
+                            <select name="service" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required>
+                                <option value="" data-translate="contact-select">Select a service</option>
+                                <option value="avatars" data-translate="contact-avatars">AI Avatars</option>
+                                <option value="voice" data-translate="contact-voice">Voice Services</option>
+                                <option value="images" data-translate="contact-images">Image Generation</option>
+                                <option value="videos" data-translate="contact-videos">AI Video</option>
+                                <option value="ecommerce" data-translate="contact-ecommerce">E-commerce</option>
+                                <option value="photoshoot" data-translate="contact-photoshoot">Virtual Photoshoot</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2" data-translate="contact-message">Message</label>
+                            <textarea name="message" rows="5" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" data-translate="contact-placeholder" placeholder="Tell me about your project..." required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-translate="contact-submit">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="mt-12 text-center">
+                    <div class="flex flex-col sm:flex-row gap-8 justify-center items-center">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-blue-600"></i>
+                            <span class="text-gray-600">andrii.ai@example.com</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fab fa-telegram text-blue-600"></i>
+                            <span class="text-gray-600">@andrii_ai</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fab fa-instagram text-blue-600"></i>
+                            <span class="text-gray-600">@andrii_ai_creator</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold mb-4">Andrii AI Creator</h3>
+                <p class="text-gray-400 mb-6" data-translate="footer-text">Bringing your ideas to life with artificial intelligence</p>
+                <div class="flex justify-center space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-telegram text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-linkedin text-2xl"></i>
+                    </a>
+                </div>
+                <div class="mt-8 pt-8 border-t border-gray-800 text-gray-400">
+                    <p>&copy; 2025 Andrii AI Creator. <span data-translate="footer-rights">All rights reserved</span>.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script type="module">
+        // Admin Configuration
+        const ADMIN_PASSWORD = 'andrii2025'; // Change this password!
+        
+        // Data Storage
+        let isAdminMode = false;
+        let technologies = [
+            { name: 'Midjourney', emoji: '🎨' },
+            { name: 'FLUX', emoji: '⚡' },
+            { name: 'Stable Diffusion', emoji: '🔬' },
+            { name: 'Runway', emoji: '🎬' },
+            { name: 'Kling AI', emoji: '🌟' },
+            { name: 'Luma', emoji: '🎭' },
+            { name: 'PikaLabs', emoji: '🎪' },
+            { name: 'Krea', emoji: '🔗' },
+            { name: 'HeyGen', emoji: '👤' },
+            { name: 'ElevenLabs', emoji: '🎙️' }
+        ];
+        
+        let portfolioItems = [];
+
+        // Translations
+        const translations = {
+            uk: {
+                'nav-about': 'Про мене',
+                'nav-services': 'Послуги',
+                'nav-portfolio': 'Портфоліо',
+                'nav-contact': 'Контакти',
+                'hero-greeting': 'Привіт, я',
+                'hero-subtitle': 'AI Creator | Творець штучного інтелекту',
+                'hero-description': 'Створюю неймовірні AI аватари, генерую унікальні зображення та відео, озвучую контент на 70+ мовах. Втілюю ваші ідеї в життя за допомогою найсучасніших AI технологій.',
+                'hero-services-btn': 'Мої послуги',
+                'hero-contact-btn': 'Зв\'язатися',
+                'about-title': 'Про мене',
+                'about-description': 'Я спеціалізуюся на створенні високоякісного AI контенту для бізнесу та творчих проектів. Використовую найкращі AI інструменти для досягнення ваших цілей.',
+                'about-innovation': 'Інновації',
+                'about-innovation-desc': 'Використовую найновіші AI технології',
+                'about-creativity': 'Креативність',
+                'about-creativity-desc': 'Втілюю будь-які творчі ідеї',
+                'about-speed': 'Швидкість',
+                'about-speed-desc': 'Швидке виконання проектів',
+                'services-title': 'Мої послуги',
+                'services-subtitle': 'Професійні AI рішення для вашого бізнесу',
+                'service-avatars-title': 'AI Аватари',
+                'service-avatars-desc': 'Створюю реалістичні AI аватари для бізнесу, реклами, презентацій, соціальних мереж, ігор, додатків та будь-яких інших потреб.',
+                'service-avatars-1': '• Корпоративні представники',
+                'service-avatars-2': '• Персонажі для соцмереж',
+                'service-avatars-3': '• Аватари для ігор та додатків',
+                'service-avatars-4': '• Віртуальні ведучі',
+                'service-voice-title': 'Озвучка AI',
+                'service-voice-desc': 'Професійна озвучка текстів, аватарів та аудіокниг на 70+ мовах. Переклад та озвучка відео контенту.',
+                'service-voice-1': '• 70+ мов світу',
+                'service-voice-2': '• Озвучка аудіокниг',
+                'service-voice-3': '• Переклад відео',
+                'service-voice-4': '• Голоси для аватарів',
+                'service-images-title': 'Генерація зображень',
+                'service-images-desc': 'Створюю унікальні зображення за допомогою Midjourney, FLUX, Stable Diffusion, Krea та інших AI сервісів.',
+                'service-images-1': '• Реалістичні фотографії',
+                'service-images-2': '• Креативні ілюстрації',
+                'service-images-3': '• Персонажі мультфільмів',
+                'service-images-4': '• Концепт-арт',
+                'service-video-title': 'AI Відео',
+                'service-video-desc': 'Генерую відео за допомогою Kling AI, Runway, Luma, PikaLabs, Google Veo 3, Minimax. Підбираю оптимальний сервіс для кожної задачі.',
+                'service-video-1': '• Рекламні ролики',
+                'service-video-2': '• Анімація персонажів',
+                'service-video-3': '• Презентаційні відео',
+                'service-video-4': '• Креативний контент',
+                'service-ecommerce-title': 'E-commerce креативи',
+                'service-ecommerce-desc': 'Створюю рекламні креативи з реальними товарами. Тренування окремих AI моделей на ваші продукти для максимальної якості.',
+                'service-ecommerce-1': '• Фото товарів у різних сценах',
+                'service-ecommerce-2': '• Одяг на реальних людях',
+                'service-ecommerce-3': '• Рекламні банери',
+                'service-ecommerce-4': '• Каталожні зображення',
+                'service-photoshoot-title': 'Віртуальні фотосесії',
+                'service-photoshoot-desc': 'Тренування AI моделі на конкретну людину для створення фото в різних стилях, локаціях та образах без реальної фотосесії.',
+                'service-photoshoot-1': '• Портрети в різних стилях',
+                'service-photoshoot-2': '• Професійні фото',
+                'service-photoshoot-3': '• Креативні образи',
+                'service-photoshoot-4': '• Соціальні мережі',
+                'tech-title': 'Технології, які я використовую',
+                'portfolio-title': 'Портфоліо',
+                'portfolio-subtitle': 'Приклади моїх робіт',
+                'portfolio-note': 'Завантажте свої роботи сюди, щоб показати клієнтам',
+                'contact-title': 'Зв\'язатися зі мною',
+                'contact-subtitle': 'Готовий втілити ваші ідеї в життя',
+                'contact-name': 'Ваше ім\'я',
+                'contact-email': 'Email',
+                'contact-service': 'Послуга',
+                'contact-select': 'Оберіть послугу',
+                'contact-avatars': 'AI Аватари',
+                'contact-voice': 'Озвучка',
+                'contact-images': 'Генерація зображень',
+                'contact-videos': 'AI Відео',
+                'contact-ecommerce': 'E-commerce',
+                'contact-photoshoot': 'Віртуальна фотосесія',
+                'contact-message': 'Повідомлення',
+                'contact-placeholder': 'Розкажіть про ваш проект...',
+                'contact-submit': 'Відправити повідомлення',
+                'footer-text': 'Втілюю ваші ідеї за допомогою штучного інтелекту',
+                'footer-rights': 'Всі права захищені'
+            },
+            en: {
+                'nav-about': 'About',
+                'nav-services': 'Services',
+                'nav-portfolio': 'Portfolio',
+                'nav-contact': 'Contact',
+                'hero-greeting': 'Hi, I\'m',
+                'hero-subtitle': 'AI Creator | Artificial Intelligence Creator',
+                'hero-description': 'I create incredible AI avatars, generate unique images and videos, voice content in 70+ languages. I bring your ideas to life using cutting-edge AI technologies.',
+                'hero-services-btn': 'My Services',
+                'hero-contact-btn': 'Get in Touch',
+                'about-title': 'About Me',
+                'about-description': 'I specialize in creating high-quality AI content for business and creative projects. I use the best AI tools to achieve your goals.',
+                'about-innovation': 'Innovation',
+                'about-innovation-desc': 'Using the latest AI technologies',
+                'about-creativity': 'Creativity',
+                'about-creativity-desc': 'Bringing any creative ideas to life',
+                'about-speed': 'Speed',
+                'about-speed-desc': 'Fast project delivery',
+                'services-title': 'My Services',
+                'services-subtitle': 'Professional AI solutions for your business',
+                'service-avatars-title': 'AI Avatars',
+                'service-avatars-desc': 'I create realistic AI avatars for business, advertising, presentations, social media, games, apps and any other needs.',
+                'service-avatars-1': '• Corporate representatives',
+                'service-avatars-2': '• Social media characters',
+                'service-avatars-3': '• Gaming and app avatars',
+                'service-avatars-4': '• Virtual hosts',
+                'service-voice-title': 'AI Voice',
+                'service-voice-desc': 'Professional voiceover for texts, avatars and audiobooks in 70+ languages. Video translation and voiceover.',
+                'service-voice-1': '• 70+ world languages',
+                'service-voice-2': '• Audiobook narration',
+                'service-voice-3': '• Video translation',
+                'service-voice-4': '• Avatar voices',
+                'service-images-title': 'Image Generation',
+                'service-images-desc': 'I create unique images using Midjourney, FLUX, Stable Diffusion, Krea and other AI services.',
+                'service-images-1': '• Realistic photographs',
+                'service-images-2': '• Creative illustrations',
+                'service-images-3': '• Cartoon characters',
+                'service-images-4': '• Concept art',
+                'service-video-title': 'AI Video',
+                'service-video-desc': 'I generate videos using Kling AI, Runway, Luma, PikaLabs, Google Veo 3, Minimax. I select the optimal service for each task.',
+                'service-video-1': '• Promotional videos',
+                'service-video-2': '• Character animation',
+                'service-video-3': '• Presentation videos',
+                'service-video-4': '• Creative content',
+                'service-ecommerce-title': 'E-commerce Creatives',
+                'service-ecommerce-desc': 'I create advertising creatives with real products. Training separate AI models on your products for maximum quality.',
+                'service-ecommerce-1': '• Product photos in various scenes',
+                'service-ecommerce-2': '• Clothing on real people',
+                'service-ecommerce-3': '• Advertising banners',
+                'service-ecommerce-4': '• Catalog images',
+                'service-photoshoot-title': 'Virtual Photoshoots',
+                'service-photoshoot-desc': 'Training AI model on a specific person to create photos in different styles, locations and looks without a real photoshoot.',
+                'service-photoshoot-1': '• Portraits in various styles',
+                'service-photoshoot-2': '• Professional photos',
+                'service-photoshoot-3': '• Creative looks',
+                'service-photoshoot-4': '• Social media content',
+                'tech-title': 'Technologies I Use',
+                'portfolio-title': 'Portfolio',
+                'portfolio-subtitle': 'Examples of my work',
+                'portfolio-note': 'Upload your work here to show clients',
+                'contact-title': 'Contact Me',
+                'contact-subtitle': 'Ready to bring your ideas to life',
+                'contact-name': 'Your Name',
+                'contact-email': 'Email',
+                'contact-service': 'Service',
+                'contact-select': 'Select a service',
+                'contact-avatars': 'AI Avatars',
+                'contact-voice': 'Voice Services',
+                'contact-images': 'Image Generation',
+                'contact-videos': 'AI Video',
+                'contact-ecommerce': 'E-commerce',
+                'contact-photoshoot': 'Virtual Photoshoot',
+                'contact-message': 'Message',
+                'contact-placeholder': 'Tell me about your project...',
+                'contact-submit': 'Send Message',
+                'footer-text': 'Bringing your ideas to life with artificial intelligence',
+                'footer-rights': 'All rights reserved'
+            }
+        };
+
+        // Language switching
+        let currentLang = localStorage.getItem('language') || 'en';
+        
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            
+            // Update button states
+            document.getElementById('lang-en').classList.toggle('bg-blue-500', lang === 'en');
+            document.getElementById('lang-en').classList.toggle('text-white', lang === 'en');
+            document.getElementById('lang-en').classList.toggle('text-gray-600', lang !== 'en');
+            
+            document.getElementById('lang-ua').classList.toggle('bg-blue-500', lang === 'uk');
+            document.getElementById('lang-ua').classList.toggle('text-white', lang === 'uk');
+            document.getElementById('lang-ua').classList.toggle('text-gray-600', lang !== 'uk');
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = lang === 'uk' ? 'uk' : 'en';
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+            
+            // Update title and meta description
+            const titles = {
+                uk: 'Andrii - AI Creator | Професійні AI послуги',
+                en: 'Andrii - AI Creator | Professional AI Services'
+            };
+            
+            const descriptions = {
+                uk: 'Професійні AI послуги: аватари, озвучка, генерація зображень та відео, e-commerce креативи, віртуальні фотосесії',
+                en: 'Professional AI services: avatars, voiceover, image and video generation, e-commerce creatives, virtual photoshoots'
+            };
+            
+            document.title = titles[lang];
+            document.querySelector('meta[name="description"]').content = descriptions[lang];
+            
+            // Add fade-in animation
+            document.body.classList.add('fade-in');
+            setTimeout(() => document.body.classList.remove('fade-in'), 500);
+        }
+        
+        // Initialize language
+        updateLanguage(currentLang);
+        
+        // Language button event listeners
+        document.getElementById('lang-en').addEventListener('click', () => updateLanguage('en'));
+        document.getElementById('lang-ua').addEventListener('click', () => updateLanguage('uk'));
+
+        // Notification System
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Load Data from LocalStorage
+        function loadData() {
+            const savedTech = localStorage.getItem('technologies');
+            if (savedTech) {
+                technologies = JSON.parse(savedTech);
+            }
+            
+            const savedPortfolio = localStorage.getItem('portfolioItems');
+            if (savedPortfolio) {
+                portfolioItems = JSON.parse(savedPortfolio);
+            }
+            
+            const savedAdminMode = localStorage.getItem('adminMode');
+            if (savedAdminMode === 'true') {
+                toggleAdminMode(true);
+            }
+        }
+
+        // Save Data to LocalStorage
+        function saveData() {
+            localStorage.setItem('technologies', JSON.stringify(technologies));
+            localStorage.setItem('portfolioItems', JSON.stringify(portfolioItems));
+        }
+
+        // Admin Functions
+        function toggleAdminMode(enable = null) {
+            isAdminMode = enable !== null ? enable : !isAdminMode;
+            
+            if (isAdminMode) {
+                document.body.classList.add('admin-mode');
+                localStorage.setItem('adminMode', 'true');
+                showNotification('Admin mode enabled', 'success');
+            } else {
+                document.body.classList.remove('admin-mode');
+                localStorage.removeItem('adminMode');
+                showNotification('Admin mode disabled', 'success');
+            }
+        }
+
+        // Modal Functions
+        window.openTechModal = function() {
+            document.getElementById('tech-modal').classList.add('active');
+        }
+
+        window.closeTechModal = function() {
+            document.getElementById('tech-modal').classList.remove('active');
+            document.getElementById('tech-form').reset();
+        }
+
+        window.openPortfolioModal = function(category = '') {
+            if (category) {
+                document.getElementById('portfolio-category').value = category;
+            }
+            document.getElementById('portfolio-modal').classList.add('active');
+        }
+
+        window.closePortfolioModal = function() {
+            document.getElementById('portfolio-modal').classList.remove('active');
+            document.getElementById('portfolio-form').reset();
+        }
+
+        window.openPasswordModal = function() {
+            document.getElementById('password-modal').classList.add('active');
+        }
+
+        window.closePasswordModal = function() {
+            document.getElementById('password-modal').classList.remove('active');
+            document.getElementById('password-form').reset();
+        }
+
+        // Render Functions
+        function renderTechnologies() {
+            const grid = document.getElementById('tech-grid');
+            grid.innerHTML = '';
+            
+            technologies.forEach((tech, index) => {
+                const techDiv = document.createElement('div');
+                techDiv.className = 'text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors relative';
+                techDiv.innerHTML = `
+                    <div class="text-2xl mb-2">${tech.emoji}</div>
+                    <h4 class="font-semibold">${tech.name}</h4>
+                    <button class="admin-only absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 text-xs hover:bg-red-600" onclick="removeTechnology(${index})">×</button>
+                `;
+                grid.appendChild(techDiv);
+            });
+        }
+
+        function renderPortfolio() {
+            const grid = document.getElementById('portfolio-grid');
+            grid.innerHTML = '';
+            
+            if (portfolioItems.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500 text-lg">No portfolio items yet</p>
+                        <p class="text-gray-400">Add your first work to get started</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            portfolioItems.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `portfolio-item bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 ${item.category}`;
+                
+                let mediaContent = '';
+                if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
+                    const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
+                    mediaContent = `<iframe class="w-full h-48" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                } else if (item.url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                    mediaContent = `<img class="w-full h-48 object-cover" src="${item.url}" alt="${item.title}">`;
+                } else {
+                    mediaContent = `<div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white">
+                        <div class="text-center">
+                            <i class="fas fa-file text-4xl mb-2"></i>
+                            <p>Media File</p>
+                        </div>
+                    </div>`;
+                }
+                
+                itemDiv.innerHTML = `
+                    ${mediaContent}
+                    <div class="p-6">
+                        <h3 class="font-semibold text-lg mb-2">${item.title}</h3>
+                        <p class="text-gray-600 text-sm">${item.description}</p>
+                        <span class="inline-block mt-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">${item.category}</span>
+                    </div>
+                    <button class="delete-btn" onclick="removePortfolioItem(${index})">×</button>
+                `;
+                grid.appendChild(itemDiv);
+            });
+        }
+
+        // CRUD Functions
+        window.removeTechnology = function(index) {
+            technologies.splice(index, 1);
+            saveData();
+            renderTechnologies();
+            showNotification('Technology removed', 'success');
+        }
+
+        window.removePortfolioItem = function(index) {
+            portfolioItems.splice(index, 1);
+            saveData();
+            renderPortfolio();
+            showNotification('Portfolio item removed', 'success');
+        }
+
+        // Event Listeners
+        document.getElementById('admin-toggle').addEventListener('click', function() {
+            if (!isAdminMode) {
+                openPasswordModal();
+            } else {
+                toggleAdminMode(false);
+            }
+        });
+
+        document.getElementById('password-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('admin-password').value;
+            
+            if (password === ADMIN_PASSWORD) {
+                toggleAdminMode(true);
+                closePasswordModal();
+            } else {
+                showNotification('Incorrect password', 'error');
+            }
+        });
+
+        document.getElementById('tech-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('tech-name').value;
+            const emoji = document.getElementById('tech-emoji').value;
+            
+            technologies.push({ name, emoji });
+            saveData();
+            renderTechnologies();
+            closeTechModal();
+            showNotification('Technology added successfully', 'success');
+        });
+
+        document.getElementById('portfolio-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const category = document.getElementById('portfolio-category').value;
+            const title = document.getElementById('portfolio-title').value;
+            const description = document.getElementById('portfolio-description').value;
+            const url = document.getElementById('portfolio-url').value;
+            
+            portfolioItems.push({ category, title, description, url });
+            saveData();
+            renderPortfolio();
+            closePortfolioModal();
+            showNotification('Portfolio item added successfully', 'success');
+        });
+
+        // Portfolio Filter
+        document.querySelectorAll('.portfolio-filter').forEach(button => {
+            button.addEventListener('click', function() {
+                // Update active button
+                document.querySelectorAll('.portfolio-filter').forEach(btn => {
+                    btn.classList.remove('active', 'bg-blue-500', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                });
+                this.classList.add('active', 'bg-blue-500', 'text-white');
+                this.classList.remove('bg-gray-200', 'text-gray-700');
+                
+                // Filter portfolio items
+                const filter = this.dataset.filter;
+                document.querySelectorAll('.portfolio-item').forEach(item => {
+                    if (filter === 'all' || item.classList.contains(filter)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Admin Panel Functions
+        document.getElementById('add-technology-btn').addEventListener('click', openTechModal);
+
+        document.getElementById('clear-portfolio-btn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear all portfolio items?')) {
+                portfolioItems = [];
+                saveData();
+                renderPortfolio();
+                showNotification('Portfolio cleared', 'success');
+            }
+        });
+
+        document.getElementById('export-data-btn').addEventListener('click', function() {
+            const data = {
+                technologies,
+                portfolioItems,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'andrii-ai-portfolio-data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('Data exported successfully', 'success');
+        });
+
+        // Contact Form with Netlify
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            // Don't prevent default - let Netlify handle it
+            showNotification('Message sent successfully! I will contact you soon.', 'success');
+        });
+
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Close admin panel when clicking outside
+        document.addEventListener('click', function(e) {
+            const adminPanel = document.getElementById('admin-panel');
+            const adminToggle = document.getElementById('admin-toggle');
+            
+            if (!adminPanel.contains(e.target) && !adminToggle.contains(e.target)) {
+                adminPanel.style.display = 'none';
+            }
+        });
+
+        document.getElementById('admin-toggle').addEventListener('click', function() {
+            const adminPanel = document.getElementById('admin-panel');
+            adminPanel.style.display = adminPanel.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all service cards and sections
+        document.querySelectorAll('.service-card, section').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const isHidden = mobileMenu.classList.contains('hidden');
+            
+            if (isHidden) {
+                mobileMenu.classList.remove('hidden');
+                this.querySelector('i').classList.remove('fa-bars');
+                this.querySelector('i').classList.add('fa-times');
+            } else {
+                mobileMenu.classList.add('hidden');
+                this.querySelector('i').classList.add('fa-bars');
+                this.querySelector('i').classList.remove('fa-times');
+            }
+        });
+
+        // Close mobile menu when clicking on nav links
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const mobileMenu = document.getElementById('mobile-menu');
+                const menuButton = document.getElementById('mobile-menu-button');
+                
+                mobileMenu.classList.add('hidden');
+                menuButton.querySelector('i').classList.add('fa-bars');
+                menuButton.querySelector('i').classList.remove('fa-times');
+            });
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const isHidden = mobileMenu.classList.contains('hidden');
+            
+            if (isHidden) {
+                mobileMenu.classList.remove('hidden');
+                this.querySelector('i').classList.remove('fa-bars');
+                this.querySelector('i').classList.add('fa-times');
+            } else {
+                mobileMenu.classList.add('hidden');
+                this.querySelector('i').classList.add('fa-bars');
+                this.querySelector('i').classList.remove('fa-times');
+            }
+        });
+
+        // Close mobile menu when clicking on nav links
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const mobileMenu = document.getElementById('mobile-menu');
+                const menuButton = document.getElementById('mobile-menu-button');
+                
+                mobileMenu.classList.add('hidden');
+                menuButton.querySelector('i').classList.add('fa-bars');
+                menuButton.querySelector('i').classList.remove('fa-times');
+            });
+        });
+
+        // Initialize everything
+        loadData();
+        renderTechnologies();
+        renderPortfolio();
+    </script>
+</body>
+</html>
