@@ -353,13 +353,13 @@
         /* Mobile Navigation Styles */
         @media (max-width: 768px) {
             #admin-login {
-                bottom: 20px !important;
-                right: 20px !important;
+                bottom: 8px !important;
+                right: 8px !important;
                 z-index: 30 !important;
             }
             
             .admin-panel {
-                bottom: 80px !important;
+                bottom: 40px !important;
                 left: 8px !important;
                 right: 8px !important;
                 max-width: none !important;
@@ -392,10 +392,10 @@
 </head>
 
 <body class="bg-gray-50">
-    <!-- Admin Login -->
-    <div id="admin-login" class="fixed bottom-4 right-4 z-50">
-        <button id="admin-toggle" class="bg-gray-800 text-white p-3 rounded-full text-lg hover:bg-gray-700 shadow-lg hover:scale-110 transition-all duration-300">
-            <i class="fas fa-cog">⚙️</i>
+    <!-- Admin Login - Hidden -->
+    <div id="admin-login" class="fixed bottom-2 right-2 z-50">
+        <button id="admin-toggle" class="bg-gray-900/50 text-gray-500 p-1 rounded text-xs hover:bg-gray-700 hover:text-white transition-all duration-300 opacity-30 hover:opacity-100">
+            ⚙
         </button>
     </div>
 
@@ -408,20 +408,20 @@
     </div>
 
     <!-- Admin Panel -->
-    <div id="admin-panel" class="admin-panel fixed bottom-20 right-4 bg-gray-800 text-white rounded-lg shadow-lg p-4 z-40 max-w-sm border border-gray-600">
+    <div id="admin-panel" class="admin-panel fixed bottom-12 right-2 bg-gray-800 text-white rounded-lg shadow-lg p-4 z-40 max-w-sm border border-gray-600">
         <h3 class="font-bold mb-4 text-white">🛠️ Admin Panel</h3>
         <div class="space-y-2">
             <button id="add-technology-btn" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-plus mr-2">➕</i>Add Technology
+                <i class="fas fa-plus mr-2"></i>Add Technology
             </button>
-            <button onclick="openContactModal()" class="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:green-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-address-book mr-2">📞</i>Manage Contacts
+            <button onclick="openContactModal()" class="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300 hover:scale-105">
+                <i class="fas fa-address-book mr-2"></i>Manage Contacts
             </button>
             <button id="clear-portfolio-btn" class="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-trash mr-2">🗑️</i>Clear All Portfolio
+                <i class="fas fa-trash mr-2"></i>Clear All Portfolio
             </button>
             <button id="export-data-btn" class="w-full bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-download mr-2">💾</i>Export Data
+                <i class="fas fa-download mr-2"></i>Export Data
             </button>
         </div>
     </div>
@@ -1394,9 +1394,7 @@
                 techDiv.innerHTML = `
                     <div class="text-4xl mb-4 transition-transform duration-500 group-hover:scale-125 group-hover:rotate-12">${tech.emoji}</div>
                     <h4 class="font-bold text-white text-lg">${tech.name}</h4>
-                    <button class="admin-only absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 hover:scale-110 transition-all duration-300 flex items-center justify-center" onclick="removeTechnology(${index})" style="display: none;">
-                        <span class="fas fa-times icon-fallback"></span>
-                    </button>
+                    <button class="admin-only absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 hover:scale-110 transition-all duration-300 flex items-center justify-center" onclick="removeTechnology(${index})" style="display: none;">×</button>
                 `;
                 grid.appendChild(techDiv);
             });
