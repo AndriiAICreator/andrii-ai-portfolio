@@ -159,11 +159,37 @@
         }
         
         @media (max-width: 1024px) {
-            .portfolio-grid { column-count: 2; }
+            .portfolio-grid { 
+                column-count: 2; 
+                column-gap: 1.5rem;
+            }
+            .portfolio-item { 
+                margin-bottom: 1.5rem; 
+            }
         }
         @media (max-width: 640px) {
-            .portfolio-grid { column-count: 1; column-gap: 1rem; }
-            .portfolio-item { margin-bottom: 1rem; }
+            .portfolio-grid { 
+                column-count: 1; 
+                column-gap: 1rem;
+                display: block !important;
+            }
+            .portfolio-item { 
+                margin-bottom: 1.5rem;
+                display: block !important;
+                width: 100% !important;
+                break-inside: auto !important;
+            }
+            .portfolio-item video, .portfolio-item iframe {
+                height: 280px !important;
+                width: 100% !important;
+                border-radius: 0 !important;
+            }
+            
+            .portfolio-item img {
+                width: 100% !important;
+                height: auto !important;
+                max-width: 100% !important;
+            }
         }
 
         /* Lightbox Styles */
@@ -386,6 +412,44 @@
             /* Disable mouse effects on mobile */
             .sparkle, .cursor-glow {
                 display: none;
+            }
+            
+            /* Portfolio filters mobile */
+            .portfolio-filter {
+                font-size: 0.875rem !important;
+                padding: 0.5rem 1rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            #category-filter {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.5rem !important;
+                margin-bottom: 2rem !important;
+            }
+            
+            #category-select {
+                width: 100% !important;
+                font-size: 0.875rem !important;
+            }
+            
+            /* Force portfolio display on mobile */
+            #portfolio-grid {
+                display: block !important;
+                column-count: 1 !important;
+            }
+            
+            .portfolio-item {
+                display: block !important;
+                width: 100% !important;
+                margin-bottom: 1.5rem !important;
+                break-inside: auto !important;
+                page-break-inside: avoid !important;
+            }
+            
+            /* Debug styles for mobile portfolio */
+            .portfolio-item * {
+                max-width: 100% !important;
             }
         }
     </style>
@@ -1629,21 +1693,42 @@
                 } else if (item.url.includes('drive.google.com')) {
                     const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
-                        const height = isLightbox ? '80vh' : '200px';
-                        const width = isLightbox ? '90vw' : '100%';
+                        let height, width;
+                        if (isLightbox) {
+                            height = '80vh';
+                            width = '90vw';
+                        } else {
+                            // Mobile responsive height
+                            height = window.innerWidth < 640 ? '250px' : '200px';
+                            width = '100%';
+                        }
                         mediaContent = `<iframe style="width: ${width}; height: ${height};" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
                     }
                 } else if (item.url.includes('dropbox.com')) {
                     const directUrl = item.url.replace('dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
-                    const height = isLightbox ? '80vh' : '200px';
-                    const width = isLightbox ? '90vw' : '100%';
+                    let height, width;
+                    if (isLightbox) {
+                        height = '80vh';
+                        width = '90vw';
+                    } else {
+                        // Mobile responsive height
+                        height = window.innerWidth < 640 ? '250px' : '200px';
+                        width = '100%';
+                    }
                     mediaContent = `<video style="width: ${width}; height: ${height}; object-fit: cover;" controls>
                         <source src="${directUrl}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>`;
                 } else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
-                    const height = isLightbox ? '80vh' : '200px';
-                    const width = isLightbox ? '90vw' : '100%';
+                    let height, width;
+                    if (isLightbox) {
+                        height = '80vh';
+                        width = '90vw';
+                    } else {
+                        // Mobile responsive height
+                        height = window.innerWidth < 640 ? '250px' : '200px';
+                        width = '100%';
+                    }
                     mediaContent = `<video style="width: ${width}; height: ${height}; object-fit: cover;" controls>
                         <source src="${item.url}" type="video/mp4">
                         Your browser does not support the video tag.
@@ -1671,6 +1756,12 @@
         function renderPortfolio() {
             const grid = document.getElementById('portfolio-grid');
             grid.innerHTML = '';
+            
+            // Force mobile layout if screen is small
+            if (window.innerWidth < 640) {
+                grid.style.columnCount = '1';
+                grid.style.display = 'block';
+            }
             
             if (portfolioItems.length === 0) {
                 grid.innerHTML = `
@@ -2234,6 +2325,45 @@
         renderTechnologies();
         renderPortfolio();
         renderContacts();
+        
+        // Additional mobile portfolio fix
+        if (window.innerWidth < 640) {
+            setTimeout(() => {
+                forceMobilePortfolioLayout();
+                console.log('Mobile portfolio fix applied after render');
+            }, 500);
+        }
+        
+        // Handle window resize for mobile portfolio
+        function forceMobilePortfolioLayout() {
+            const grid = document.getElementById('portfolio-grid');
+            if (window.innerWidth < 640) {
+                grid.style.columnCount = '1';
+                grid.style.display = 'block';
+                grid.style.columnGap = '0';
+                
+                // Force re-render portfolio items for mobile
+                const items = grid.querySelectorAll('.portfolio-item');
+                items.forEach(item => {
+                    item.style.display = 'block';
+                    item.style.width = '100%';
+                    item.style.marginBottom = '1.5rem';
+                    item.style.breakInside = 'auto';
+                    item.style.pageBreakInside = 'avoid';
+                });
+                
+                console.log('Mobile portfolio layout applied, items count:', items.length);
+            } else {
+                grid.style.columnCount = '';
+                grid.style.display = '';
+                grid.style.columnGap = '';
+            }
+        }
+        
+        window.addEventListener('resize', forceMobilePortfolioLayout);
+        
+        // Force mobile layout on initial load if mobile
+        setTimeout(forceMobilePortfolioLayout, 100);
         
         // Hide category filter initially if not "All" is selected
         const categoryFilterDiv = document.getElementById('category-filter');
