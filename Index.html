@@ -1006,11 +1006,19 @@
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
+    <script>
+        // Load environment variables from Netlify
+        window.GITHUB_TOKEN = '{{GITHUB_TOKEN}}'; // Netlify will replace this
+    </script>
+    
     <script type="module">
         // Admin Configuration
         const ADMIN_PASSWORD = 'andrii2025'; // Change this password!
         
-        // Data Storage
+        // Data Storage Configuration
+        const GITHUB_REPO = 'MyWorkplace/andrii-ai-portfolio'; // 👈 Замінити на свій репозиторій
+        const GITHUB_TOKEN = window.GITHUB_TOKEN || ''; // 👈 Токен береться з Netlify Environment Variables
+        
         let isAdminMode = false;
         let technologies = [
             { name: 'Midjourney', emoji: '🎨' },
@@ -1305,67 +1313,152 @@
             }, 3000);
         }
 
-        // Load Data from LocalStorage
-        function loadData() {
-            const savedTech = localStorage.getItem('technologies');
-            if (savedTech) {
-                try {
-                    const parsed = JSON.parse(savedTech);
-                    // Always ensure Adobe technologies are included
-                    const adobeTools = [
-                        { name: 'Photoshop', emoji: '🖼️' },
-                        { name: 'Premiere Pro', emoji: '🎞️' },
-                        { name: 'After Effects', emoji: '💫' },
-                        { name: 'Lightroom', emoji: '📷' }
-                    ];
-                    
-                    // Merge saved technologies with Adobe tools, avoiding duplicates
-                    const existing = parsed.map(t => t.name);
-                    const missingAdobe = adobeTools.filter(adobe => !existing.includes(adobe.name));
-                    technologies = [...parsed, ...missingAdobe];
-                    
-                    console.log('Loaded technologies:', technologies.length, technologies.map(t => t.name));
-                } catch (e) {
-                    console.error('Error parsing saved technologies:', e);
-                    // Use default if parsing fails
-                }
-            } else {
-                console.log('No saved technologies, using defaults:', technologies.length);
+        // GitHub API Functions
+        async function loadDataFromGitHub() {
+            // Skip GitHub if not configured
+            if (GITHUB_TOKEN === 'github_pat_YOUR_TOKEN_HERE' || GITHUB_REPO === 'AndriiAICreator/andrii-ai-portfolio') {
+                console.log('⚠️ GitHub not configured, using localStorage fallback');
+                loadDataFromLocalStorage();
+                return Promise.resolve();
             }
             
-            const savedPortfolio = localStorage.getItem('portfolioItems');
-            if (savedPortfolio) {
-                try {
-                    const parsed = JSON.parse(savedPortfolio);
-                    portfolioItems = parsed; // Load whatever is saved, even if empty
-                    console.log('Loaded portfolio from localStorage:', portfolioItems.length, 'items');
-                } catch (e) {
-                    console.error('Error parsing portfolio data:', e);
-                    portfolioItems = []; // Reset to empty on error
+            try {
+                showNotification('Loading data...', 'success');
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data.json`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const content = JSON.parse(atob(data.content));
+                    
+                    technologies = content.technologies || technologies;
+                    portfolioItems = content.portfolioItems || [];
+                    contacts = content.contacts || contacts;
+                    
+                    console.log('✅ Data loaded from GitHub:', portfolioItems.length, 'portfolio items');
+                    showNotification('Data loaded successfully!', 'success');
+                } else {
+                    console.log('📁 No data.json found, using defaults');
+                    showNotification('Using default data (first time)', 'success');
                 }
-            } else {
-                console.log('No portfolio in localStorage, starting with empty portfolio');
-                portfolioItems = []; // Start completely empty
-            }
-            
-            const savedContacts = localStorage.getItem('contacts');
-            if (savedContacts) {
-                contacts = JSON.parse(savedContacts);
+            } catch (error) {
+                console.error('❌ Error loading from GitHub:', error);
+                showNotification('Using local fallback data', 'error');
+                // Fallback to localStorage if GitHub fails
+                loadDataFromLocalStorage();
+                return Promise.reject(error);
             }
         }
 
-        // Save Data to LocalStorage
-        function saveData() {
-            localStorage.setItem('technologies', JSON.stringify(technologies));
-            localStorage.setItem('portfolioItems', JSON.stringify(portfolioItems));
-            localStorage.setItem('contacts', JSON.stringify(contacts));
+        async function saveDataToGitHub() {
+            if (!isAdminMode) return; // Only save in admin mode
+            
+            // Skip GitHub if not configured
+            if (GITHUB_TOKEN === 'github_pat_YOUR_TOKEN_HERE' || GITHUB_REPO === 'AndriiAICreator/andrii-ai-portfolio') {
+                console.log('⚠️ GitHub not configured, saving to localStorage only');
+                saveDataToLocalStorage();
+                showNotification('Saved locally (GitHub not configured)', 'success');
+                return;
+            }
+            
+            try {
+                showNotification('Saving data...', 'success');
+                
+                const data = {
+                    technologies,
+                    portfolioItems,
+                    contacts,
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                // Get current file (for sha)
+                let sha = null;
+                try {
+                    const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data.json`);
+                    if (response.ok) {
+                        const fileData = await response.json();
+                        sha = fileData.sha;
+                    }
+                } catch (e) {
+                    console.log('Creating new data.json file');
+                }
+                
+                // Update file
+                const updateData = {
+                    message: `Update portfolio data - ${new Date().toLocaleString()}`,
+                    content: btoa(JSON.stringify(data, null, 2)),
+                };
+                
+                if (sha) {
+                    updateData.sha = sha;
+                }
+                
+                const updateResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data.json`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updateData)
+                });
+                
+                if (updateResponse.ok) {
+                    console.log('✅ Data saved to GitHub');
+                    showNotification('Data saved to GitHub! Changes will appear on live site.', 'success');
+                    
+                    // Also save to localStorage as backup
+                    saveDataToLocalStorage();
+                } else {
+                    throw new Error('Failed to save to GitHub');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error saving to GitHub:', error);
+                showNotification('Error saving to GitHub. Saved locally instead.', 'error');
+                // Fallback to localStorage
+                saveDataToLocalStorage();
+            }
+        }
+        
+        // Fallback localStorage functions
+        function loadDataFromLocalStorage() {
+            try {
+                const savedPortfolio = localStorage.getItem('portfolioItems');
+                if (savedPortfolio) {
+                    portfolioItems = JSON.parse(savedPortfolio);
+                }
+                
+                const savedTech = localStorage.getItem('technologies');
+                if (savedTech) {
+                    technologies = JSON.parse(savedTech);
+                }
+                
+                const savedContacts = localStorage.getItem('contacts');
+                if (savedContacts) {
+                    contacts = JSON.parse(savedContacts);
+                }
+                
+                console.log('📱 Loaded from localStorage as fallback');
+            } catch (error) {
+                console.error('Error loading from localStorage:', error);
+            }
+        }
+        
+        function saveDataToLocalStorage() {
+            try {
+                localStorage.setItem('technologies', JSON.stringify(technologies));
+                localStorage.setItem('portfolioItems', JSON.stringify(portfolioItems));
+                localStorage.setItem('contacts', JSON.stringify(contacts));
+                console.log('💾 Saved to localStorage');
+            } catch (error) {
+                console.error('Error saving to localStorage:', error);
+            }
         }
 
         // Contact Management Functions
         window.removeContact = function(index) {
             if (confirm('Are you sure you want to remove this contact?')) {
                 contacts.splice(index, 1);
-                saveData();
+                saveDataToGitHub();
                 renderContacts();
                 showNotification('Contact removed successfully', 'success');
             }
@@ -1772,14 +1865,14 @@
         // CRUD Functions
         window.removeTechnology = function(index) {
             technologies.splice(index, 1);
-            saveData();
+            saveDataToGitHub();
             renderTechnologies();
             showNotification('Technology removed', 'success');
         }
 
         window.removePortfolioItem = function(index) {
             portfolioItems.splice(index, 1);
-            saveData();
+            saveDataToGitHub();
             renderPortfolio();
             showNotification('Portfolio item removed', 'success');
         }
@@ -1819,7 +1912,7 @@
                 const emoji = document.getElementById('tech-emoji').value;
                 
                 technologies.push({ name, emoji });
-                saveData();
+                saveDataToGitHub();
                 renderTechnologies();
                 closeTechModal();
                 showNotification('Technology added successfully', 'success');
@@ -1835,7 +1928,7 @@
                 const url = document.getElementById('portfolio-url').value;
                 
                 portfolioItems.push({ category, mediaType, url });
-                saveData();
+                saveDataToGitHub();
                 renderPortfolio();
                 closePortfolioModal();
                 showNotification('Portfolio item added successfully', 'success');
@@ -1852,7 +1945,7 @@
                 const icon = getContactIcon(platform);
                 
                 contacts.push({ platform, label, url, icon });
-                saveData();
+                saveDataToGitHub();
                 renderContacts();
                 closeContactModal();
                 showNotification('Contact added successfully', 'success');
@@ -1928,7 +2021,7 @@
             clearPortfolioBtn.addEventListener('click', function() {
                 if (confirm('Are you sure you want to clear all portfolio items?')) {
                     portfolioItems = [];
-                    saveData();
+                    saveDataToGitHub();
                     renderPortfolio();
                     showNotification('Portfolio cleared', 'success');
                 }
@@ -1987,8 +2080,8 @@
                             portfolioItems = data.portfolioItems || [];
                             contacts = data.contacts || [];
                             
-                            // Save to localStorage
-                            saveData();
+                            // Save to GitHub
+                            saveDataToGitHub();
                             
                             // Re-render everything
                             renderTechnologies();
@@ -2334,20 +2427,33 @@
         });
         
         // Initialize everything
-        console.log('Initializing with default technologies:', technologies.length);
+        console.log('🚀 Initializing Andrii AI Portfolio');
+        console.log('Default technologies:', technologies.length);
         console.log('Starting portfolio items:', portfolioItems.length);
         
-        loadData();
+        // Initialize everything
+        console.log('🚀 Initializing Andrii AI Portfolio');
+        console.log('Default technologies:', technologies.length);
+        console.log('Starting portfolio items:', portfolioItems.length);
         
-        // Force save to ensure data is preserved
-        saveData();
-        console.log('After loadData and saveData:');
-        console.log('- Technologies:', technologies.length);
-        console.log('- Portfolio items:', portfolioItems.length);
+        // Check if admin mode was previously enabled
+        if (localStorage.getItem('adminMode') === 'true') {
+            toggleAdminMode(true);
+        }
         
-        renderTechnologies();
-        renderPortfolio();
-        renderContacts();
+        // Load data from GitHub on startup
+        loadDataFromGitHub().then(() => {
+            renderTechnologies();
+            renderPortfolio();
+            renderContacts();
+            console.log('✅ App initialized with data:', portfolioItems.length, 'portfolio items');
+        }).catch((error) => {
+            console.error('Failed to load from GitHub, using defaults:', error);
+            loadDataFromLocalStorage();
+            renderTechnologies();
+            renderPortfolio();
+            renderContacts();
+        });
     </script>
 </body>
 </html>
