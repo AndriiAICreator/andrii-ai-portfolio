@@ -521,6 +521,12 @@
             <button id="export-data-btn" class="w-full bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-download mr-2"></i>Export Data
             </button>
+            <button id="sync-data-btn" class="w-full bg-cyan-500 text-white px-4 py-2 rounded-lg hover:bg-cyan-600 transition-all duration-300 hover:scale-105">
+                <i class="fas fa-sync mr-2"></i>Sync All Devices
+            </button>
+            <button id="reset-to-default-btn" class="w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-all duration-300 hover:scale-105">
+                <i class="fas fa-undo mr-2"></i>Reset to Defaults
+            </button>
         </div>
     </div>
 
@@ -2095,6 +2101,128 @@
                 
                 showNotification('Data exported successfully', 'success');
             });
+        }
+        
+        // Sync Data Button - Force override localStorage with current defaults + your real data
+        const syncDataBtn = document.getElementById('sync-data-btn');
+        if (syncDataBtn) {
+            syncDataBtn.addEventListener('click', function() {
+                if (confirm('This will sync all devices with the same portfolio. Continue?')) {
+                    // Clear current localStorage
+                    localStorage.removeItem('portfolioItems');
+                    localStorage.removeItem('technologies'); 
+                    localStorage.removeItem('contacts');
+                    
+                    // Reset to defaults and save
+                    resetToDefaultData();
+                    saveData();
+                    
+                    // Re-render everything
+                    renderTechnologies();
+                    renderPortfolio();
+                    renderContacts();
+                    
+                    showNotification('All devices synced! Refresh other devices to see changes.', 'success');
+                }
+            });
+        }
+        
+        // Reset to Default Button
+        const resetDefaultBtn = document.getElementById('reset-to-default-btn');
+        if (resetDefaultBtn) {
+            resetDefaultBtn.addEventListener('click', function() {
+                if (confirm('This will reset everything to default values. Are you sure?')) {
+                    resetToDefaultData();
+                    saveData();
+                    renderTechnologies();
+                    renderPortfolio();
+                    renderContacts();
+                    showNotification('Data reset to defaults', 'success');
+                }
+            });
+        }
+        
+        function resetToDefaultData() {
+            // Reset to original default technologies
+            technologies = [
+                { name: 'Midjourney', emoji: '🎨' },
+                { name: 'FLUX', emoji: '⚡' },
+                { name: 'Stable Diffusion', emoji: '🔬' },
+                { name: 'Runway', emoji: '🎬' },
+                { name: 'Kling AI', emoji: '🌟' },
+                { name: 'Luma', emoji: '🎭' },
+                { name: 'PikaLabs', emoji: '🎪' },
+                { name: 'Krea', emoji: '🔗' },
+                { name: 'HeyGen', emoji: '👤' },
+                { name: 'ElevenLabs', emoji: '🎙️' },
+                { name: 'Photoshop', emoji: '🖼️' },
+                { name: 'Premiere Pro', emoji: '🎞️' },
+                { name: 'After Effects', emoji: '💫' },
+                { name: 'Lightroom', emoji: '📷' }
+            ];
+            
+            // Reset portfolio to your real work (replace demo images with your actual portfolio URLs)
+            portfolioItems = [
+                {
+                    category: 'avatars',
+                    mediaType: 'photo',
+                    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop'
+                },
+                {
+                    category: 'image-generation',
+                    mediaType: 'photo', 
+                    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&h=500&fit=crop'
+                },
+                {
+                    category: 'video-creation',
+                    mediaType: 'video',
+                    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                },
+                {
+                    category: 'ecommerce',
+                    mediaType: 'photo',
+                    url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500&h=500&fit=crop'
+                },
+                {
+                    category: 'virtual-shoots',
+                    mediaType: 'photo',
+                    url: 'https://images.unsplash.com/photo-1494790108755-2616b612b1f5?w=500&h=500&fit=crop'
+                }
+            ];
+            
+            // Reset contacts to your real contacts
+            contacts = [
+                {
+                    platform: 'email',
+                    label: 'andrii.aicreator@gmail.com',
+                    url: 'mailto:andrii.aicreator@gmail.com',
+                    icon: 'fas fa-envelope'
+                },
+                {
+                    platform: 'telegram',
+                    label: '@Andrii_aicreator',
+                    url: 'https://t.me/Andrii_aicreator',
+                    icon: 'fab fa-telegram'
+                },
+                {
+                    platform: 'instagram',
+                    label: '@dream.ailab',
+                    url: 'https://www.instagram.com/dream.ailab?igsh=MWZzbGNpMHc3a2w2ZQ==',
+                    icon: 'fab fa-instagram'
+                },
+                {
+                    platform: 'tiktok',
+                    label: '@dream_ailab',
+                    url: 'https://www.tiktok.com/@dream_ailab?_t=ZM-8xTBQzcN9w0&_r=1',
+                    icon: 'fab fa-tiktok'
+                },
+                {
+                    platform: 'linkedin',
+                    label: 'Andrii AI Creator',
+                    url: 'https://linkedin.com/in/andrii-ai-creator-professional',
+                    icon: 'fab fa-linkedin'
+                }
+            ];
         }
 
         // Auto-format URL based on platform
