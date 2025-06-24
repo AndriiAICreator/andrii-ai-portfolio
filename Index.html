@@ -1017,13 +1017,20 @@
         
         // Data Storage Configuration  
         const GITHUB_REPO = 'MyWorkplace/andrii-ai-portfolio'; // 👈 Твій GitHub username/repo-name
-        const GITHUB_TOKEN = window.GITHUB_TOKEN || ''; // 👈 Токен з Netlify Environment Variables
+        const GITHUB_TOKEN = '{{GITHUB_TOKEN}}'; // 👈 Netlify замінить це на реальний токен
         
         // Debug GitHub connection
         console.log('🔧 GitHub Config Check:');
         console.log('- Repository:', GITHUB_REPO);
         console.log('- Token available:', GITHUB_TOKEN ? 'YES' : 'NO');
         console.log('- Token starts with ghp_:', GITHUB_TOKEN.startsWith('ghp_') ? 'YES' : 'NO');
+        console.log('- Token value:', GITHUB_TOKEN.substring(0, 10) + '...');
+        
+        // Check if Netlify environment variables are working
+        if (GITHUB_TOKEN === '{{GITHUB_TOKEN}}') {
+            console.warn('⚠️ Netlify environment variables not working. Token not replaced.');
+            showNotification('GitHub not configured - using localStorage only', 'error');
+        }
         
         let isAdminMode = false;
         let technologies = [
@@ -1322,8 +1329,8 @@
         // GitHub API Functions
         async function loadDataFromGitHub() {
             // Skip GitHub if not configured
-            if (GITHUB_TOKEN === 'github_pat_YOUR_TOKEN_HERE' || GITHUB_REPO === 'AndriiAICreator/andrii-ai-portfolio') {
-                console.log('⚠️ GitHub not configured, using localStorage fallback');
+            if (!GITHUB_TOKEN || GITHUB_TOKEN === '{{GITHUB_TOKEN}}' || !GITHUB_TOKEN.startsWith('ghp_')) {
+                console.log('⚠️ GitHub token not configured or invalid, using localStorage fallback');
                 loadDataFromLocalStorage();
                 return Promise.resolve();
             }
@@ -1334,7 +1341,7 @@
                 
                 if (response.ok) {
                     const data = await response.json();
-                    const content = JSON.parse(atob(data.content));
+                    const content = JSON.parse(decodeURIComponent(escape(atob(data.content))));
                     
                     technologies = content.technologies || technologies;
                     portfolioItems = content.portfolioItems || [];
@@ -1359,8 +1366,8 @@
             if (!isAdminMode) return; // Only save in admin mode
             
             // Skip GitHub if not configured
-            if (GITHUB_TOKEN === 'github_pat_YOUR_TOKEN_HERE' || GITHUB_REPO === 'AndriiAICreator/andrii-ai-portfolio') {
-                console.log('⚠️ GitHub not configured, saving to localStorage only');
+            if (!GITHUB_TOKEN || GITHUB_TOKEN === '{{GITHUB_TOKEN}}' || !GITHUB_TOKEN.startsWith('ghp_')) {
+                console.log('⚠️ GitHub token not configured or invalid, saving to localStorage only');
                 saveDataToLocalStorage();
                 showNotification('Saved locally (GitHub not configured)', 'success');
                 return;
@@ -1388,10 +1395,10 @@
                     console.log('Creating new data.json file');
                 }
                 
-                // Update file
+                // Update file - Fixed encoding for Ukrainian characters
                 const updateData = {
                     message: `Update portfolio data - ${new Date().toLocaleString()}`,
-                    content: btoa(JSON.stringify(data, null, 2)),
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
                 };
                 
                 if (sha) {
