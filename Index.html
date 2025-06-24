@@ -225,7 +225,11 @@
                         • YouTube: youtube.com/watch?v=...<br>
                         • Google Drive: drive.google.com/file/d/.../view<br>
                         • Dropbox: dropbox.com/s/.../video.mp4<br>
-                        • Direct video: .mp4, .mov, .webm
+                        • Direct video: .mp4, .mov, .webm<br><br>
+                        <strong>📷 For Google Drive Photos:</strong><br>
+                        1. Upload photo to Google Drive<br>
+                        2. Right-click → Share → "Anyone with the link"<br>
+                        3. Copy the share link and paste here
                     </div>
                 </div>
                 <div class="flex gap-2">
@@ -957,10 +961,11 @@
                 contacts = JSON.parse(savedContacts);
             }
             
-            const savedAdminMode = localStorage.getItem('adminMode');
-            if (savedAdminMode === 'true') {
-                toggleAdminMode(true);
-            }
+            // Remove auto-activation of admin mode
+            // const savedAdminMode = localStorage.getItem('adminMode');
+            // if (savedAdminMode === 'true') {
+            //     toggleAdminMode(true);
+            // }
         }
 
         // Save Data to LocalStorage
@@ -1204,9 +1209,9 @@
                     const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
                         if (isLightbox) {
-                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w1920" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;">`;
+                            mediaContent = `<img src="https://lh3.googleusercontent.com/d/${fileId}=w1920" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.src='https://drive.google.com/thumbnail?id=${fileId}&sz=w1920'; this.onerror=null;">`;
                         } else {
-                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w800" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
+                            mediaContent = `<img src="https://lh3.googleusercontent.com/d/${fileId}=w800" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.src='https://drive.google.com/thumbnail?id=${fileId}&sz=w800'; this.onerror=null;">`;
                         }
                     } else {
                         mediaContent = `<div class="h-48 bg-blue-100 flex items-center justify-center text-blue-600">
@@ -1218,9 +1223,9 @@
                     }
                 } else if (item.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
                     if (isLightbox) {
-                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;">`;
+                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.parentNode.innerHTML='<div class=\\'h-48 bg-red-100 flex items-center justify-center text-red-600\\'><div class=\\'text-center\\'><i class=\\'fas fa-exclamation-triangle text-4xl mb-2\\'></i><p>Image failed to load</p></div></div>'">`;
                     } else {
-                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
+                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.parentNode.innerHTML='<div class=\\'h-48 bg-red-100 flex items-center justify-center text-red-600\\'><div class=\\'text-center\\'><i class=\\'fas fa-exclamation-triangle text-4xl mb-2\\'></i><p>Image failed to load</p></div></div>'">`;
                     }
                 }
             }
@@ -1720,6 +1725,9 @@
             }
         });
 
+        // Clear admin mode on page load to prevent auto-activation
+        localStorage.removeItem('adminMode');
+        
         // Initialize everything
         loadData();
         renderTechnologies();
