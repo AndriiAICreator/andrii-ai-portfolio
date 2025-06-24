@@ -452,13 +452,10 @@
             <button id="clear-portfolio-btn" class="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-trash mr-2"></i>Clear All Portfolio
             </button>
-            <button id="export-data-btn" class="w-full bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-download mr-2"></i>Export Data
-            </button>
-            <input type="file" id="import-file-input" accept=".json" style="display: none;">
-            <button id="import-data-btn" class="w-full bg-cyan-500 text-white px-4 py-2 rounded-lg hover:bg-cyan-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-upload mr-2"></i>Import Data
-            </button>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+                <i class="fas fa-cloud mr-2"></i>
+                <strong>Firebase Only Mode:</strong> All data automatically synced online in real-time!
+            </div>
         </div>
     </div>
 
@@ -1034,8 +1031,8 @@
         // Admin Configuration
         const ADMIN_PASSWORD = 'andrii2025'; // Change this password!
         
-        // Data Storage Configuration - Firebase Mode
-        console.log('🔥 Loading Andrii AI Portfolio with Firebase...');
+        // Data Storage Configuration - PURE FIREBASE MODE ONLY
+        console.log('🔥 Loading Andrii AI Portfolio - FIREBASE ONLY MODE...');
         
         let isAdminMode = false;
         let technologies = [
@@ -1331,10 +1328,10 @@
             }, 3000);
         }
 
-        // Firebase Data Management
+        // PURE Firebase Data Management - NO localStorage
         async function loadDataFromFirebase() {
             try {
-                console.log('🔥 Loading from Firebase...');
+                console.log('🔥 Loading from Firebase ONLY...');
                 
                 // Load portfolio data
                 const portfolioDoc = await getDoc(doc(db, 'portfolio', 'data'));
@@ -1348,7 +1345,7 @@
                         showNotification('✅ Дані завантажено з Firebase!', 'success');
                     }
                 } else {
-                    console.log('📝 No Firebase data found, using defaults and creating initial document');
+                    console.log('📝 No Firebase document found, creating initial data...');
                     // Create initial document with default data
                     await saveDataToFirebase();
                     if (isAdminMode) {
@@ -1358,13 +1355,19 @@
                 
                 return Promise.resolve();
             } catch (error) {
-                console.error('❌ Error loading from Firebase:', error);
+                console.error('❌ Firebase load error:', error.code, error.message);
+                
                 if (isAdminMode) {
-                    showNotification('⚠️ Помилка Firebase, використовую локальні дані', 'error');
+                    if (error.code === 'permission-denied') {
+                        showNotification('❌ Firebase: Немає дозволу на читання. Перевірте правила Firebase.', 'error');
+                    } else if (error.code === 'unavailable') {
+                        showNotification('❌ Firebase недоступний. Перевірте підключення до інтернету.', 'error');
+                    } else {
+                        showNotification(`❌ Firebase помилка: ${error.message}`, 'error');
+                    }
                 }
-                // Fallback to localStorage
-                await loadDataFromLocalStorage();
-                return Promise.resolve(); // Don't reject, just continue with fallback
+                
+                return Promise.reject(error);
             }
         }
 
@@ -1372,7 +1375,7 @@
             if (!isAdminMode) return; // Only save in admin mode
             
             try {
-                console.log('🔥 Saving data to Firebase...');
+                console.log('🔥 Saving to Firebase ONLY...');
                 if (isAdminMode) {
                     showNotification('🔥 Зберігаю в Firebase...', 'success');
                 }
@@ -1384,64 +1387,34 @@
                     lastUpdated: new Date().toISOString()
                 };
                 
+                // Save to Firebase ONLY
                 await setDoc(doc(db, 'portfolio', 'data'), data);
                 
-                console.log('✅ Data saved to Firebase');
+                console.log('✅ Data saved to Firebase ONLY');
                 if (isAdminMode) {
-                    showNotification('✅ Дані збережено в Firebase! Зміни синхронізовані онлайн.', 'success');
+                    showNotification('✅ Дані збережено в Firebase! Все синхронізовано онлайн.', 'success');
                 }
                 
-                // Also save to localStorage as backup
-                await saveDataToLocalStorage();
             } catch (error) {
-                console.error('❌ Error saving to Firebase:', error);
+                console.error('❌ Firebase save error:', error);
+                console.error('Error code:', error.code);
+                console.error('Error message:', error.message);
+                
                 if (isAdminMode) {
-                    showNotification('⚠️ Помилка збереження в Firebase, збережено локально', 'error');
+                    if (error.code === 'permission-denied') {
+                        showNotification('❌ Firebase: Немає дозволу на запис. Перевірте правила безпеки Firebase.', 'error');
+                    } else if (error.code === 'unavailable') {
+                        showNotification('❌ Firebase недоступний. Перевірте підключення до інтернету.', 'error');
+                    } else {
+                        showNotification(`❌ Firebase помилка: ${error.message}`, 'error');
+                    }
                 }
-                // Fallback to localStorage if Firebase fails
-                await saveDataToLocalStorage();
+                
                 return Promise.reject(error);
             }
         }
         
-        // Fallback localStorage functions
-        async function loadDataFromLocalStorage() {
-            try {
-                const savedPortfolio = localStorage.getItem('portfolioItems');
-                if (savedPortfolio) {
-                    portfolioItems = JSON.parse(savedPortfolio);
-                }
-                
-                const savedTech = localStorage.getItem('technologies');
-                if (savedTech) {
-                    technologies = JSON.parse(savedTech);
-                }
-                
-                const savedContacts = localStorage.getItem('contacts');
-                if (savedContacts) {
-                    contacts = JSON.parse(savedContacts);
-                }
-                
-                console.log('📱 Data loaded from localStorage backup');
-                return Promise.resolve();
-            } catch (error) {
-                console.error('Error loading from localStorage:', error);
-                return Promise.reject(error);
-            }
-        }
-
-        async function saveDataToLocalStorage() {
-            try {
-                localStorage.setItem('technologies', JSON.stringify(technologies));
-                localStorage.setItem('portfolioItems', JSON.stringify(portfolioItems));
-                localStorage.setItem('contacts', JSON.stringify(contacts));
-                localStorage.setItem('lastUpdated', new Date().toISOString());
-                
-                console.log('💾 Data backed up to localStorage');
-            } catch (error) {
-                console.error('Error saving to localStorage:', error);
-            }
-        }
+        // NO localStorage functions - FIREBASE ONLY!
         
         // File Upload Functions
         async function uploadFileToFirebase(file, category) {
@@ -1468,9 +1441,9 @@
             }
         }
         
-        // Main save function - Firebase + localStorage backup
+        // Main save function - FIREBASE ONLY
         async function saveData() {
-            await saveDataToFirebase();
+            await saveDataToFirebase(); // Firebase ONLY, no fallback
         }
 
         // Contact Management Functions
@@ -2062,7 +2035,7 @@
             categorySelect.addEventListener('change', filterPortfolio);
         }
 
-        // Admin Panel Functions with null checks
+        // Admin Panel Functions - FIREBASE ONLY
         const addTechBtn = document.getElementById('add-technology-btn');
         if (addTechBtn) {
             addTechBtn.addEventListener('click', openTechModal);
@@ -2071,87 +2044,12 @@
         const clearPortfolioBtn = document.getElementById('clear-portfolio-btn');
         if (clearPortfolioBtn) {
             clearPortfolioBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to clear all portfolio items?')) {
+                if (confirm('Are you sure you want to clear all portfolio items? This will delete everything from Firebase!')) {
                     portfolioItems = [];
                     saveData();
                     renderPortfolio();
-                    showNotification('Portfolio cleared', 'success');
+                    showNotification('Portfolio cleared from Firebase', 'success');
                 }
-            });
-        }
-
-        const exportDataBtn = document.getElementById('export-data-btn');
-        if (exportDataBtn) {
-            exportDataBtn.addEventListener('click', function() {
-                const data = {
-                    technologies,
-                    portfolioItems,
-                    contacts,
-                    exportDate: new Date().toISOString()
-                };
-                
-                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'andrii-ai-portfolio-data.json';
-                a.click();
-                URL.revokeObjectURL(url);
-                
-                showNotification('Data exported successfully', 'success');
-            });
-        }
-
-        // Import Data Button
-        const importDataBtn = document.getElementById('import-data-btn');
-        const importFileInput = document.getElementById('import-file-input');
-        
-        if (importDataBtn && importFileInput) {
-            importDataBtn.addEventListener('click', function() {
-                importFileInput.click();
-            });
-            
-            importFileInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    try {
-                        const data = JSON.parse(event.target.result);
-                        
-                        // Validate data structure
-                        if (!data.technologies || !data.portfolioItems || !data.contacts) {
-                            throw new Error('Invalid data format');
-                        }
-                        
-                        // Ask for confirmation
-                        if (confirm('This will replace ALL current data. Are you sure? Make sure to export current data first if needed.')) {
-                            // Import data
-                            technologies = data.technologies || [];
-                            portfolioItems = data.portfolioItems || [];
-                            contacts = data.contacts || [];
-                            
-                            // Save to GitHub
-                            saveData();
-                            
-                            // Re-render everything
-                            renderTechnologies();
-                            renderPortfolio();
-                            renderContacts();
-                            
-                            showNotification('Data imported successfully!', 'success');
-                        }
-                        
-                    } catch (error) {
-                        console.error('Import error:', error);
-                        showNotification('Error importing data. Please check the file format.', 'error');
-                    }
-                };
-                
-                reader.readAsText(file);
-                // Reset the input
-                e.target.value = '';
             });
         }
 
@@ -2513,19 +2411,23 @@
             }
         }
         
-        // Load data from Firebase on startup
+        // Load data from Firebase ONLY on startup
         loadDataFromFirebase().then(() => {
             renderTechnologies();
             renderPortfolio();
             renderContacts();
             setupRealtimeSync(); // Start real-time sync
-            console.log('✅ Andrii AI Portfolio loaded');
+            console.log('✅ Andrii AI Portfolio loaded - FIREBASE ONLY MODE');
         }).catch((error) => {
-            console.error('Firebase load failed, using fallback:', error);
+            console.error('❌ CRITICAL: Firebase failed to load:', error);
+            if (isAdminMode) {
+                showNotification('❌ КРИТИЧНА ПОМИЛКА: Firebase недоступний. Сайт не може працювати без онлайн з\'єднання.', 'error');
+            }
+            // Still render with defaults, but show error
             renderTechnologies();
             renderPortfolio();
             renderContacts();
-            console.log('✅ Andrii AI Portfolio loaded with fallback');
+            console.log('⚠️ Andrii AI Portfolio loaded with ERRORS - Firebase required');
         });
     </script>
 </body>
