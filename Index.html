@@ -55,6 +55,25 @@
         .notification.success { background: #10b981; }
         .notification.error { background: #ef4444; }
         
+        /* Lightbox Styles */
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 300; }
+        .lightbox.active { display: flex; align-items: center; justify-content: center; }
+        .lightbox-content { max-width: 90vw; max-height: 90vh; position: relative; }
+        .lightbox img, .lightbox video, .lightbox iframe { max-width: 100%; max-height: 90vh; object-fit: contain; }
+        .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 20px; z-index: 310; }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
+        .lightbox-prev { left: -70px; }
+        .lightbox-next { right: -70px; }
+        .lightbox-close { position: absolute; top: -50px; right: 0; background: none; color: white; border: none; font-size: 30px; cursor: pointer; z-index: 310; }
+        .lightbox-close:hover { color: #ff4444; }
+        
+        @media (max-width: 768px) {
+            .lightbox-nav { width: 40px; height: 40px; font-size: 16px; }
+            .lightbox-prev { left: 10px; }
+            .lightbox-next { right: 10px; }
+            .lightbox-close { top: 10px; right: 10px; }
+        }
+        
         /* Mobile Navigation Styles */
         @media (max-width: 768px) {
             #admin-login {
@@ -156,22 +175,24 @@
                     <label class="block text-sm font-medium mb-2">Category</label>
                     <select id="portfolio-category" class="w-full px-3 py-2 border rounded-lg" required>
                         <option value="avatars">AI Avatars</option>
-                        <option value="images">Image Generation</option>
-                        <option value="videos">AI Video</option>
-                        <option value="audio">AI Audio</option>
+                        <option value="voice-work">Voice Work</option>
+                        <option value="image-generation">Image Generation</option>
+                        <option value="video-creation">Video Creation</option>
+                        <option value="ecommerce">E-commerce</option>
+                        <option value="virtual-shoots">Virtual Shoots</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-2">Title</label>
-                    <input type="text" id="portfolio-title" class="w-full px-3 py-2 border rounded-lg" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-2">Description</label>
-                    <textarea id="portfolio-description" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
-                </div>
-                <div>
                     <label class="block text-sm font-medium mb-2">File/URL</label>
-                    <input type="text" id="portfolio-url" class="w-full px-3 py-2 border rounded-lg" placeholder="Image URL, YouTube link, etc." required>
+                    <input type="text" id="portfolio-url" class="w-full px-3 py-2 border rounded-lg" placeholder="Image URL, YouTube, Google Drive, Dropbox, etc." required>
+                    <div class="mt-2 text-xs text-gray-500">
+                        <strong>Supported:</strong><br>
+                        • Images: JPG, PNG, GIF, WebP<br>
+                        • YouTube: youtube.com/watch?v=...<br>
+                        • Google Drive: drive.google.com/file/d/.../view<br>
+                        • Dropbox: dropbox.com/s/.../video.mp4<br>
+                        • Direct video: .mp4, .mov, .webm
+                    </div>
                 </div>
                 <div class="flex gap-2">
                     <button type="submit" class="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Add</button>
@@ -474,12 +495,25 @@
             </div>
 
             <!-- Portfolio Filter -->
-            <div class="flex flex-wrap justify-center gap-4 mb-12">
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
                 <button class="portfolio-filter active px-6 py-2 rounded-full bg-blue-500 text-white" data-filter="all">All</button>
-                <button class="portfolio-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="avatars">AI Avatars</button>
-                <button class="portfolio-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="images">Images</button>
+                <button class="portfolio-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="photos">Photos</button>
                 <button class="portfolio-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="videos">Videos</button>
                 <button class="portfolio-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="audio">Audio</button>
+            </div>
+            
+            <!-- Category Filter (only shows when "All" is selected) -->
+            <div id="category-filter" class="flex flex-wrap justify-center gap-2 mb-12">
+                <label class="text-sm font-medium text-gray-600 mr-4">Category:</label>
+                <select id="category-select" class="px-4 py-1 border border-gray-300 rounded-lg text-sm">
+                    <option value="all">All Categories</option>
+                    <option value="avatars">AI Avatars</option>
+                    <option value="voice-work">Voice Work</option>
+                    <option value="image-generation">Image Generation</option>
+                    <option value="video-creation">Video Creation</option>
+                    <option value="ecommerce">E-commerce</option>
+                    <option value="virtual-shoots">Virtual Shoots</option>
+                </select>
             </div>
 
             <div id="portfolio-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -489,22 +523,36 @@
             <!-- Add Portfolio Buttons (Admin Only) -->
             <div class="admin-only text-center mt-12 space-y-4">
                 <p class="text-gray-600 mb-6" data-translate="portfolio-note">Upload your work here to show clients</p>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-                    <button onclick="openPortfolioModal('avatars')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
-                        <i class="fas fa-user-circle mb-2 block"></i>
-                        Add Avatar
+                
+                <!-- Video Upload Tips -->
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-left max-w-4xl mx-auto">
+                    <h4 class="font-semibold text-yellow-800 mb-2">📹 Video Upload Tips:</h4>
+                    <ul class="text-sm text-yellow-700 space-y-1">
+                        <li><strong>YouTube:</strong> Use only copyright-free music or your own music</li>
+                        <li><strong>Google Drive:</strong> Upload video → Share → "Anyone with link can view"</li>
+                        <li><strong>Dropbox:</strong> Upload video → Create link → Works great for any video</li>
+                        <li><strong>Alternative:</strong> Use free music from YouTube Audio Library or Pixabay</li>
+                    </ul>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
+                    <button onclick="openPortfolioModal('avatars')" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                        <i class="fas fa-user-circle mr-2"></i>AI Avatars
                     </button>
-                    <button onclick="openPortfolioModal('images')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
-                        <i class="fas fa-image mb-2 block"></i>
-                        Add Image
+                    <button onclick="openPortfolioModal('voice-work')" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm">
+                        <i class="fas fa-microphone mr-2"></i>Voice Work
                     </button>
-                    <button onclick="openPortfolioModal('videos')" class="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition-colors">
-                        <i class="fas fa-video mb-2 block"></i>
-                        Add Video
+                    <button onclick="openPortfolioModal('image-generation')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm">
+                        <i class="fas fa-image mr-2"></i>Image Generation
                     </button>
-                    <button onclick="openPortfolioModal('audio')" class="bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition-colors">
-                        <i class="fas fa-volume-up mb-2 block"></i>
-                        Add Audio
+                    <button onclick="openPortfolioModal('video-creation')" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors text-sm">
+                        <i class="fas fa-video mr-2"></i>Video Creation
+                    </button>
+                    <button onclick="openPortfolioModal('ecommerce')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm">
+                        <i class="fas fa-shopping-cart mr-2"></i>E-commerce
+                    </button>
+                    <button onclick="openPortfolioModal('virtual-shoots')" class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors text-sm">
+                        <i class="fas fa-camera mr-2"></i>Virtual Shoots
                     </button>
                 </div>
             </div>
@@ -556,12 +604,28 @@
         </div>
     </footer>
 
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <div id="lightbox-content" class="lightbox-content">
+            <!-- Media content will be inserted here -->
+        </div>
+        <button id="lightbox-prev" class="lightbox-nav lightbox-prev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="lightbox-next" class="lightbox-nav lightbox-next">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        <button id="lightbox-close" class="lightbox-close">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
     <script type="module">
         // Admin Configuration
-        const ADMIN_PASSWORD = 'Qwerty22$$'; // Change this password!
+        const ADMIN_PASSWORD = 'andrii2025'; // Change this password!
         
         // Data Storage
         let isAdminMode = false;
@@ -1027,6 +1091,157 @@
             });
         }
 
+        // Lightbox functionality
+        let currentLightboxIndex = 0;
+        let lightboxItems = [];
+
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            lightboxItems = portfolioItems.filter(item => {
+                const currentFilter = document.querySelector('.portfolio-filter.active').dataset.filter;
+                const currentCategory = document.getElementById('category-select').value;
+                
+                // Apply filters
+                if (currentFilter !== 'all') {
+                    const mediaType = getMediaType(item.url);
+                    if (mediaType !== currentFilter) return false;
+                }
+                
+                if (currentCategory !== 'all' && item.category !== currentCategory) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            updateLightboxContent();
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function updateLightboxContent() {
+            const item = lightboxItems[currentLightboxIndex];
+            const content = document.getElementById('lightbox-content');
+            
+            if (!item) return;
+            
+            content.innerHTML = createMediaContent(item, true); // true = lightbox mode
+        }
+
+        function nextLightboxItem() {
+            currentLightboxIndex = (currentLightboxIndex + 1) % lightboxItems.length;
+            updateLightboxContent();
+        }
+
+        function prevLightboxItem() {
+            currentLightboxIndex = (currentLightboxIndex - 1 + lightboxItems.length) % lightboxItems.length;
+            updateLightboxContent();
+        }
+
+        function getMediaType(url) {
+            if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) return 'photos';
+            if (url.includes('youtube.com') || url.includes('youtu.be') || 
+                url.includes('drive.google.com') || url.includes('dropbox.com') ||
+                url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) return 'videos';
+            if (url.match(/\.(mp3|wav|ogg|m4a)$/i)) return 'audio';
+            return 'photos'; // default
+        }
+
+        function createMediaContent(item, isLightbox = false) {
+            const sizeClass = isLightbox ? 'max-w-full max-h-90vh' : 'w-full h-48';
+            let mediaContent = '';
+            
+            // YouTube videos
+            if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
+                const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
+                if (videoId) {
+                    const height = isLightbox ? '80vh' : '192px';
+                    mediaContent = `<iframe class="${sizeClass}" style="height: ${height};" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                } else {
+                    mediaContent = `<div class="h-48 bg-red-100 flex items-center justify-center text-red-600">
+                        <div class="text-center">
+                            <i class="fab fa-youtube text-4xl mb-2"></i>
+                            <p>Invalid YouTube URL</p>
+                        </div>
+                    </div>`;
+                }
+            }
+            // Google Drive videos
+            else if (item.url.includes('drive.google.com')) {
+                const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
+                if (fileId) {
+                    const height = isLightbox ? '80vh' : '192px';
+                    mediaContent = `<iframe class="${sizeClass}" style="height: ${height};" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
+                } else {
+                    mediaContent = `<div class="h-48 bg-blue-100 flex items-center justify-center text-blue-600">
+                        <div class="text-center">
+                            <i class="fab fa-google-drive text-4xl mb-2"></i>
+                            <p><a href="${item.url}" target="_blank" class="underline">Open in Google Drive</a></p>
+                        </div>
+                    </div>`;
+                }
+            }
+            // Dropbox videos
+            else if (item.url.includes('dropbox.com')) {
+                const directUrl = item.url.replace('dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
+                if (item.url.match(/\.(mp4|mov|webm|avi)$/i)) {
+                    mediaContent = `<video class="${sizeClass} object-cover" controls>
+                        <source src="${directUrl}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>`;
+                } else {
+                    mediaContent = `<div class="h-48 bg-purple-100 flex items-center justify-center text-purple-600">
+                        <div class="text-center">
+                            <i class="fab fa-dropbox text-4xl mb-2"></i>
+                            <p><a href="${item.url}" target="_blank" class="underline">Open in Dropbox</a></p>
+                        </div>
+                    </div>`;
+                }
+            }
+            // Direct video files
+            else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
+                mediaContent = `<video class="${sizeClass} object-cover" controls>
+                    <source src="${item.url}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>`;
+            }
+            // Images
+            else if (item.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+                mediaContent = `<img class="${sizeClass} object-cover cursor-pointer" src="${item.url}" alt="Portfolio item" onerror="this.parentNode.innerHTML='<div class=\\'h-48 bg-red-100 flex items-center justify-center text-red-600\\'><div class=\\'text-center\\'><i class=\\'fas fa-exclamation-triangle text-4xl mb-2\\'></i><p>Image failed to load</p></div></div>'">`;
+            }
+            // Audio files
+            else if (item.url.match(/\.(mp3|wav|ogg|m4a)$/i)) {
+                mediaContent = `<div class="h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white">
+                    <div class="text-center">
+                        <i class="fas fa-music text-4xl mb-4"></i>
+                        <audio controls class="w-full max-w-xs">
+                            <source src="${item.url}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                </div>`;
+            }
+            // Unknown file type
+            else {
+                mediaContent = `<div class="h-48 bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white">
+                    <div class="text-center">
+                        <i class="fas fa-external-link-alt text-4xl mb-2"></i>
+                        <p class="mb-2">External Link</p>
+                        <a href="${item.url}" target="_blank" class="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                            Open Link
+                        </a>
+                    </div>
+                </div>`;
+            }
+            
+            return mediaContent;
+        }
+
         function renderPortfolio() {
             const grid = document.getElementById('portfolio-grid');
             grid.innerHTML = '';
@@ -1044,32 +1259,24 @@
             
             portfolioItems.forEach((item, index) => {
                 const itemDiv = document.createElement('div');
-                itemDiv.className = `portfolio-item bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 ${item.category}`;
+                const mediaType = getMediaType(item.url);
+                itemDiv.className = `portfolio-item bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer ${item.category} ${mediaType}`;
+                itemDiv.dataset.index = index;
                 
-                let mediaContent = '';
-                if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
-                    const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
-                    mediaContent = `<iframe class="w-full h-48" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                } else if (item.url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
-                    mediaContent = `<img class="w-full h-48 object-cover" src="${item.url}" alt="${item.title}">`;
-                } else {
-                    mediaContent = `<div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white">
-                        <div class="text-center">
-                            <i class="fas fa-file text-4xl mb-2"></i>
-                            <p>Media File</p>
-                        </div>
-                    </div>`;
-                }
+                const mediaContent = createMediaContent(item);
                 
                 itemDiv.innerHTML = `
                     ${mediaContent}
-                    <div class="p-6">
-                        <h3 class="font-semibold text-lg mb-2">${item.title}</h3>
-                        <p class="text-gray-600 text-sm">${item.description}</p>
-                        <span class="inline-block mt-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">${item.category}</span>
-                    </div>
                     <button class="delete-btn" onclick="removePortfolioItem(${index})">×</button>
                 `;
+                
+                // Add click handler for lightbox
+                itemDiv.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('delete-btn')) {
+                        openLightbox(index);
+                    }
+                });
+                
                 grid.appendChild(itemDiv);
             });
         }
@@ -1136,11 +1343,9 @@
             portfolioForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const category = document.getElementById('portfolio-category').value;
-                const title = document.getElementById('portfolio-title').value;
-                const description = document.getElementById('portfolio-description').value;
                 const url = document.getElementById('portfolio-url').value;
                 
-                portfolioItems.push({ category, title, description, url });
+                portfolioItems.push({ category, url });
                 saveData();
                 renderPortfolio();
                 closePortfolioModal();
@@ -1166,6 +1371,34 @@
         }
 
         // Portfolio Filter
+        function filterPortfolio() {
+            const mediaFilter = document.querySelector('.portfolio-filter.active').dataset.filter;
+            const categoryFilter = document.getElementById('category-select').value;
+            
+            document.querySelectorAll('.portfolio-item').forEach(item => {
+                const shouldShow = shouldShowItem(item, mediaFilter, categoryFilter);
+                item.style.display = shouldShow ? 'block' : 'none';
+            });
+        }
+
+        function shouldShowItem(item, mediaFilter, categoryFilter) {
+            // Media type filter
+            if (mediaFilter !== 'all') {
+                if (!item.classList.contains(mediaFilter)) {
+                    return false;
+                }
+            }
+            
+            // Category filter (only when "All" media type is selected)
+            if (mediaFilter === 'all' && categoryFilter !== 'all') {
+                if (!item.classList.contains(categoryFilter)) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
         document.querySelectorAll('.portfolio-filter').forEach(button => {
             button.addEventListener('click', function() {
                 // Update active button
@@ -1176,17 +1409,24 @@
                 this.classList.add('active', 'bg-blue-500', 'text-white');
                 this.classList.remove('bg-gray-200', 'text-gray-700');
                 
-                // Filter portfolio items
-                const filter = this.dataset.filter;
-                document.querySelectorAll('.portfolio-item').forEach(item => {
-                    if (filter === 'all' || item.classList.contains(filter)) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
+                // Show/hide category filter
+                const categoryFilterDiv = document.getElementById('category-filter');
+                if (this.dataset.filter === 'all') {
+                    categoryFilterDiv.style.display = 'flex';
+                } else {
+                    categoryFilterDiv.style.display = 'none';
+                    document.getElementById('category-select').value = 'all';
+                }
+                
+                filterPortfolio();
             });
         });
+
+        // Category filter
+        const categorySelect = document.getElementById('category-select');
+        if (categorySelect) {
+            categorySelect.addEventListener('change', filterPortfolio);
+        }
 
         // Admin Panel Functions with null checks
         const addTechBtn = document.getElementById('add-technology-btn');
@@ -1392,11 +1632,60 @@
             });
         });
 
+        // Lightbox event listeners
+        const lightboxClose = document.getElementById('lightbox-close');
+        const lightboxPrev = document.getElementById('lightbox-prev');
+        const lightboxNext = document.getElementById('lightbox-next');
+        const lightbox = document.getElementById('lightbox');
+
+        if (lightboxClose) {
+            lightboxClose.addEventListener('click', closeLightbox);
+        }
+
+        if (lightboxPrev) {
+            lightboxPrev.addEventListener('click', prevLightboxItem);
+        }
+
+        if (lightboxNext) {
+            lightboxNext.addEventListener('click', nextLightboxItem);
+        }
+
+        if (lightbox) {
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeLightbox();
+                }
+            });
+        }
+
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', function(e) {
+            if (lightbox.classList.contains('active')) {
+                switch(e.key) {
+                    case 'Escape':
+                        closeLightbox();
+                        break;
+                    case 'ArrowLeft':
+                        prevLightboxItem();
+                        break;
+                    case 'ArrowRight':
+                        nextLightboxItem();
+                        break;
+                }
+            }
+        });
+
         // Initialize everything
         loadData();
         renderTechnologies();
         renderPortfolio();
         renderContacts();
+        
+        // Hide category filter initially if not "All" is selected
+        const categoryFilterDiv = document.getElementById('category-filter');
+        if (categoryFilterDiv) {
+            categoryFilterDiv.style.display = 'flex'; // Show by default since "All" is active
+        }
     </script>
 </body>
 </html>
