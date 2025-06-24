@@ -34,20 +34,12 @@
         .admin-mode .admin-only { display: block !important; }
         .admin-only { display: none; }
         .portfolio-item { position: relative; }
-        .portfolio-item .delete-btn { 
-            position: absolute; 
-            top: 10px; 
-            right: 10px; 
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: none;
-            cursor: pointer;
+        .admin-mode .portfolio-item:hover .delete-btn { 
+            display: flex !important; 
+            align-items: center; 
+            justify-content: center;
+            z-index: 20;
         }
-        .admin-mode .portfolio-item:hover .delete-btn { display: flex; align-items: center; justify-content: center; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; }
         .modal.active { display: flex; align-items: center; justify-content: center; }
         .notification { position: fixed; top: 20px; right: 20px; z-index: 200; padding: 12px 24px; border-radius: 8px; color: white; font-weight: 500; transform: translateX(400px); transition: transform 0.3s ease; }
@@ -55,11 +47,45 @@
         .notification.success { background: #10b981; }
         .notification.error { background: #ef4444; }
         
+        /* Portfolio Grid - Masonry Style */
+        .portfolio-grid {
+            column-count: 3;
+            column-gap: 1.5rem;
+            break-inside: avoid;
+        }
+        .portfolio-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            width: 100%;
+        }
+        .portfolio-item img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 16px 16px 0 0;
+        }
+        .portfolio-item video, .portfolio-item iframe {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 16px 16px 0 0;
+        }
+        
+        @media (max-width: 1024px) {
+            .portfolio-grid { column-count: 2; }
+        }
+        @media (max-width: 640px) {
+            .portfolio-grid { column-count: 1; column-gap: 1rem; }
+            .portfolio-item { margin-bottom: 1rem; }
+        }
+
         /* Lightbox Styles */
         .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 300; }
         .lightbox.active { display: flex; align-items: center; justify-content: center; }
         .lightbox-content { max-width: 90vw; max-height: 90vh; position: relative; }
-        .lightbox img, .lightbox video, .lightbox iframe { max-width: 100%; max-height: 90vh; object-fit: contain; }
+        .lightbox img { max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain; border-radius: 8px; }
+        .lightbox video, .lightbox iframe { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
         .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 20px; z-index: 310; }
         .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
         .lightbox-prev { left: -70px; }
@@ -180,6 +206,14 @@
                         <option value="video-creation">Video Creation</option>
                         <option value="ecommerce">E-commerce</option>
                         <option value="virtual-shoots">Virtual Shoots</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Media Type</label>
+                    <select id="portfolio-media-type" class="w-full px-3 py-2 border rounded-lg" required>
+                        <option value="photo">Photo</option>
+                        <option value="video">Video</option>
+                        <option value="audio">Audio</option>
                     </select>
                 </div>
                 <div>
@@ -516,7 +550,7 @@
                 </select>
             </div>
 
-            <div id="portfolio-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div id="portfolio-grid" class="portfolio-grid">
                 <!-- Portfolio items will be loaded here -->
             </div>
 
@@ -1103,7 +1137,7 @@
                 
                 // Apply filters
                 if (currentFilter !== 'all') {
-                    const mediaType = getMediaType(item.url);
+                    const mediaType = getMediaType(item);
                     if (mediaType !== currentFilter) return false;
                 }
                 
@@ -1143,7 +1177,15 @@
             updateLightboxContent();
         }
 
-        function getMediaType(url) {
+        function getMediaType(item) {
+            // Use stored mediaType if available, otherwise detect from URL
+            if (item.mediaType) {
+                return item.mediaType === 'photo' ? 'photos' : 
+                       item.mediaType === 'video' ? 'videos' : 'audio';
+            }
+            
+            // Fallback to URL detection for old data
+            const url = item.url || item;
             if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) return 'photos';
             if (url.includes('youtube.com') || url.includes('youtu.be') || 
                 url.includes('drive.google.com') || url.includes('dropbox.com') ||
@@ -1153,69 +1195,70 @@
         }
 
         function createMediaContent(item, isLightbox = false) {
-            const sizeClass = isLightbox ? 'max-w-full max-h-90vh' : 'w-full h-48';
             let mediaContent = '';
+            const mediaType = getMediaType(item);
             
-            // YouTube videos
-            if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
-                const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
-                if (videoId) {
-                    const height = isLightbox ? '80vh' : '192px';
-                    mediaContent = `<iframe class="${sizeClass}" style="height: ${height};" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                } else {
-                    mediaContent = `<div class="h-48 bg-red-100 flex items-center justify-center text-red-600">
-                        <div class="text-center">
-                            <i class="fab fa-youtube text-4xl mb-2"></i>
-                            <p>Invalid YouTube URL</p>
-                        </div>
-                    </div>`;
+            // For photos, prioritize displaying as images
+            if (mediaType === 'photos' || item.mediaType === 'photo') {
+                if (item.url.includes('drive.google.com')) {
+                    const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
+                    if (fileId) {
+                        if (isLightbox) {
+                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w1920" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;">`;
+                        } else {
+                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w800" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
+                        }
+                    } else {
+                        mediaContent = `<div class="h-48 bg-blue-100 flex items-center justify-center text-blue-600">
+                            <div class="text-center">
+                                <i class="fab fa-google-drive text-4xl mb-2"></i>
+                                <p><a href="${item.url}" target="_blank" class="underline">Open in Google Drive</a></p>
+                            </div>
+                        </div>`;
+                    }
+                } else if (item.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+                    if (isLightbox) {
+                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;">`;
+                    } else {
+                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
+                    }
                 }
             }
-            // Google Drive videos
-            else if (item.url.includes('drive.google.com')) {
-                const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
-                if (fileId) {
-                    const height = isLightbox ? '80vh' : '192px';
-                    mediaContent = `<iframe class="${sizeClass}" style="height: ${height};" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
-                } else {
-                    mediaContent = `<div class="h-48 bg-blue-100 flex items-center justify-center text-blue-600">
-                        <div class="text-center">
-                            <i class="fab fa-google-drive text-4xl mb-2"></i>
-                            <p><a href="${item.url}" target="_blank" class="underline">Open in Google Drive</a></p>
-                        </div>
-                    </div>`;
-                }
-            }
-            // Dropbox videos
-            else if (item.url.includes('dropbox.com')) {
-                const directUrl = item.url.replace('dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
-                if (item.url.match(/\.(mp4|mov|webm|avi)$/i)) {
-                    mediaContent = `<video class="${sizeClass} object-cover" controls>
+            // For videos
+            else if (mediaType === 'videos' || item.mediaType === 'video') {
+                if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
+                    const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
+                    if (videoId) {
+                        const height = isLightbox ? '80vh' : '200px';
+                        const width = isLightbox ? '90vw' : '100%';
+                        mediaContent = `<iframe style="width: ${width}; height: ${height};" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                    }
+                } else if (item.url.includes('drive.google.com')) {
+                    const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
+                    if (fileId) {
+                        const height = isLightbox ? '80vh' : '200px';
+                        const width = isLightbox ? '90vw' : '100%';
+                        mediaContent = `<iframe style="width: ${width}; height: ${height};" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
+                    }
+                } else if (item.url.includes('dropbox.com')) {
+                    const directUrl = item.url.replace('dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
+                    const height = isLightbox ? '80vh' : '200px';
+                    const width = isLightbox ? '90vw' : '100%';
+                    mediaContent = `<video style="width: ${width}; height: ${height}; object-fit: cover;" controls>
                         <source src="${directUrl}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>`;
-                } else {
-                    mediaContent = `<div class="h-48 bg-purple-100 flex items-center justify-center text-purple-600">
-                        <div class="text-center">
-                            <i class="fab fa-dropbox text-4xl mb-2"></i>
-                            <p><a href="${item.url}" target="_blank" class="underline">Open in Dropbox</a></p>
-                        </div>
-                    </div>`;
+                } else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
+                    const height = isLightbox ? '80vh' : '200px';
+                    const width = isLightbox ? '90vw' : '100%';
+                    mediaContent = `<video style="width: ${width}; height: ${height}; object-fit: cover;" controls>
+                        <source src="${item.url}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>`;
                 }
             }
-            // Direct video files
-            else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
-                mediaContent = `<video class="${sizeClass} object-cover" controls>
-                    <source src="${item.url}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>`;
-            }
-            // Images
-            else if (item.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
-                mediaContent = `<img class="${sizeClass} object-cover cursor-pointer" src="${item.url}" alt="Portfolio item" onerror="this.parentNode.innerHTML='<div class=\\'h-48 bg-red-100 flex items-center justify-center text-red-600\\'><div class=\\'text-center\\'><i class=\\'fas fa-exclamation-triangle text-4xl mb-2\\'></i><p>Image failed to load</p></div></div>'">`;
-            }
-            // Audio files
-            else if (item.url.match(/\.(mp3|wav|ogg|m4a)$/i)) {
+            // For audio
+            else if (mediaType === 'audio' || item.mediaType === 'audio') {
                 mediaContent = `<div class="h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white">
                     <div class="text-center">
                         <i class="fas fa-music text-4xl mb-4"></i>
@@ -1226,8 +1269,9 @@
                     </div>
                 </div>`;
             }
-            // Unknown file type
-            else {
+            
+            // Fallback for unrecognized content
+            if (!mediaContent) {
                 mediaContent = `<div class="h-48 bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white">
                     <div class="text-center">
                         <i class="fas fa-external-link-alt text-4xl mb-2"></i>
@@ -1259,15 +1303,15 @@
             
             portfolioItems.forEach((item, index) => {
                 const itemDiv = document.createElement('div');
-                const mediaType = getMediaType(item.url);
-                itemDiv.className = `portfolio-item bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer ${item.category} ${mediaType}`;
+                const mediaType = getMediaType(item);
+                itemDiv.className = `portfolio-item bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer relative ${item.category} ${mediaType}`;
                 itemDiv.dataset.index = index;
                 
                 const mediaContent = createMediaContent(item);
                 
                 itemDiv.innerHTML = `
                     ${mediaContent}
-                    <button class="delete-btn" onclick="removePortfolioItem(${index})">×</button>
+                    <button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${index})" style="display: none;">×</button>
                 `;
                 
                 // Add click handler for lightbox
@@ -1343,9 +1387,10 @@
             portfolioForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const category = document.getElementById('portfolio-category').value;
+                const mediaType = document.getElementById('portfolio-media-type').value;
                 const url = document.getElementById('portfolio-url').value;
                 
-                portfolioItems.push({ category, url });
+                portfolioItems.push({ category, mediaType, url });
                 saveData();
                 renderPortfolio();
                 closePortfolioModal();
