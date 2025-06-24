@@ -120,16 +120,14 @@
         .notification.success { background: #10b981; }
         .notification.error { background: #ef4444; }
         
-        /* Portfolio Grid - Desktop and Tablet Masonry Style */
+        /* Simple Portfolio Grid - Works everywhere */
         .portfolio-grid {
-            column-count: 3;
-            column-gap: 2rem;
-            break-inside: avoid;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
         }
+        
         .portfolio-item {
-            break-inside: avoid;
-            margin-bottom: 2rem;
-            display: inline-block;
             width: 100%;
             background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
             backdrop-filter: blur(20px);
@@ -138,78 +136,46 @@
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        
         .portfolio-item:hover {
             transform: translateY(-10px) scale(1.02);
             box-shadow: 0 30px 60px rgba(139, 92, 246, 0.3), 0 0 30px rgba(139, 92, 246, 0.2);
             border-color: rgba(139, 92, 246, 0.5);
         }
+        
         .portfolio-item img {
             width: 100%;
             height: auto;
             object-fit: cover;
             transition: transform 0.4s ease;
         }
+        
         .portfolio-item:hover img {
             transform: scale(1.05);
         }
+        
         .portfolio-item video, .portfolio-item iframe {
             width: 100%;
-            height: 200px;
+            height: 250px;
             object-fit: cover;
         }
         
-        /* Mobile Portfolio Grid - Flexbox for better control */
-        .portfolio-grid-mobile {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        
-        .portfolio-item-mobile {
-            width: 100%;
-            margin-bottom: 0;
-            display: block;
-            background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 24px;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .portfolio-item-mobile img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-        }
-        
-        .portfolio-item-mobile video, 
-        .portfolio-item-mobile iframe {
-            width: 100%;
-            height: 280px;
-            object-fit: cover;
-            border-radius: 0;
-        }
-        
+        /* Responsive adjustments */
         @media (max-width: 1024px) {
-            .portfolio-grid { 
-                column-count: 2; 
-                column-gap: 1.5rem;
-            }
-            .portfolio-item { 
-                margin-bottom: 1.5rem; 
+            .portfolio-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
             }
         }
         
         @media (max-width: 640px) {
-            /* Hide masonry layout on mobile */
             .portfolio-grid {
-                display: none !important;
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
             
-            /* Show mobile layout */
-            .portfolio-grid-mobile {
-                display: flex !important;
+            .portfolio-item video, .portfolio-item iframe {
+                height: 300px;
             }
         }
 
@@ -453,38 +419,6 @@
                 width: 100% !important;
                 font-size: 0.875rem !important;
             }
-            
-            /* Mobile Portfolio Styles */
-            #portfolio-grid-mobile {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 1.5rem !important;
-            }
-            
-            #portfolio-grid {
-                display: none !important;
-            }
-            
-            .portfolio-item-mobile {
-                display: block !important;
-                width: 100% !important;
-                margin-bottom: 0 !important;
-            }
-            
-            .portfolio-item-mobile img {
-                width: 100% !important;
-                height: auto !important;
-                max-width: 100% !important;
-                display: block !important;
-            }
-            
-            .portfolio-item-mobile video,
-            .portfolio-item-mobile iframe {
-                width: 100% !important;
-                height: 280px !important;
-                max-width: 100% !important;
-                display: block !important;
-            }
         }
     </style>
 </head>
@@ -520,15 +454,6 @@
             </button>
             <button id="export-data-btn" class="w-full bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-download mr-2"></i>Export Data
-            </button>
-            <button id="sync-data-btn" class="w-full bg-cyan-500 text-white px-4 py-2 rounded-lg hover:bg-cyan-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-sync mr-2"></i>Sync Current Data
-            </button>
-            <button id="clear-all-data-btn" class="w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-trash-alt mr-2"></i>Clear Everything
-            </button>
-            <button id="reset-to-default-btn" class="w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-undo mr-2"></i>Load Demo Data
             </button>
         </div>
     </div>
@@ -966,14 +891,9 @@
                 </select>
             </div>
 
-            <!-- Desktop/Tablet Portfolio Grid -->
+            <!-- Portfolio Grid -->
             <div id="portfolio-grid" class="portfolio-grid">
                 <!-- Portfolio items will be loaded here -->
-            </div>
-            
-            <!-- Mobile Portfolio Grid -->
-            <div id="portfolio-grid-mobile" class="portfolio-grid-mobile" style="display: none;">
-                <!-- Mobile portfolio items will be loaded here -->
             </div>
 
             <!-- Add Portfolio Buttons (Admin Only) -->
@@ -1381,23 +1301,8 @@
             }, 3000);
         }
 
-        // Check for sync updates from other devices
-        function checkForSyncUpdates() {
-            const lastSyncTime = localStorage.getItem('lastSyncTime');
-            const lastLoadTime = localStorage.getItem('lastLoadTime') || '0';
-            
-            if (lastSyncTime && parseInt(lastSyncTime) > parseInt(lastLoadTime)) {
-                console.log('Sync detected, using latest synced data');
-                localStorage.setItem('lastLoadTime', new Date().getTime());
-                return true;
-            }
-            return false;
-        }
-
         // Load Data from LocalStorage
         function loadData() {
-            // Check if this is a sync update
-            const isSyncUpdate = checkForSyncUpdates();
             const savedTech = localStorage.getItem('technologies');
             if (savedTech) {
                 try {
@@ -1443,12 +1348,6 @@
             if (savedContacts) {
                 contacts = JSON.parse(savedContacts);
             }
-            
-            // Remove auto-activation of admin mode
-            // const savedAdminMode = localStorage.getItem('adminMode');
-            // if (savedAdminMode === 'true') {
-            //     toggleAdminMode(true);
-            // }
         }
 
         // Save Data to LocalStorage
@@ -1809,7 +1708,6 @@
                     </video>`;
                 }
             }
-            // Audio removed from portfolio display
             
             // Fallback for unrecognized content
             if (!mediaContent) {
@@ -1829,21 +1727,16 @@
 
         function renderPortfolio() {
             const grid = document.getElementById('portfolio-grid');
-            const mobileGrid = document.getElementById('portfolio-grid-mobile');
-            
             grid.innerHTML = '';
-            mobileGrid.innerHTML = '';
             
             if (portfolioItems.length === 0) {
-                const emptyMessage = `
-                    <div class="col-span-full text-center py-12">
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 0;">
                         <i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i>
                         <p class="text-gray-500 text-lg">No portfolio items yet</p>
                         <p class="text-gray-400">Add your first work to get started</p>
                     </div>
                 `;
-                grid.innerHTML = emptyMessage;
-                mobileGrid.innerHTML = emptyMessage;
                 return;
             }
             
@@ -1851,51 +1744,25 @@
                 const mediaType = getMediaType(item);
                 const mediaContent = createMediaContent(item);
                 
-                // Desktop/Tablet version
                 const itemDiv = document.createElement('div');
-                itemDiv.className = `portfolio-item bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer relative ${item.category} ${mediaType}`;
+                itemDiv.className = `portfolio-item cursor-pointer relative ${item.category} ${mediaType}`;
                 itemDiv.dataset.index = index;
                 itemDiv.innerHTML = `
                     ${mediaContent}
                     <button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${index})" style="display: none;">×</button>
                 `;
                 
-                // Mobile version
-                const mobileItemDiv = document.createElement('div');
-                mobileItemDiv.className = `portfolio-item-mobile cursor-pointer relative ${item.category} ${mediaType}`;
-                mobileItemDiv.dataset.index = index;
-                mobileItemDiv.innerHTML = `
-                    ${mediaContent}
-                    <button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${index})" style="display: none;">×</button>
-                `;
-                
-                // Add click handlers for lightbox
-                const clickHandler = (e) => {
+                // Add click handler for lightbox
+                itemDiv.addEventListener('click', (e) => {
                     if (!e.target.classList.contains('delete-btn')) {
                         openLightbox(index);
                     }
-                };
-                
-                itemDiv.addEventListener('click', clickHandler);
-                mobileItemDiv.addEventListener('click', clickHandler);
+                });
                 
                 grid.appendChild(itemDiv);
-                mobileGrid.appendChild(mobileItemDiv);
             });
             
-            console.log('Portfolio rendered successfully:');
-            console.log('- Total portfolio items:', portfolioItems.length);
-            console.log('- Desktop grid children:', grid.children.length);
-            console.log('- Mobile grid children:', mobileGrid.children.length);
-            console.log('- Current screen width:', window.innerWidth);
-            console.log('- Active layout:', window.innerWidth < 640 ? 'Mobile' : 'Desktop');
-            
-            // Force mobile layout after render if needed
-            setTimeout(() => {
-                if (window.innerWidth < 640) {
-                    handlePortfolioResize();
-                }
-            }, 100);
+            console.log('Portfolio rendered:', portfolioItems.length, 'items');
         }
 
         // CRUD Functions
@@ -1993,14 +1860,7 @@
             const mediaFilter = document.querySelector('.portfolio-filter.active').dataset.filter;
             const categoryFilter = document.getElementById('category-select').value;
             
-            // Filter desktop/tablet items
             document.querySelectorAll('.portfolio-item').forEach(item => {
-                const shouldShow = shouldShowItem(item, mediaFilter, categoryFilter);
-                item.style.display = shouldShow ? 'block' : 'none';
-            });
-            
-            // Filter mobile items
-            document.querySelectorAll('.portfolio-item-mobile').forEach(item => {
                 const shouldShow = shouldShowItem(item, mediaFilter, categoryFilter);
                 item.style.display = shouldShow ? 'block' : 'none';
             });
@@ -2092,153 +1952,6 @@
                 showNotification('Data exported successfully', 'success');
             });
         }
-        
-        // Sync Data Button - Force save current data for other devices
-        const syncDataBtn = document.getElementById('sync-data-btn');
-        if (syncDataBtn) {
-            syncDataBtn.addEventListener('click', function() {
-                if (confirm('This will make all devices show the SAME data as this device. Continue?')) {
-                    // Force save current state (whatever is currently displayed)
-                    saveData();
-                    
-                    // Add sync timestamp for other devices to detect
-                    localStorage.setItem('lastSyncTime', new Date().getTime());
-                    
-                    showNotification('Current data saved! Other devices will sync when they refresh the page.', 'success');
-                }
-            });
-        }
-        
-        // Clear All Data Button
-        const clearAllDataBtn = document.getElementById('clear-all-data-btn');
-        if (clearAllDataBtn) {
-            clearAllDataBtn.addEventListener('click', function() {
-                if (confirm('This will DELETE EVERYTHING! Are you absolutely sure?')) {
-                    // Clear all data completely
-                    portfolioItems = [];
-                    technologies = [
-                        { name: 'Midjourney', emoji: '🎨' },
-                        { name: 'FLUX', emoji: '⚡' },
-                        { name: 'Stable Diffusion', emoji: '🔬' },
-                        { name: 'Runway', emoji: '🎬' },
-                        { name: 'Adobe Photoshop', emoji: '🖼️' },
-                        { name: 'Adobe Premiere', emoji: '🎞️' }
-                    ];
-                    contacts = [
-                        {
-                            platform: 'email',
-                            label: 'andrii.aicreator@gmail.com',
-                            url: 'mailto:andrii.aicreator@gmail.com',
-                            icon: 'fas fa-envelope'
-                        }
-                    ];
-                    
-                    saveData();
-                    renderTechnologies();
-                    renderPortfolio();
-                    renderContacts();
-                    showNotification('Everything cleared! Only basic data remains.', 'success');
-                }
-            });
-        }
-
-        // Reset to Default Button (now loads demo data)
-        const resetDefaultBtn = document.getElementById('reset-to-default-btn');
-        if (resetDefaultBtn) {
-            resetDefaultBtn.addEventListener('click', function() {
-                if (confirm('This will load demo data for testing. Continue?')) {
-                    resetToDefaultData();
-                    saveData();
-                    renderTechnologies();
-                    renderPortfolio();
-                    renderContacts();
-                    showNotification('Demo data loaded', 'success');
-                }
-            });
-        }
-        
-        function resetToDefaultData() {
-            // Reset to original default technologies
-            technologies = [
-                { name: 'Midjourney', emoji: '🎨' },
-                { name: 'FLUX', emoji: '⚡' },
-                { name: 'Stable Diffusion', emoji: '🔬' },
-                { name: 'Runway', emoji: '🎬' },
-                { name: 'Kling AI', emoji: '🌟' },
-                { name: 'Luma', emoji: '🎭' },
-                { name: 'PikaLabs', emoji: '🎪' },
-                { name: 'Krea', emoji: '🔗' },
-                { name: 'HeyGen', emoji: '👤' },
-                { name: 'ElevenLabs', emoji: '🎙️' },
-                { name: 'Photoshop', emoji: '🖼️' },
-                { name: 'Premiere Pro', emoji: '🎞️' },
-                { name: 'After Effects', emoji: '💫' },
-                { name: 'Lightroom', emoji: '📷' }
-            ];
-            
-            // Add demo portfolio items for testing
-            portfolioItems = [
-                {
-                    category: 'avatars',
-                    mediaType: 'photo',
-                    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop'
-                },
-                {
-                    category: 'image-generation',
-                    mediaType: 'photo', 
-                    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&h=500&fit=crop'
-                },
-                {
-                    category: 'video-creation',
-                    mediaType: 'video',
-                    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-                },
-                {
-                    category: 'ecommerce',
-                    mediaType: 'photo',
-                    url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500&h=500&fit=crop'
-                },
-                {
-                    category: 'virtual-shoots',
-                    mediaType: 'photo',
-                    url: 'https://images.unsplash.com/photo-1494790108755-2616b612b1f5?w=500&h=500&fit=crop'
-                }
-            ];
-            
-            // Reset contacts to your real contacts
-            contacts = [
-                {
-                    platform: 'email',
-                    label: 'andrii.aicreator@gmail.com',
-                    url: 'mailto:andrii.aicreator@gmail.com',
-                    icon: 'fas fa-envelope'
-                },
-                {
-                    platform: 'telegram',
-                    label: '@Andrii_aicreator',
-                    url: 'https://t.me/Andrii_aicreator',
-                    icon: 'fab fa-telegram'
-                },
-                {
-                    platform: 'instagram',
-                    label: '@dream.ailab',
-                    url: 'https://www.instagram.com/dream.ailab?igsh=MWZzbGNpMHc3a2w2ZQ==',
-                    icon: 'fab fa-instagram'
-                },
-                {
-                    platform: 'tiktok',
-                    label: '@dream_ailab',
-                    url: 'https://www.tiktok.com/@dream_ailab?_t=ZM-8xTBQzcN9w0&_r=1',
-                    icon: 'fab fa-tiktok'
-                },
-                {
-                    platform: 'linkedin',
-                    label: 'Andrii AI Creator',
-                    url: 'https://linkedin.com/in/andrii-ai-creator-professional',
-                    icon: 'fab fa-linkedin'
-                }
-            ];
-        }
 
         // Auto-format URL based on platform
         const contactPlatform = document.getElementById('contact-platform');
@@ -2290,8 +2003,6 @@
             };
             return examples[platform] || 'Label';
         }
-
-
 
         // Close modals when clicking outside
         document.querySelectorAll('.modal').forEach(modal => {
@@ -2565,9 +2276,6 @@
             });
         });
         
-        // Clear admin mode on page load to prevent auto-activation
-        localStorage.removeItem('adminMode');
-        
         // Initialize everything
         console.log('Initializing with default technologies:', technologies.length);
         console.log('Starting portfolio items:', portfolioItems.length);
@@ -2583,41 +2291,6 @@
         renderTechnologies();
         renderPortfolio();
         renderContacts();
-        
-        // Apply correct portfolio layout immediately for mobile
-        handlePortfolioResize();
-        
-        // Also apply with delay for safety
-        setTimeout(() => {
-            handlePortfolioResize();
-            console.log('Portfolio layout initialized');
-        }, 200);
-        
-        // Handle window resize for portfolio layout switching
-        function handlePortfolioResize() {
-            const desktopGrid = document.getElementById('portfolio-grid');
-            const mobileGrid = document.getElementById('portfolio-grid-mobile');
-            
-            if (window.innerWidth < 640) {
-                // Mobile layout
-                desktopGrid.style.display = 'none';
-                mobileGrid.style.display = 'flex';
-                console.log('Switched to mobile portfolio layout');
-            } else {
-                // Desktop/Tablet layout
-                desktopGrid.style.display = 'block';
-                mobileGrid.style.display = 'none';
-                console.log('Switched to desktop portfolio layout');
-            }
-        }
-        
-        window.addEventListener('resize', handlePortfolioResize);
-        
-        // Hide category filter initially if not "All" is selected
-        const categoryFilterDiv = document.getElementById('category-filter');
-        if (categoryFilterDiv) {
-            categoryFilterDiv.style.display = 'flex'; // Show by default since "All" is active
-        }
     </script>
 </body>
 </html>
