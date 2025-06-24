@@ -1015,9 +1015,15 @@
         // Admin Configuration
         const ADMIN_PASSWORD = 'andrii2025'; // Change this password!
         
-        // Data Storage Configuration
-        const GITHUB_REPO = 'MyWorkplace/andrii-ai-portfolio'; // 👈 Замінити на свій репозиторій
-        const GITHUB_TOKEN = window.GITHUB_TOKEN || ''; // 👈 Токен береться з Netlify Environment Variables
+        // Data Storage Configuration  
+        const GITHUB_REPO = 'MyWorkplace/andrii-ai-portfolio'; // 👈 Твій GitHub username/repo-name
+        const GITHUB_TOKEN = window.GITHUB_TOKEN || ''; // 👈 Токен з Netlify Environment Variables
+        
+        // Debug GitHub connection
+        console.log('🔧 GitHub Config Check:');
+        console.log('- Repository:', GITHUB_REPO);
+        console.log('- Token available:', GITHUB_TOKEN ? 'YES' : 'NO');
+        console.log('- Token starts with ghp_:', GITHUB_TOKEN.startsWith('ghp_') ? 'YES' : 'NO');
         
         let isAdminMode = false;
         let technologies = [
@@ -1408,7 +1414,18 @@
                     // Also save to localStorage as backup
                     saveDataToLocalStorage();
                 } else {
-                    throw new Error('Failed to save to GitHub');
+                    const errorData = await updateResponse.text();
+                    console.error('❌ GitHub API Error:', updateResponse.status, errorData);
+                    
+                    if (updateResponse.status === 401) {
+                        throw new Error('GitHub token invalid or expired');
+                    } else if (updateResponse.status === 404) {
+                        throw new Error('Repository not found or no access');
+                    } else if (updateResponse.status === 403) {
+                        throw new Error('No permission to write to repository');
+                    } else {
+                        throw new Error(`GitHub API error: ${updateResponse.status}`);
+                    }
                 }
                 
             } catch (error) {
