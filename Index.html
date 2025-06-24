@@ -1272,7 +1272,28 @@
         function loadData() {
             const savedTech = localStorage.getItem('technologies');
             if (savedTech) {
-                technologies = JSON.parse(savedTech);
+                try {
+                    const parsed = JSON.parse(savedTech);
+                    // Always ensure Adobe technologies are included
+                    const adobeTools = [
+                        { name: 'Photoshop', emoji: '🖼️' },
+                        { name: 'Premiere Pro', emoji: '🎞️' },
+                        { name: 'After Effects', emoji: '💫' },
+                        { name: 'Lightroom', emoji: '📷' }
+                    ];
+                    
+                    // Merge saved technologies with Adobe tools, avoiding duplicates
+                    const existing = parsed.map(t => t.name);
+                    const missingAdobe = adobeTools.filter(adobe => !existing.includes(adobe.name));
+                    technologies = [...parsed, ...missingAdobe];
+                    
+                    console.log('Loaded technologies:', technologies.length, technologies.map(t => t.name));
+                } catch (e) {
+                    console.error('Error parsing saved technologies:', e);
+                    // Use default if parsing fails
+                }
+            } else {
+                console.log('No saved technologies, using defaults:', technologies.length);
             }
             
             const savedPortfolio = localStorage.getItem('portfolioItems');
@@ -1386,6 +1407,8 @@
         function renderTechnologies() {
             const grid = document.getElementById('tech-grid');
             grid.innerHTML = '';
+            
+            console.log('Rendering technologies:', technologies.length, technologies);
             
             technologies.forEach((tech, index) => {
                 const techDiv = document.createElement('div');
@@ -2201,7 +2224,13 @@
         localStorage.removeItem('adminMode');
         
         // Initialize everything
+        console.log('Initializing with default technologies:', technologies.length);
         loadData();
+        
+        // Force save to ensure Adobe technologies are always available
+        saveData();
+        console.log('After loadData and saveData:', technologies.length);
+        
         renderTechnologies();
         renderPortfolio();
         renderContacts();
