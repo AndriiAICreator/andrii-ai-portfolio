@@ -1096,7 +1096,33 @@
             { name: 'Lightroom', emoji: '📷' }
         ];
         
-        let portfolioItems = [];
+        let portfolioItems = [
+            {
+                category: 'avatars',
+                mediaType: 'photo',
+                url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop'
+            },
+            {
+                category: 'image-generation',
+                mediaType: 'photo', 
+                url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&h=500&fit=crop'
+            },
+            {
+                category: 'video-creation',
+                mediaType: 'video',
+                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+            },
+            {
+                category: 'ecommerce',
+                mediaType: 'photo',
+                url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500&h=500&fit=crop'
+            },
+            {
+                category: 'virtual-shoots',
+                mediaType: 'photo',
+                url: 'https://images.unsplash.com/photo-1494790108755-2616b612b1f5?w=500&h=500&fit=crop'
+            }
+        ];
         
         let contacts = [
             {
@@ -1402,7 +1428,19 @@
             
             const savedPortfolio = localStorage.getItem('portfolioItems');
             if (savedPortfolio) {
-                portfolioItems = JSON.parse(savedPortfolio);
+                try {
+                    const parsed = JSON.parse(savedPortfolio);
+                    if (parsed.length > 0) {
+                        portfolioItems = parsed;
+                        console.log('Loaded portfolio from localStorage:', portfolioItems.length, 'items');
+                    } else {
+                        console.log('LocalStorage portfolio is empty, using defaults');
+                    }
+                } catch (e) {
+                    console.error('Error parsing portfolio data:', e);
+                }
+            } else {
+                console.log('No portfolio in localStorage, using default items:', portfolioItems.length);
             }
             
             const savedContacts = localStorage.getItem('contacts');
@@ -1849,7 +1887,12 @@
                 mobileGrid.appendChild(mobileItemDiv);
             });
             
-            console.log('Portfolio rendered - Desktop items:', grid.children.length, 'Mobile items:', mobileGrid.children.length);
+            console.log('Portfolio rendered successfully:');
+            console.log('- Total portfolio items:', portfolioItems.length);
+            console.log('- Desktop grid children:', grid.children.length);
+            console.log('- Mobile grid children:', mobileGrid.children.length);
+            console.log('- Current screen width:', window.innerWidth);
+            console.log('- Active layout:', window.innerWidth < 640 ? 'Mobile' : 'Desktop');
             
             // Force mobile layout after render if needed
             setTimeout(() => {
@@ -2384,11 +2427,15 @@
         
         // Initialize everything
         console.log('Initializing with default technologies:', technologies.length);
+        console.log('Default portfolio items:', portfolioItems.length);
+        
         loadData();
         
-        // Force save to ensure Adobe technologies are always available
+        // Force save to ensure data is preserved
         saveData();
-        console.log('After loadData and saveData:', technologies.length);
+        console.log('After loadData and saveData:');
+        console.log('- Technologies:', technologies.length);
+        console.log('- Portfolio items:', portfolioItems.length);
         
         renderTechnologies();
         renderPortfolio();
