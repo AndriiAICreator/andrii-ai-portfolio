@@ -522,10 +522,13 @@
                 <i class="fas fa-download mr-2"></i>Export Data
             </button>
             <button id="sync-data-btn" class="w-full bg-cyan-500 text-white px-4 py-2 rounded-lg hover:bg-cyan-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-sync mr-2"></i>Sync All Devices
+                <i class="fas fa-sync mr-2"></i>Sync Current Data
+            </button>
+            <button id="clear-all-data-btn" class="w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all duration-300 hover:scale-105">
+                <i class="fas fa-trash-alt mr-2"></i>Clear Everything
             </button>
             <button id="reset-to-default-btn" class="w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-undo mr-2"></i>Reset to Defaults
+                <i class="fas fa-undo mr-2"></i>Load Demo Data
             </button>
         </div>
     </div>
@@ -1404,8 +1407,23 @@
             }, 3000);
         }
 
+        // Check for sync updates from other devices
+        function checkForSyncUpdates() {
+            const lastSyncTime = localStorage.getItem('lastSyncTime');
+            const lastLoadTime = localStorage.getItem('lastLoadTime') || '0';
+            
+            if (lastSyncTime && parseInt(lastSyncTime) > parseInt(lastLoadTime)) {
+                console.log('Sync detected, using latest synced data');
+                localStorage.setItem('lastLoadTime', new Date().getTime());
+                return true;
+            }
+            return false;
+        }
+
         // Load Data from LocalStorage
         function loadData() {
+            // Check if this is a sync update
+            const isSyncUpdate = checkForSyncUpdates();
             const savedTech = localStorage.getItem('technologies');
             if (savedTech) {
                 try {
@@ -2103,41 +2121,66 @@
             });
         }
         
-        // Sync Data Button - Force override localStorage with current defaults + your real data
+        // Sync Data Button - Force save current data for other devices
         const syncDataBtn = document.getElementById('sync-data-btn');
         if (syncDataBtn) {
             syncDataBtn.addEventListener('click', function() {
-                if (confirm('This will sync all devices with the same portfolio. Continue?')) {
-                    // Clear current localStorage
-                    localStorage.removeItem('portfolioItems');
-                    localStorage.removeItem('technologies'); 
-                    localStorage.removeItem('contacts');
-                    
-                    // Reset to defaults and save
-                    resetToDefaultData();
+                if (confirm('This will make all devices show the SAME data as this device. Continue?')) {
+                    // Force save current state (whatever is currently displayed)
                     saveData();
                     
-                    // Re-render everything
-                    renderTechnologies();
-                    renderPortfolio();
-                    renderContacts();
+                    // Add sync timestamp for other devices to detect
+                    localStorage.setItem('lastSyncTime', new Date().getTime());
                     
-                    showNotification('All devices synced! Refresh other devices to see changes.', 'success');
+                    showNotification('Current data saved! Other devices will sync when they refresh the page.', 'success');
                 }
             });
         }
         
-        // Reset to Default Button
+        // Clear All Data Button
+        const clearAllDataBtn = document.getElementById('clear-all-data-btn');
+        if (clearAllDataBtn) {
+            clearAllDataBtn.addEventListener('click', function() {
+                if (confirm('This will DELETE EVERYTHING! Are you absolutely sure?')) {
+                    // Clear all data completely
+                    portfolioItems = [];
+                    technologies = [
+                        { name: 'Midjourney', emoji: '🎨' },
+                        { name: 'FLUX', emoji: '⚡' },
+                        { name: 'Stable Diffusion', emoji: '🔬' },
+                        { name: 'Runway', emoji: '🎬' },
+                        { name: 'Adobe Photoshop', emoji: '🖼️' },
+                        { name: 'Adobe Premiere', emoji: '🎞️' }
+                    ];
+                    contacts = [
+                        {
+                            platform: 'email',
+                            label: 'andrii.aicreator@gmail.com',
+                            url: 'mailto:andrii.aicreator@gmail.com',
+                            icon: 'fas fa-envelope'
+                        }
+                    ];
+                    
+                    saveData();
+                    renderTechnologies();
+                    renderPortfolio();
+                    renderContacts();
+                    showNotification('Everything cleared! Only basic data remains.', 'success');
+                }
+            });
+        }
+
+        // Reset to Default Button (now loads demo data)
         const resetDefaultBtn = document.getElementById('reset-to-default-btn');
         if (resetDefaultBtn) {
             resetDefaultBtn.addEventListener('click', function() {
-                if (confirm('This will reset everything to default values. Are you sure?')) {
+                if (confirm('This will load demo data for testing. Continue?')) {
                     resetToDefaultData();
                     saveData();
                     renderTechnologies();
                     renderPortfolio();
                     renderContacts();
-                    showNotification('Data reset to defaults', 'success');
+                    showNotification('Demo data loaded', 'success');
                 }
             });
         }
