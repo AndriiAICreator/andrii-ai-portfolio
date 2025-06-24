@@ -1334,7 +1334,7 @@
         // Firebase Data Management
         async function loadDataFromFirebase() {
             try {
-                showNotification('🔥 Завантажую дані з Firebase...', 'success');
+                console.log('🔥 Loading from Firebase...');
                 
                 // Load portfolio data
                 const portfolioDoc = await getDoc(doc(db, 'portfolio', 'data'));
@@ -1344,18 +1344,27 @@
                     technologies = data.technologies || technologies; // Keep defaults if empty
                     contacts = data.contacts || contacts; // Keep defaults if empty
                     console.log('🔥 Data loaded from Firebase:', portfolioItems.length, 'portfolio items');
+                    if (isAdminMode) {
+                        showNotification('✅ Дані завантажено з Firebase!', 'success');
+                    }
                 } else {
-                    console.log('📝 No Firebase data found, using defaults');
+                    console.log('📝 No Firebase data found, using defaults and creating initial document');
+                    // Create initial document with default data
+                    await saveDataToFirebase();
+                    if (isAdminMode) {
+                        showNotification('✅ Створено початкові дані в Firebase!', 'success');
+                    }
                 }
                 
-                showNotification('✅ Дані завантажено з Firebase!', 'success');
                 return Promise.resolve();
             } catch (error) {
                 console.error('❌ Error loading from Firebase:', error);
-                showNotification('⚠️ Помилка завантаження з Firebase, використовую локальні дані', 'error');
+                if (isAdminMode) {
+                    showNotification('⚠️ Помилка Firebase, використовую локальні дані', 'error');
+                }
                 // Fallback to localStorage
                 await loadDataFromLocalStorage();
-                return Promise.reject(error);
+                return Promise.resolve(); // Don't reject, just continue with fallback
             }
         }
 
@@ -1364,7 +1373,9 @@
             
             try {
                 console.log('🔥 Saving data to Firebase...');
-                showNotification('🔥 Зберігаю в Firebase...', 'success');
+                if (isAdminMode) {
+                    showNotification('🔥 Зберігаю в Firebase...', 'success');
+                }
                 
                 const data = {
                     portfolioItems,
@@ -1376,13 +1387,17 @@
                 await setDoc(doc(db, 'portfolio', 'data'), data);
                 
                 console.log('✅ Data saved to Firebase');
-                showNotification('✅ Дані збережено в Firebase! Зміни синхронізовані онлайн.', 'success');
+                if (isAdminMode) {
+                    showNotification('✅ Дані збережено в Firebase! Зміни синхронізовані онлайн.', 'success');
+                }
                 
                 // Also save to localStorage as backup
                 await saveDataToLocalStorage();
             } catch (error) {
                 console.error('❌ Error saving to Firebase:', error);
-                showNotification('⚠️ Помилка збереження в Firebase, збережено локально', 'error');
+                if (isAdminMode) {
+                    showNotification('⚠️ Помилка збереження в Firebase, збережено локально', 'error');
+                }
                 // Fallback to localStorage if Firebase fails
                 await saveDataToLocalStorage();
                 return Promise.reject(error);
@@ -2486,13 +2501,15 @@
                             renderPortfolio();
                             renderContacts();
                             
-                            showNotification('🔄 Дані оновлено автоматично', 'success');
                             console.log('🔄 Real-time data sync from Firebase');
                         }
                     }
+                }, (error) => {
+                    console.error('Real-time sync error:', error);
+                    // Silently handle error - no notifications for users
                 });
             } catch (error) {
-                console.error('Real-time sync error:', error);
+                console.error('Real-time sync setup error:', error);
             }
         }
         
@@ -2502,13 +2519,13 @@
             renderPortfolio();
             renderContacts();
             setupRealtimeSync(); // Start real-time sync
-            console.log('✅ Andrii AI Portfolio loaded with Firebase + Real-time sync');
+            console.log('✅ Andrii AI Portfolio loaded');
         }).catch((error) => {
-            console.error('Failed to load from Firebase:', error);
+            console.error('Firebase load failed, using fallback:', error);
             renderTechnologies();
             renderPortfolio();
             renderContacts();
-            console.log('✅ Andrii AI Portfolio loaded with fallback data');
+            console.log('✅ Andrii AI Portfolio loaded with fallback');
         });
     </script>
 </body>
