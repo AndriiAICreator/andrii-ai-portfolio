@@ -81,23 +81,134 @@
         }
 
         /* Lightbox Styles */
-        .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 300; }
-        .lightbox.active { display: flex; align-items: center; justify-content: center; }
-        .lightbox-content { max-width: 90vw; max-height: 90vh; position: relative; }
-        .lightbox img { max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain; border-radius: 8px; }
-        .lightbox video, .lightbox iframe { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
-        .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 20px; z-index: 310; }
-        .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
-        .lightbox-prev { left: -70px; }
-        .lightbox-next { right: -70px; }
-        .lightbox-close { position: absolute; top: -50px; right: 0; background: none; color: white; border: none; font-size: 30px; cursor: pointer; z-index: 310; }
-        .lightbox-close:hover { color: #ff4444; }
+        .lightbox { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 300;
+            padding: 20px;
+        }
+        .lightbox.active { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .lightbox-content { 
+            max-width: 90vw; 
+            max-height: 90vh; 
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lightbox img { 
+            max-width: 90vw; 
+            max-height: 90vh; 
+            width: auto; 
+            height: auto; 
+            object-fit: contain; 
+            border-radius: 8px; 
+        }
+        .lightbox video, .lightbox iframe { 
+            max-width: 90vw; 
+            max-height: 90vh; 
+            border-radius: 8px; 
+        }
+        .lightbox-nav { 
+            position: fixed; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            background: rgba(0,0,0,0.7); 
+            color: white; 
+            border: 2px solid rgba(255,255,255,0.3);
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            font-size: 24px; 
+            z-index: 310;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .lightbox-nav:hover { 
+            background: rgba(255,255,255,0.2); 
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-50%) scale(1.1);
+        }
+        .lightbox-prev { 
+            left: 30px; 
+        }
+        .lightbox-next { 
+            right: 30px; 
+        }
+        .lightbox-close { 
+            position: fixed; 
+            top: 30px; 
+            right: 30px; 
+            background: rgba(0,0,0,0.7); 
+            color: white; 
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px; 
+            cursor: pointer; 
+            z-index: 310;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .lightbox-close:hover { 
+            color: #ff4444; 
+            background: rgba(255,68,68,0.2);
+            border-color: #ff4444;
+            transform: scale(1.1);
+        }
+        
+        /* Counter display */
+        .lightbox-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 310;
+        }
         
         @media (max-width: 768px) {
-            .lightbox-nav { width: 40px; height: 40px; font-size: 16px; }
-            .lightbox-prev { left: 10px; }
-            .lightbox-next { right: 10px; }
-            .lightbox-close { top: 10px; right: 10px; }
+            .lightbox { padding: 10px; }
+            .lightbox-nav { 
+                width: 50px; 
+                height: 50px; 
+                font-size: 20px; 
+            }
+            .lightbox-prev { left: 15px; }
+            .lightbox-next { right: 15px; }
+            .lightbox-close { 
+                top: 15px; 
+                right: 15px; 
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+            .lightbox-counter {
+                bottom: 15px;
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+        
+        /* Touch gestures for mobile */
+        .lightbox-content {
+            touch-action: pan-x;
         }
         
         /* Mobile Navigation Styles */
@@ -656,6 +767,9 @@
         <button id="lightbox-close" class="lightbox-close">
             <i class="fas fa-times"></i>
         </button>
+        <div id="lightbox-counter" class="lightbox-counter">
+            1 / 1
+        </div>
     </div>
 
     <!-- Notification -->
@@ -1135,11 +1249,11 @@
         let lightboxItems = [];
 
         function openLightbox(index) {
-            currentLightboxIndex = index;
+            // Get filtered items based on current view
+            const currentFilter = document.querySelector('.portfolio-filter.active').dataset.filter;
+            const currentCategory = document.getElementById('category-select').value;
+            
             lightboxItems = portfolioItems.filter(item => {
-                const currentFilter = document.querySelector('.portfolio-filter.active').dataset.filter;
-                const currentCategory = document.getElementById('category-select').value;
-                
                 // Apply filters
                 if (currentFilter !== 'all') {
                     const mediaType = getMediaType(item);
@@ -1153,7 +1267,16 @@
                 return true;
             });
             
+            // Find the correct index in the filtered array
+            const originalItem = portfolioItems[index];
+            currentLightboxIndex = lightboxItems.findIndex(item => item === originalItem);
+            
+            if (currentLightboxIndex === -1) {
+                currentLightboxIndex = 0;
+            }
+            
             updateLightboxContent();
+            updateLightboxNavigation();
             document.getElementById('lightbox').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -1171,15 +1294,40 @@
             
             content.innerHTML = createMediaContent(item, true); // true = lightbox mode
         }
+        
+        function updateLightboxNavigation() {
+            const counter = document.getElementById('lightbox-counter');
+            const prevBtn = document.getElementById('lightbox-prev');
+            const nextBtn = document.getElementById('lightbox-next');
+            
+            if (counter) {
+                counter.textContent = `${currentLightboxIndex + 1} / ${lightboxItems.length}`;
+            }
+            
+            // Show/hide navigation buttons based on items count
+            if (lightboxItems.length <= 1) {
+                if (prevBtn) prevBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'none';
+                if (counter) counter.style.display = 'none';
+            } else {
+                if (prevBtn) prevBtn.style.display = 'flex';
+                if (nextBtn) nextBtn.style.display = 'flex';
+                if (counter) counter.style.display = 'block';
+            }
+        }
 
         function nextLightboxItem() {
+            if (lightboxItems.length <= 1) return;
             currentLightboxIndex = (currentLightboxIndex + 1) % lightboxItems.length;
             updateLightboxContent();
+            updateLightboxNavigation();
         }
 
         function prevLightboxItem() {
+            if (lightboxItems.length <= 1) return;
             currentLightboxIndex = (currentLightboxIndex - 1 + lightboxItems.length) % lightboxItems.length;
             updateLightboxContent();
+            updateLightboxNavigation();
         }
 
         function getMediaType(item) {
@@ -1710,7 +1858,7 @@
 
         // Keyboard navigation for lightbox
         document.addEventListener('keydown', function(e) {
-            if (lightbox.classList.contains('active')) {
+            if (lightbox && lightbox.classList.contains('active')) {
                 switch(e.key) {
                     case 'Escape':
                         closeLightbox();
@@ -1724,6 +1872,41 @@
                 }
             }
         });
+        
+        // Touch/Swipe support for mobile
+        let touchStartX = null;
+        let touchStartY = null;
+        
+        if (lightbox) {
+            lightbox.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            });
+            
+            lightbox.addEventListener('touchend', function(e) {
+                if (!touchStartX || !touchStartY) return;
+                
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+                
+                const deltaX = touchStartX - touchEndX;
+                const deltaY = touchStartY - touchEndY;
+                
+                // Only process horizontal swipes (more than 50px and more horizontal than vertical)
+                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                    if (deltaX > 0) {
+                        // Swipe left - next item
+                        nextLightboxItem();
+                    } else {
+                        // Swipe right - previous item
+                        prevLightboxItem();
+                    }
+                }
+                
+                touchStartX = null;
+                touchStartY = null;
+            });
+        }
 
         // Clear admin mode on page load to prevent auto-activation
         localStorage.removeItem('adminMode');
