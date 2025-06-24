@@ -1011,9 +1011,7 @@
         const ADMIN_PASSWORD = 'andrii2025'; // Change this password!
         
         // Data Storage Configuration - LocalStorage Mode
-        console.log('📱 Running in localStorage mode - perfect for local development!');
-        console.log('💡 Use Export/Import buttons to sync between devices');
-        showNotification('Portfolio running in local mode - use Export/Import to sync devices', 'success');
+        console.log('📱 Loading Andrii AI Portfolio...');
         
         let isAdminMode = false;
         let technologies = [
@@ -1327,7 +1325,7 @@
                     contacts = JSON.parse(savedContacts);
                 }
                 
-                console.log('📱 Loaded from localStorage as fallback');
+                console.log('📱 Data loaded from localStorage');
                 return Promise.resolve();
             } catch (error) {
                 console.error('Error loading from localStorage:', error);
@@ -1345,7 +1343,9 @@
                 localStorage.setItem('lastUpdated', new Date().toISOString());
                 
                 console.log('💾 Data saved to localStorage');
-                showNotification('💾 Зміни збережено локально!', 'success');
+                if (isAdminMode) {
+                    showNotification('💾 Зміни збережено локально!', 'success');
+                }
             } catch (error) {
                 console.error('Error saving to localStorage:', error);
                 showNotification('Помилка збереження', 'error');
@@ -1392,11 +1392,11 @@
             if (isAdminMode) {
                 document.body.classList.add('admin-mode');
                 localStorage.setItem('adminMode', 'true');
-                showNotification('Admin mode enabled', 'success');
+                showNotification('⚙️ Адмін режим', 'success');
             } else {
                 document.body.classList.remove('admin-mode');
                 localStorage.removeItem('adminMode');
-                showNotification('Admin mode disabled', 'success');
+                showNotification('👤 Режим користувача', 'success');
             }
         }
 
@@ -1445,7 +1445,7 @@
             const grid = document.getElementById('tech-grid');
             grid.innerHTML = '';
             
-            console.log('Rendering technologies:', technologies.length, technologies);
+            // Render technologies
             
             technologies.forEach((tech, index) => {
                 const techDiv = document.createElement('div');
@@ -1762,7 +1762,7 @@
                 grid.appendChild(itemDiv);
             });
             
-            console.log('Portfolio rendered:', portfolioItems.length, 'items');
+            // Portfolio rendered
         }
 
         // CRUD Functions
@@ -2329,22 +2329,17 @@
             });
         });
         
-        // Initialize everything
-        console.log('🚀 Initializing Andrii AI Portfolio');
-        console.log('Default technologies:', technologies.length);
-        console.log('Starting portfolio items:', portfolioItems.length);
+        // Initialize portfolio
         
-        // Check if admin mode was previously enabled
-        if (localStorage.getItem('adminMode') === 'true') {
-            toggleAdminMode(true);
-        }
+        // Start in user mode by default
+        isAdminMode = false;
         
         // Load data from localStorage on startup
         loadDataFromLocalStorage();
         renderTechnologies();
         renderPortfolio();
         renderContacts();
-        console.log('✅ App initialized with localStorage data:', portfolioItems.length, 'portfolio items');
+        console.log('✅ Andrii AI Portfolio loaded');
     </script>
 </body>
 </html>
