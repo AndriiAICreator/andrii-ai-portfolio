@@ -208,10 +208,32 @@
         
         .portfolio-item video, .portfolio-item iframe {
             width: 100%;
-            height: auto;
-            min-height: 200px;
-            object-fit: cover;
             border-radius: 20px 20px 0 0;
+        }
+        
+        /* Auto height for different aspect ratios */
+        .portfolio-item .video-16-9 {
+            aspect-ratio: 16/9;
+        }
+        
+        .portfolio-item .video-9-16 {
+            aspect-ratio: 9/16;
+        }
+        
+        .portfolio-item .video-1-1 {
+            aspect-ratio: 1/1;
+        }
+        
+        .portfolio-item .video-4-3 {
+            aspect-ratio: 4/3;
+        }
+        
+        .portfolio-item .video-21-9 {
+            aspect-ratio: 21/9;
+        }
+        
+        .portfolio-item .video-default {
+            height: 250px;
         }
         
         /* Portfolio item overlay effects */
@@ -260,8 +282,17 @@
                 max-width: 100%;
             }
             
-            .portfolio-item video, .portfolio-item iframe {
-                min-height: 250px;
+            .portfolio-item .video-9-16 {
+                aspect-ratio: 9/16;
+                max-height: 400px;
+            }
+            
+            .portfolio-item .video-16-9 {
+                aspect-ratio: 16/9;
+            }
+            
+            .portfolio-item .video-default {
+                height: 250px;
             }
         }
         
@@ -605,6 +636,20 @@
                         <option value="photo">📸 Photo</option>
                         <option value="video">🎬 Video</option>
                     </select>
+                </div>
+                <div id="video-aspect-ratio-div" style="display: none;">
+                    <label class="block text-sm font-medium mb-2 text-gray-300">Video Format (пропорції)</label>
+                    <select id="video-aspect-ratio" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none">
+                        <option value="auto">🤖 Auto-detect (рекомендовано)</option>
+                        <option value="16-9">📺 Горизонтальне 16:9 (YouTube, Desktop)</option>
+                        <option value="9-16">📱 Вертикальне 9:16 (TikTok, Stories)</option>
+                        <option value="1-1">⬜ Квадратне 1:1 (Instagram Post)</option>
+                        <option value="4-3">📺 Класичне 4:3 (TV, старе відео)</option>
+                        <option value="21-9">🎬 Кінематографічне 21:9 (Ultra-wide)</option>
+                    </select>
+                    <div class="mt-1 text-xs text-gray-400">
+                        💡 Підказка: якщо обрати "Auto-detect", система спробує визначити формат автоматично за назвою файлу або посиланням
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-2 text-gray-300">File/URL</label>
@@ -1872,6 +1917,60 @@
                 url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) return 'videos';
             return 'photos';
         }
+        
+        function detectVideoAspectRatio(item) {
+            // Спочатку перевіряємо збережену інформацію про пропорції
+            if (item.aspectRatio && item.aspectRatio !== 'auto') {
+                return `video-${item.aspectRatio}`;
+            }
+            
+            // Визначаємо пропорції відео за назвою файлу або категорією
+            const url = item.url || '';
+            const fileName = url.toLowerCase();
+            
+            // Шукаємо підказки в назві файлу
+            if (fileName.includes('story') || fileName.includes('stories') || 
+                fileName.includes('reel') || fileName.includes('tiktok') ||
+                fileName.includes('9_16') || fileName.includes('9x16') ||
+                fileName.includes('vertical')) {
+                return 'video-9-16'; // Вертикальне відео (TikTok, Stories)
+            }
+            
+            if (fileName.includes('landscape') || fileName.includes('youtube') ||
+                fileName.includes('16_9') || fileName.includes('16x9') ||
+                fileName.includes('horizontal')) {
+                return 'video-16-9'; // Горизонтальне відео (YouTube)
+            }
+            
+            if (fileName.includes('square') || fileName.includes('1_1') || 
+                fileName.includes('1x1') || fileName.includes('instagram_post')) {
+                return 'video-1-1'; // Квадратне відео (Instagram Post)
+            }
+            
+            if (fileName.includes('ultrawide') || fileName.includes('21_9') || 
+                fileName.includes('21x9') || fileName.includes('cinema')) {
+                return 'video-21-9'; // Ультраширокий формат
+            }
+            
+            if (fileName.includes('4_3') || fileName.includes('4x3') || 
+                fileName.includes('classic')) {
+                return 'video-4-3'; // Класичний формат
+            }
+            
+            // За замовчуванням для YouTube - 16:9, для інших - визначаємо за категорією
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                return 'video-16-9';
+            }
+            
+            // За категорією проекту
+            if (item.category === 'video-creation' && 
+                (fileName.includes('tiktok') || fileName.includes('stories'))) {
+                return 'video-9-16';
+            }
+            
+            // За замовчуванням - стандартний розмір
+            return 'video-default';
+        }
 
         function createMediaContent(item, isLightbox = false) {
             let mediaContent = '';
@@ -1903,53 +2002,51 @@
                 }
             }
             else if (mediaType === 'videos' || item.mediaType === 'video') {
+                const aspectRatioClass = detectVideoAspectRatio(item);
+                
                 if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
                     const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
                     if (videoId) {
-                        const height = isLightbox ? '80vh' : '200px';
-                        const width = isLightbox ? '90vw' : '100%';
-                        mediaContent = `<iframe style="width: ${width}; height: ${height};" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                        if (isLightbox) {
+                            mediaContent = `<iframe class="youtube-lightbox" style="width: 90vw; height: 80vh;" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                        } else {
+                            mediaContent = `<iframe class="${aspectRatioClass}" style="width: 100%;" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                        }
                     }
                 } else if (item.url.includes('drive.google.com')) {
                     const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
-                        let height, width;
                         if (isLightbox) {
-                            height = '80vh';
-                            width = '90vw';
+                            mediaContent = `<iframe class="drive-lightbox" style="width: 90vw; height: 80vh;" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
                         } else {
-                            height = window.innerWidth < 640 ? '250px' : '200px';
-                            width = '100%';
+                            mediaContent = `<iframe class="${aspectRatioClass}" style="width: 100%;" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
                         }
-                        mediaContent = `<iframe style="width: ${width}; height: ${height};" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
                     }
                 } else if (item.url.includes('dropbox.com')) {
                     const directUrl = item.url.replace('dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
-                    let height, width;
                     if (isLightbox) {
-                        height = '80vh';
-                        width = '90vw';
+                        mediaContent = `<video class="dropbox-lightbox" style="width: 90vw; height: 80vh; object-fit: contain;" controls>
+                            <source src="${directUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>`;
                     } else {
-                        height = window.innerWidth < 640 ? '250px' : '200px';
-                        width = '100%';
+                        mediaContent = `<video class="${aspectRatioClass}" style="width: 100%; object-fit: cover;" controls>
+                            <source src="${directUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>`;
                     }
-                    mediaContent = `<video style="width: ${width}; height: ${height}; object-fit: cover;" controls>
-                        <source src="${directUrl}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>`;
                 } else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
-                    let height, width;
                     if (isLightbox) {
-                        height = '80vh';
-                        width = '90vw';
+                        mediaContent = `<video class="video-lightbox" style="width: 90vw; height: 80vh; object-fit: contain;" controls>
+                            <source src="${item.url}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>`;
                     } else {
-                        height = window.innerWidth < 640 ? '250px' : '200px';
-                        width = '100%';
+                        mediaContent = `<video class="${aspectRatioClass}" style="width: 100%; object-fit: cover;" controls>
+                            <source src="${item.url}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>`;
                     }
-                    mediaContent = `<video style="width: ${width}; height: ${height}; object-fit: cover;" controls>
-                        <source src="${item.url}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>`;
                 }
             }
             
@@ -2122,6 +2219,19 @@
             });
         }
 
+        // Show/hide video aspect ratio options
+        const portfolioMediaType = document.getElementById('portfolio-media-type');
+        if (portfolioMediaType) {
+            portfolioMediaType.addEventListener('change', function() {
+                const aspectRatioDiv = document.getElementById('video-aspect-ratio-div');
+                if (this.value === 'video') {
+                    aspectRatioDiv.style.display = 'block';
+                } else {
+                    aspectRatioDiv.style.display = 'none';
+                }
+            });
+        }
+
         const portfolioForm = document.getElementById('portfolio-form');
         if (portfolioForm) {
             portfolioForm.addEventListener('submit', async function(e) {
@@ -2132,6 +2242,7 @@
                     const mediaType = document.getElementById('portfolio-media-type').value;
                     const urlInput = document.getElementById('portfolio-url').value;
                     const fileInput = document.getElementById('portfolio-file');
+                    const videoAspectRatio = document.getElementById('video-aspect-ratio').value;
                     
                     let finalUrl = urlInput;
                     
@@ -2153,6 +2264,7 @@
                         category, 
                         mediaType, 
                         url: finalUrl,
+                        aspectRatio: mediaType === 'video' ? videoAspectRatio : null,
                         uploadedAt: new Date().toISOString(),
                         isUploaded: !!fileInput.files[0]
                     });
