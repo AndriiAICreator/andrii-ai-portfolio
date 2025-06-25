@@ -208,19 +208,10 @@
         
         .portfolio-item video, .portfolio-item iframe {
             width: 100%;
-            min-height: 280px;
+            height: 280px;
             border-radius: 20px 20px 0 0;
             display: block;
-            background: #000;
-        }
-        
-        .portfolio-item iframe {
             border: none;
-            outline: none;
-        }
-        
-        .portfolio-item video {
-            object-fit: cover;
         }
         
 
@@ -1986,63 +1977,11 @@
                 } else if (item.url.includes('drive.google.com')) {
                     const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
-                        // Використовуємо прямий download URL для кращої сумісності
-                        const directDownloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-                        
+                        // Повертаємося до простішого iframe рішення
                         if (isLightbox) {
-                            mediaContent = `
-                                <div style="width: 90%; height: 80%; position: relative; display: flex; align-items: center; justify-content: center;">
-                                    <video 
-                                        id="drive-video-${fileId}" 
-                                        width="100%" 
-                                        height="100%" 
-                                        controls 
-                                        style="object-fit: contain; background: black; border-radius: 8px; max-width: 100%; max-height: 100%;"
-                                        onloadstart="console.log('✅ Drive video loading...')"
-                                        oncanplay="console.log('✅ Drive video ready to play')"
-                                        onerror="console.log('❌ Direct video failed, showing fallback'); this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <source src="${directDownloadUrl}" type="video/mp4">
-                                        <source src="https://drive.google.com/uc?id=${fileId}&export=download" type="video/mp4">
-                                        Your browser does not support video playback.
-                                    </video>
-                                    <div style="width: 90%; height: 80%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: none; align-items: center; justify-content: center; color: white; border-radius: 8px; position: absolute; top: 0; left: 0;">
-                                        <div style="text-align: center;">
-                                            <i class="fab fa-google-drive" style="font-size: 4rem; margin-bottom: 1rem;"></i>
-                                            <p style="margin: 0 0 1rem 0; font-size: 1.2rem;">Google Drive відео</p>
-                                            <p style="margin: 0 0 1rem 0; font-size: 0.9rem; opacity: 0.8;">Прямий доступ заблоковано</p>
-                                            <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.75rem 1.5rem; border-radius: 8px; color: white; text-decoration: none; font-weight: bold;">
-                                                <i class="fas fa-external-link-alt mr-2"></i>Відкрити в Drive
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>`;
+                            mediaContent = `<iframe width="90%" height="80%" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
                         } else {
-                            mediaContent = `
-                                <div style="width: 100%; height: 280px; position: relative;">
-                                    <video 
-                                        id="drive-video-${fileId}" 
-                                        width="100%" 
-                                        height="100%" 
-                                        controls 
-                                        style="object-fit: cover; background: black; border-radius: 20px 20px 0 0;"
-                                        onloadstart="console.log('✅ Drive video loading...')"
-                                        oncanplay="console.log('✅ Drive video ready to play')"
-                                        onerror="console.log('❌ Direct video failed, showing fallback'); this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <source src="${directDownloadUrl}" type="video/mp4">
-                                        <source src="https://drive.google.com/uc?id=${fileId}&export=download" type="video/mp4">
-                                        Your browser does not support video playback.
-                                    </video>
-                                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: none; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0; position: absolute; top: 0; left: 0;">
-                                        <div style="text-align: center;">
-                                            <i class="fab fa-google-drive" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                                            <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">Google Drive відео</p>
-                                            <p style="margin: 0 0 1rem 0; font-size: 0.8rem; opacity: 0.8;">Прямий доступ заблоковано</p>
-                                            <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 6px; color: white; text-decoration: none; font-weight: 500;">
-                                                <i class="fas fa-external-link-alt mr-1"></i>Відкрити в Drive
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>`;
+                            mediaContent = `<iframe width="100%" height="280" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
                         }
                     } else {
                         // Fallback для неправильних Google Drive посилань
@@ -2676,7 +2615,6 @@
         window.debugVideoIssues = function() {
             console.log('🎬 VIDEO DEBUG INFO:');
             console.log('📱 User Agent:', navigator.userAgent);
-            console.log('💻 Device type:', getOptimalDriveMethod());
             console.log('Portfolio items:', portfolioItems);
             
             portfolioItems.forEach((item, index) => {
@@ -2697,134 +2635,40 @@
                         const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                         console.log('Google Drive file ID:', fileId);
                         console.log('Google Drive preview URL:', `https://drive.google.com/file/d/${fileId}/preview`);
-                        console.log('Google Drive direct URL:', `https://drive.google.com/uc?export=download&id=${fileId}`);
-                        
-                        // Test both methods
-                        console.log('🔒 Testing Google Drive access methods...');
-                        
-                        // Test 1: iframe
-                        const testIframe = document.createElement('iframe');
-                        testIframe.src = `https://drive.google.com/file/d/${fileId}/preview`;
-                        testIframe.style.width = '1px';
-                        testIframe.style.height = '1px';
-                        testIframe.style.position = 'absolute';
-                        testIframe.style.left = '-9999px';
-                        testIframe.onload = () => console.log('✅ Google Drive iframe: WORKS');
-                        testIframe.onerror = () => console.log('❌ Google Drive iframe: BLOCKED');
-                        document.body.appendChild(testIframe);
-                        
-                        // Test 2: direct video
-                        const testVideo = document.createElement('video');
-                        testVideo.src = `https://drive.google.com/uc?export=download&id=${fileId}`;
-                        testVideo.style.width = '1px';
-                        testVideo.style.height = '1px';
-                        testVideo.style.position = 'absolute';
-                        testVideo.style.left = '-9999px';
-                        testVideo.onloadstart = () => console.log('✅ Google Drive direct video: WORKS');
-                        testVideo.onerror = () => console.log('❌ Google Drive direct video: FAILED');
-                        document.body.appendChild(testVideo);
-                        
-                        setTimeout(() => {
-                            if (testIframe.parentNode) testIframe.parentNode.removeChild(testIframe);
-                            if (testVideo.parentNode) testVideo.parentNode.removeChild(testVideo);
-                        }, 5000);
                     }
                 }
             });
             
-            // Test YouTube
-            console.log('🎬 Testing YouTube iframe...');
-            const testDiv = document.createElement('div');
-            testDiv.innerHTML = '<iframe width="300" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>';
-            document.body.appendChild(testDiv);
-            console.log('✅ YouTube test iframe added');
-            
-            // Check current videos on page
+            // Check current iframes on page
             setTimeout(() => {
-                console.log('📊 CURRENT VIDEO STATUS:');
-                const allVideos = document.querySelectorAll('video');
-                allVideos.forEach((video, i) => {
-                    console.log(`Video ${i}:`, {
-                        src: video.src,
-                        readyState: video.readyState,
-                        networkState: video.networkState,
-                        error: video.error,
-                        canPlay: video.readyState >= 3
-                    });
-                });
-                
-                const allIframes = document.querySelectorAll('iframe[src*="drive.google.com"]');
+                console.log('📊 CURRENT IFRAME STATUS:');
+                const allIframes = document.querySelectorAll('iframe');
                 allIframes.forEach((iframe, i) => {
-                    console.log(`Drive iframe ${i}:`, {
+                    console.log(`Iframe ${i}:`, {
                         src: iframe.src,
-                        loaded: !!iframe.contentDocument || !!iframe.contentWindow
+                        width: iframe.width,
+                        height: iframe.height,
+                        display: iframe.style.display
                     });
                 });
-            }, 3000);
+            }, 2000);
         };
         
-        // Smart Drive Video Detection - детектор пристрою
-        function getOptimalDriveMethod() {
-            // Детектуємо мобільний пристрій
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            
-            // На мобільних пристроях iframe працює краще
-            if (isMobile) {
-                console.log('📱 Mobile device detected - using iframe method');
-                return 'iframe';
-            } else {
-                console.log('💻 Desktop detected - using direct video method');
-                return 'direct';
-            }
-        }
-        
-        // Auto-fix CSP problems
-        function fixCSPBlockedVideos() {
+        // Простий детектор проблем з відео
+        function checkVideoIssues() {
             setTimeout(() => {
-                // Знайти всі Google Drive відео що не завантажилися
-                const driveVideos = document.querySelectorAll('video[id*="drive-video"]');
-                driveVideos.forEach(video => {
-                    if (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE || 
-                        video.error || 
-                        video.readyState === HTMLMediaElement.HAVE_NOTHING) {
-                        console.log('🎬 Drive video failed to load, showing fallback');
-                        if (video.nextElementSibling) {
-                            video.style.display = 'none';
-                            video.nextElementSibling.style.display = 'flex';
-                        }
-                    }
-                });
+                console.log('🔍 Checking video status...');
+                const iframes = document.querySelectorAll('iframe[src*="drive.google.com"]');
+                console.log(`📊 Found ${iframes.length} Google Drive iframes`);
                 
-                // Також перевірити iframe
-                const driveIframes = document.querySelectorAll('iframe[src*="drive.google.com"]');
-                driveIframes.forEach(iframe => {
-                    // Якщо iframe не завантажився після 3 секунд
-                    if (!iframe.contentDocument && !iframe.contentWindow) {
-                        console.log('🎬 Drive iframe blocked, showing fallback');
-                        if (iframe.nextElementSibling) {
-                            iframe.style.display = 'none';
-                            iframe.nextElementSibling.style.display = 'flex';
-                        }
-                    }
+                iframes.forEach((iframe, i) => {
+                    console.log(`📹 Iframe ${i}: ${iframe.src}`);
                 });
-            }, 3000); // Чекаємо 3 секунди
+            }, 2000);
         }
         
-        // CSP Error Detection
-        window.addEventListener('securitypolicyviolation', function(e) {
-            console.log('🚫 CSP Violation detected:', e.violatedDirective);
-            console.log('🔗 Blocked URI:', e.blockedURI);
-            
-            if (e.blockedURI.includes('drive.google.com')) {
-                console.log('🎬 Google Drive blocked by CSP - auto-fixing...');
-                fixCSPBlockedVideos();
-            }
-        });
-        
-        // Auto-check for failed videos on page load
-        window.addEventListener('load', () => {
-            setTimeout(fixCSPBlockedVideos, 2000);
-        });
+        // Запускаємо перевірку після завантаження
+        window.addEventListener('load', checkVideoIssues);
 
         // Initialize application
         console.log('🚀 Starting Andrii AI Portfolio...');
