@@ -593,7 +593,7 @@
 
                 <div>
                     <label class="block text-sm font-medium mb-2 text-gray-300">File/URL</label>
-                    <input type="text" id="portfolio-url" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" placeholder="Image URL, YouTube, Dropbox, etc.">
+                    <input type="text" id="portfolio-url" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" placeholder="Image URL, YouTube, Google Drive, Dropbox, etc.">
                     <div class="mt-2">
                         <label class="block text-sm font-medium text-gray-300 mb-1">Or upload file directly:</label>
                         <input type="file" id="portfolio-file" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" accept="image/*,video/*">
@@ -605,6 +605,7 @@
                         • Videos: MP4, MOV, WebM (max 50MB)<br><br>
                         <strong class="text-gray-300">🌐 External URLs (Also supported):</strong><br>
                         • YouTube: youtube.com/watch?v=...<br>
+                        • Google Drive: drive.google.com/file/d/.../view<br>
                         • Dropbox: dropbox.com/s/.../video.mp4<br>
                         • Direct image/video URLs
                     </div>
@@ -1572,7 +1573,7 @@
                 grid.appendChild(techDiv);
             });
             
-            // Animate tech cards
+            // Add staggered animation with enhanced effects
             document.querySelectorAll('.tech-card').forEach((card, index) => {
                 setTimeout(() => {
                     card.style.opacity = '1';
@@ -1582,6 +1583,7 @@
         }
 
         function renderContacts() {
+            // Render contact section
             const contactGrid = document.getElementById('contact-grid');
             contactGrid.innerHTML = '';
             
@@ -1640,26 +1642,22 @@
         let lightboxItems = [];
 
         function openLightbox(index) {
-            // Get currently filtered items for lightbox navigation
             const currentFilter = document.querySelector('.portfolio-filter.active').dataset.filter;
             const currentCategory = document.getElementById('category-select').value;
             
             lightboxItems = portfolioItems.filter(item => {
-                // Media type filter
                 if (currentFilter !== 'all') {
                     const mediaType = getMediaType(item);
                     if (mediaType !== currentFilter) return false;
                 }
                 
-                // Category filter (only applies when "All" media filter is selected)
-                if (currentFilter === 'all' && currentCategory !== 'all') {
-                    if (item.category !== currentCategory) return false;
+                if (currentCategory !== 'all' && item.category !== currentCategory) {
+                    return false;
                 }
                 
                 return true;
             });
             
-            // Find the index in the filtered items
             const originalItem = portfolioItems[index];
             currentLightboxIndex = lightboxItems.findIndex(item => item === originalItem);
             
@@ -1684,7 +1682,6 @@
             
             if (!item) return;
             
-            // Create lightbox-specific media content
             content.innerHTML = createMediaContent(item, true);
         }
         
@@ -1697,7 +1694,6 @@
                 counter.textContent = `${currentLightboxIndex + 1} / ${lightboxItems.length}`;
             }
             
-            // Hide navigation if only one item
             if (lightboxItems.length <= 1) {
                 if (prevBtn) prevBtn.style.display = 'none';
                 if (nextBtn) nextBtn.style.display = 'none';
@@ -1724,35 +1720,42 @@
         }
 
         function getMediaType(item) {
-            // Check the mediaType property first (for new items)
             if (item.mediaType) {
                 return item.mediaType === 'photo' ? 'photos' : 'videos';
             }
             
-            // Fallback: detect from URL for old items
             const url = item.url || item;
             if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) return 'photos';
             if (url.includes('youtube.com') || url.includes('youtu.be') || 
-                url.includes('dropbox.com') || url.includes('vimeo.com') ||
+                url.includes('drive.google.com') || url.includes('dropbox.com') ||
                 url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) return 'videos';
-            return 'photos'; // Default to photos if unsure
+            return 'photos';
         }
         
+        // SIMPLIFIED Media Content Creation - back to basics!
         function createMediaContent(item, isLightbox = false) {
             let mediaContent = '';
             const mediaType = getMediaType(item);
             
-            // Image content
             if (mediaType === 'photos' || item.mediaType === 'photo') {
-                if (isLightbox) {
-                    mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.style.display='none';">`;
-                } else {
-                    mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover; border-radius: 20px 20px 0 0;" onerror="this.style.display='none';">`;
+                if (item.url.includes('drive.google.com')) {
+                    const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
+                    if (fileId) {
+                        if (isLightbox) {
+                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w1920" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w1920';">`;
+                        } else {
+                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w800" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w800';">`;
+                        }
+                    }
+                } else if (item.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+                    if (isLightbox) {
+                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;">`;
+                    } else {
+                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
+                    }
                 }
             }
-            // Video content
             else if (mediaType === 'videos' || item.mediaType === 'video') {
-                // YouTube videos
                 if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
                     const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
                     if (videoId) {
@@ -1762,20 +1765,16 @@
                             mediaContent = `<iframe width="100%" height="280" src="https://www.youtube.com/embed/${videoId}?controls=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                         }
                     }
-                }
-                // Vimeo videos
-                else if (item.url.includes('vimeo.com')) {
-                    const videoId = item.url.match(/vimeo\.com\/(\d+)/)?.[1];
-                    if (videoId) {
+                } else if (item.url.includes('drive.google.com')) {
+                    const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
+                    if (fileId) {
                         if (isLightbox) {
-                            mediaContent = `<iframe width="90%" height="80%" src="https://player.vimeo.com/video/${videoId}?autoplay=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+                            mediaContent = `<iframe width="90%" height="80%" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
                         } else {
-                            mediaContent = `<iframe width="100%" height="280" src="https://player.vimeo.com/video/${videoId}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+                            mediaContent = `<iframe width="100%" height="280" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
                         }
                     }
-                }
-                // Dropbox videos
-                else if (item.url.includes('dropbox.com')) {
+                } else if (item.url.includes('dropbox.com')) {
                     let directUrl = item.url;
                     if (directUrl.includes('dropbox.com') && !directUrl.includes('dl.dropboxusercontent.com')) {
                         directUrl = directUrl.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '').replace('?dl=1', '');
@@ -1791,9 +1790,7 @@
                             <source src="${directUrl}" type="video/mp4">
                         </video>`;
                     }
-                }
-                // Direct video files
-                else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
+                } else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
                     if (isLightbox) {
                         mediaContent = `<video width="90%" height="80%" controls style="object-fit: contain; background: black;">
                             <source src="${item.url}" type="video/mp4">
@@ -1808,7 +1805,6 @@
                 }
             }
             
-            // Fallback for unrecognized URLs
             if (!mediaContent) {
                 mediaContent = `<div class="h-48 bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white">
                     <div class="text-center">
@@ -1844,39 +1840,23 @@
                 return;
             }
             
-            console.log('🎨 RENDERING PORTFOLIO:', portfolioItems.length, 'items');
-            
             // Apply current filters
             applyCurrentFilters();
             
             // Show items in batches
             const itemsToShow = filteredItems.slice(currentlyShown, currentlyShown + ITEMS_PER_PAGE);
             
-            console.log('📦 Items to show:', itemsToShow.length);
-            
             itemsToShow.forEach((item, relativeIndex) => {
-                console.log('🎨 Rendering item:', item);
-                
                 const absoluteIndex = portfolioItems.indexOf(item);
                 const mediaType = getMediaType(item);
                 const mediaContent = createMediaContent(item);
-                
-                console.log('🖼️ Media content created:', mediaContent.length > 0 ? 'YES' : 'NO');
                 
                 const itemDiv = document.createElement('div');
                 itemDiv.className = `portfolio-item cursor-pointer relative ${item.category} ${mediaType}`;
                 itemDiv.dataset.index = absoluteIndex;
                 itemDiv.style.animationDelay = `${relativeIndex * 100}ms`;
-                
-                // Add padding and content wrapper
                 itemDiv.innerHTML = `
-                    <div class="portfolio-content">
-                        ${mediaContent}
-                        <div class="p-4">
-                            <p class="text-sm text-gray-300 capitalize">${item.category}</p>
-                            <span class="text-xs text-gray-500">${item.mediaType || 'media'}</span>
-                        </div>
-                    </div>
+                    ${mediaContent}
                     <button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${absoluteIndex})" style="display: none;">×</button>
                 `;
                 
@@ -1887,7 +1867,6 @@
                 });
                 
                 grid.appendChild(itemDiv);
-                console.log('✅ Item added to grid');
             });
             
             currentlyShown += itemsToShow.length;
@@ -1905,7 +1884,7 @@
                     if (mediaType !== mediaFilter) return false;
                 }
                 
-                // Category filter (only applies when "All" media filter is selected)
+                // Category filter
                 if (mediaFilter === 'all' && categoryFilter !== 'all') {
                     if (item.category !== categoryFilter) return false;
                 }
@@ -1916,6 +1895,7 @@
         
         function updateLoadMoreButton() {
             const loadMoreContainer = document.getElementById('load-more-container');
+            const loadMoreBtn = document.getElementById('load-more-btn');
             const loadMoreCount = document.getElementById('load-more-count');
             const shownCount = document.getElementById('shown-count');
             const totalCount = document.getElementById('total-count');
@@ -1948,7 +1928,7 @@
         window.removePortfolioItem = function(index) {
             portfolioItems.splice(index, 1);
             saveData();
-            renderPortfolio(true);
+            renderPortfolio();
             showNotification('Portfolio item removed', 'success');
         }
 
@@ -2007,24 +1987,21 @@
                     
                     let finalUrl = urlInput;
                     
-                    // Handle file upload
                     if (fileInput.files && fileInput.files[0]) {
                         const file = fileInput.files[0];
                         
-                        // Check file size (50MB limit)
                         if (file.size > 50 * 1024 * 1024) {
-                            showNotification('❌ File too large. Max 50MB.', 'error');
+                            showNotification('❌ Файл занадто великий. Максимум 50MB.', 'error');
                             return;
                         }
                         
                         finalUrl = await uploadFileToAPI(file, category);
                     } else if (!urlInput) {
-                        showNotification('❌ Please enter URL or select file', 'error');
+                        showNotification('❌ Введіть URL або виберіть файл', 'error');
                         return;
                     }
                     
-                    // Add new item to the beginning of the array (newest first)
-                    portfolioItems.unshift({ 
+                    portfolioItems.push({ 
                         category, 
                         mediaType, 
                         url: finalUrl,
@@ -2033,13 +2010,13 @@
                     });
                     
                     await saveData();
-                    renderPortfolio(true); // Full reset to show new item first
+                    renderPortfolio();
                     closePortfolioModal();
-                    showNotification('✅ Portfolio item added successfully!', 'success');
+                    showNotification('✅ Портфоліо додано успішно!', 'success');
                     
                 } catch (error) {
                     console.error('Error adding portfolio item:', error);
-                    showNotification('❌ Error adding portfolio item', 'error');
+                    showNotification('❌ Помилка додавання портфоліо', 'error');
                 }
             });
         }
@@ -2067,9 +2044,24 @@
             renderPortfolio(true);
         }
 
+        function shouldShowItem(item, mediaFilter, categoryFilter) {
+            if (mediaFilter !== 'all') {
+                if (!item.classList.contains(mediaFilter)) {
+                    return false;
+                }
+            }
+            
+            if (mediaFilter === 'all' && categoryFilter !== 'all') {
+                if (!item.classList.contains(categoryFilter)) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
         document.querySelectorAll('.portfolio-filter').forEach(button => {
             button.addEventListener('click', function() {
-                // Update button styles
                 document.querySelectorAll('.portfolio-filter').forEach(btn => {
                     btn.classList.remove('active', 'bg-gradient-to-r', 'from-purple-500', 'to-pink-500', 'text-white');
                     btn.classList.add('bg-gray-800', 'text-gray-300', 'border-gray-600');
@@ -2077,7 +2069,6 @@
                 this.classList.add('active', 'bg-gradient-to-r', 'from-purple-500', 'to-pink-500', 'text-white');
                 this.classList.remove('bg-gray-800', 'text-gray-300', 'border-gray-600');
                 
-                // Show/hide category filter based on selection
                 const categoryFilterDiv = document.getElementById('category-filter');
                 if (this.dataset.filter === 'all') {
                     categoryFilterDiv.style.display = 'flex';
@@ -2104,11 +2095,11 @@
         const clearPortfolioBtn = document.getElementById('clear-portfolio-btn');
         if (clearPortfolioBtn) {
             clearPortfolioBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to clear all portfolio items?')) {
+                if (confirm('Are you sure you want to clear all portfolio items? This will delete everything from Google Sheets!')) {
                     portfolioItems = [];
                     saveData();
-                    renderPortfolio(true);
-                    showNotification('Portfolio cleared', 'success');
+                    renderPortfolio();
+                    showNotification('Portfolio cleared from Google Sheets', 'success');
                 }
             });
         }
@@ -2173,6 +2164,25 @@
             });
         });
 
+        // Close admin panel when clicking outside
+        document.addEventListener('click', function(e) {
+            const adminPanel = document.getElementById('admin-panel');
+            const adminToggle = document.getElementById('admin-toggle');
+            
+            if (adminPanel && adminToggle && !adminPanel.contains(e.target) && !adminToggle.contains(e.target)) {
+                adminPanel.style.display = 'none';
+            }
+        });
+
+        if (adminToggle) {
+            adminToggle.addEventListener('click', function() {
+                const adminPanel = document.getElementById('admin-panel');
+                if (adminPanel) {
+                    adminPanel.style.display = adminPanel.style.display === 'block' ? 'none' : 'block';
+                }
+            });
+        }
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -2185,6 +2195,28 @@
                     });
                 }
             });
+        });
+        
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.service-card, section').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
         });
 
         // Mobile Menu Toggle
@@ -2295,7 +2327,6 @@
                 const deltaX = touchStartX - touchEndX;
                 const deltaY = touchStartY - touchEndY;
                 
-                // Horizontal swipes
                 if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
                     if (deltaX > 0) {
                         nextLightboxItem();
@@ -2312,30 +2343,36 @@
         // Test function for admin
         window.testDataLoad = async function() {
             try {
-                showNotification('🔄 Testing data load...', 'success');
+                showNotification('🔄 Тестую завантаження даних...', 'success');
+                console.log('🧪 STARTING DATA LOAD TEST...');
                 
+                // Force reload data
                 const data = await loadDataFromAPI();
+                console.log('📊 Test result:', data);
                 
+                // Re-render everything
                 renderTechnologies();
-                renderPortfolio(true);
+                renderPortfolio();
                 renderContacts();
                 
-                const message = `✅ Test complete! Portfolio: ${portfolioItems.length}, Tech: ${technologies.length}, Contacts: ${contacts.length}`;
+                const message = `✅ Тест завершено! Portfolio: ${portfolioItems.length}, Tech: ${technologies.length}, Contacts: ${contacts.length}`;
+                console.log(message);
                 showNotification(message, 'success');
                 
             } catch (error) {
                 console.error('❌ Test failed:', error);
-                showNotification('❌ Test failed: ' + error.message, 'error');
+                showNotification('❌ Тест не пройшов: ' + error.message, 'error');
             }
         }
 
         // Initialize application
-        console.log('🚀 Starting application...');
+        console.log('🚀 Starting Andrii AI Portfolio...');
+        
+        // Load data and render
         loadDataFromAPI().then((data) => {
-            console.log('✅ Data loaded:', data);
-            
+            console.log('✅ Data loaded successfully');
             renderTechnologies();
-            renderPortfolio(true);
+            renderPortfolio(true); // Full render from start
             renderContacts();
             
             // Initialize Load More Button after DOM is ready
@@ -2344,30 +2381,45 @@
                 if (loadMoreButton) {
                     loadMoreButton.addEventListener('click', function() {
                         this.style.transform = 'scale(0.95)';
-                        this.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Loading...';
+                        this.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Завантажую...';
+                        
+                        setTimeout(() => {
+                            renderPortfolio(false); // Add more items without reset
+                            this.style.transform = 'scale(1)';
+                            this.querySelector('span').innerHTML = '<i class="fas fa-images mr-3"></i>Завантажити ще портфоліо<span id="load-more-count" class="ml-2 opacity-75"></span>';
+                            updateLoadMoreButton(); // Update button
+                        }, 500);
+                    });
+                }
+            }, 100);
+            
+            console.log('🎉 Portfolio loaded!');
+        }).catch((error) => {
+            console.error('⚠️ Using offline mode:', error);
+            renderTechnologies();
+            renderPortfolio(true); // Full render from start
+            renderContacts();
+            
+            // Initialize Load More Button for offline mode too
+            setTimeout(() => {
+                const loadMoreButtonOffline = document.getElementById('load-more-btn');
+                if (loadMoreButtonOffline) {
+                    loadMoreButtonOffline.addEventListener('click', function() {
+                        this.style.transform = 'scale(0.95)';
+                        this.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Завантажую...';
                         
                         setTimeout(() => {
                             renderPortfolio(false);
                             this.style.transform = 'scale(1)';
-                            this.querySelector('span').innerHTML = '<i class="fas fa-images mr-3"></i><span data-translate="load-more-portfolio">Load More Portfolio</span><span id="load-more-count" class="ml-2 opacity-75"></span>';
+                            this.querySelector('span').innerHTML = '<i class="fas fa-images mr-3"></i>Завантажити ще портфоліо<span id="load-more-count" class="ml-2 opacity-75"></span>';
                             updateLoadMoreButton();
                         }, 500);
                     });
                 }
             }, 100);
             
-        }).catch((error) => {
-            console.error('⚠️ Using offline mode:', error);
-            renderTechnologies();
-            renderPortfolio(true);
-            renderContacts();
+            console.log('💻 Portfolio loaded in offline mode');
         });
-
-        // Auto-check for admin mode on startup
-        if (localStorage.getItem('adminMode') === 'true') {
-            document.body.classList.add('admin-mode');
-            isAdminMode = true;
-        }
 
     </script>
 </body>
