@@ -616,8 +616,8 @@
                     <div class="mt-2 text-xs text-gray-400">
                         <strong class="text-gray-300">🔥 Google Drive Upload (Recommended):</strong><br>
                         • Select file directly - uploaded to Google Drive<br>
-                        • Images: JPG, PNG, GIF, WebP (max 10MB)<br>
-                        • Videos: MP4, MOV, WebM (max 10MB)<br><br>
+                        • Images: JPG, PNG, GIF, WebP (max 50MB)<br>
+                        • Videos: MP4, MOV, WebM (max 50MB)<br><br>
                         <strong class="text-gray-300">🌐 External URLs (Also supported):</strong><br>
                         • YouTube: youtube.com/watch?v=...<br>
                         • Google Drive: drive.google.com/file/d/.../view<br>
@@ -2138,8 +2138,8 @@
                     if (fileInput.files && fileInput.files[0]) {
                         const file = fileInput.files[0];
                         
-                        if (file.size > 10 * 1024 * 1024) {
-                            showNotification('❌ Файл занадто великий. Максимум 10MB.', 'error');
+                        if (file.size > 50 * 1024 * 1024) {
+                            showNotification('❌ Файл занадто великий. Максимум 50MB.', 'error');
                             return;
                         }
                         
