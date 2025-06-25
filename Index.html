@@ -1425,9 +1425,9 @@
             
             if (mediaType === 'photos' || item.mediaType === 'photo') {
                 if (isLightbox) {
-                    mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;">`;
+                    mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.style.display='none';">`;
                 } else {
-                    mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
+                    mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover; border-radius: 20px 20px 0 0;" onerror="this.style.display='none';">`;
                 }
             }
             else if (mediaType === 'videos' || item.mediaType === 'video') {
@@ -1514,6 +1514,8 @@
                 updateLoadMoreButton();
                 return;
             }
+            
+            console.log('🎨 RENDERING PORTFOLIO:', portfolioItems.length, 'items');
             
             // Apply current filters
             applyCurrentFilters();
@@ -1980,7 +1982,9 @@
         }
 
         // Initialize application
+        console.log('🚀 Starting application...');
         loadDataFromAPI().then((data) => {
+            console.log('✅ Data loaded:', data);
             renderTechnologies();
             renderPortfolio(true);
             renderContacts();
