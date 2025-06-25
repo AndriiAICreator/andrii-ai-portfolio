@@ -208,31 +208,46 @@
         
         .portfolio-item video, .portfolio-item iframe {
             width: 100%;
+            height: auto;
+            min-height: 200px;
             border-radius: 20px 20px 0 0;
+            display: block;
         }
         
         /* Auto height for different aspect ratios */
         .portfolio-item .video-16-9 {
             aspect-ratio: 16/9;
+            width: 100%;
+            height: auto;
         }
         
         .portfolio-item .video-9-16 {
             aspect-ratio: 9/16;
+            width: 100%;
+            height: auto;
+            max-height: 500px;
         }
         
         .portfolio-item .video-1-1 {
             aspect-ratio: 1/1;
+            width: 100%;
+            height: auto;
         }
         
         .portfolio-item .video-4-3 {
             aspect-ratio: 4/3;
+            width: 100%;
+            height: auto;
         }
         
         .portfolio-item .video-21-9 {
             aspect-ratio: 21/9;
+            width: 100%;
+            height: auto;
         }
         
         .portfolio-item .video-default {
+            width: 100%;
             height: 250px;
         }
         
@@ -282,17 +297,25 @@
                 max-width: 100%;
             }
             
+            .portfolio-item video, .portfolio-item iframe {
+                min-height: 250px;
+                display: block;
+            }
+            
             .portfolio-item .video-9-16 {
                 aspect-ratio: 9/16;
                 max-height: 400px;
+                width: 100%;
             }
             
             .portfolio-item .video-16-9 {
                 aspect-ratio: 16/9;
+                width: 100%;
             }
             
             .portfolio-item .video-default {
                 height: 250px;
+                width: 100%;
             }
         }
         
@@ -351,7 +374,10 @@
         .lightbox video, .lightbox iframe { 
             max-width: 90vw; 
             max-height: 90vh; 
-            border-radius: 8px; 
+            width: auto;
+            height: auto;
+            border-radius: 8px;
+            display: block;
         }
         .lightbox-nav { 
             position: fixed; 
@@ -2002,72 +2028,45 @@
                 }
             }
             else if (mediaType === 'videos' || item.mediaType === 'video') {
-                const aspectRatioClass = detectVideoAspectRatio(item);
-                
                 if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
                     const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
                     if (videoId) {
                         if (isLightbox) {
-                            mediaContent = `<iframe class="youtube-lightbox" style="width: 90vw; height: 80vh;" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                            mediaContent = `<iframe style="width: 90vw; height: 80vh; display: block;" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
                         } else {
-                            mediaContent = `<iframe class="${aspectRatioClass}" style="width: 100%;" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                            mediaContent = `<iframe style="width: 100%; height: 300px; display: block;" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
                         }
                     }
                 } else if (item.url.includes('drive.google.com')) {
                     const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
-                        // Спроба використати Google Drive embed з fallback
                         if (isLightbox) {
-                            mediaContent = `
-                                <iframe class="drive-lightbox" style="width: 90vw; height: 80vh;" 
-                                    src="https://drive.google.com/file/d/${fileId}/preview" 
-                                    frameborder="0" allowfullscreen allow="autoplay"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                </iframe>
-                                <div style="display: none; text-align: center; padding: 2rem; background: #f3f4f6; border-radius: 8px;">
-                                    <i class="fab fa-google-drive text-4xl text-blue-600 mb-4"></i>
-                                    <p class="text-gray-700 mb-4">Відео не може бути відтворене вбудовано</p>
-                                    <a href="${item.url}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                        <i class="fab fa-google-drive mr-2"></i>Відкрити в Google Drive
-                                    </a>
-                                </div>`;
+                            mediaContent = `<iframe style="width: 90vw; height: 80vh; display: block;" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen allow="autoplay"></iframe>`;
                         } else {
-                            mediaContent = `
-                                <iframe class="${aspectRatioClass}" style="width: 100%; min-height: 300px;" 
-                                    src="https://drive.google.com/file/d/${fileId}/preview" 
-                                    frameborder="0" allowfullscreen allow="autoplay"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                </iframe>
-                                <div style="display: none; text-align: center; padding: 1.5rem; background: #f3f4f6; border-radius: 8px;">
-                                    <i class="fab fa-google-drive text-2xl text-blue-600 mb-2"></i>
-                                    <p class="text-gray-700 text-sm mb-2">Відео потребує прямого перегляду</p>
-                                    <a href="${item.url}" target="_blank" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
-                                        Відкрити відео
-                                    </a>
-                                </div>`;
+                            mediaContent = `<iframe style="width: 100%; height: 300px; display: block;" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen allow="autoplay"></iframe>`;
                         }
                     }
                 } else if (item.url.includes('dropbox.com')) {
                     const directUrl = item.url.replace('dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
                     if (isLightbox) {
-                        mediaContent = `<video class="dropbox-lightbox" style="width: 90vw; height: 80vh; object-fit: contain;" controls>
+                        mediaContent = `<video style="width: 90vw; height: 80vh; object-fit: contain; display: block;" controls>
                             <source src="${directUrl}" type="video/mp4">
-                            Your browser does not support the video tag.
+                            Ваш браузер не підтримує відео.
                         </video>`;
                     } else {
-                        mediaContent = `<video class="${aspectRatioClass}" style="width: 100%; object-fit: cover;" controls>
+                        mediaContent = `<video style="width: 100%; height: 300px; object-fit: cover; display: block;" controls>
                             <source src="${directUrl}" type="video/mp4">
-                            Your browser does not support the video tag.
+                            Ваш браузер не підтримує відео.
                         </video>`;
                     }
                 } else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
                     if (isLightbox) {
-                        mediaContent = `<video class="video-lightbox" style="width: 90vw; height: 80vh; object-fit: contain;" controls preload="metadata">
+                        mediaContent = `<video style="width: 90vw; height: 80vh; object-fit: contain; display: block;" controls preload="metadata">
                             <source src="${item.url}" type="video/mp4">
                             <p>Відео не може бути завантажене. <a href="${item.url}" target="_blank">Відкрити в новій вкладці</a></p>
                         </video>`;
                     } else {
-                        mediaContent = `<video class="${aspectRatioClass}" style="width: 100%; object-fit: cover;" controls preload="metadata">
+                        mediaContent = `<video style="width: 100%; height: 300px; object-fit: cover; display: block;" controls preload="metadata">
                             <source src="${item.url}" type="video/mp4">
                             <p>Відео не може бути завантажене. <a href="${item.url}" target="_blank">Відкрити в новій вкладці</a></p>
                         </video>`;
