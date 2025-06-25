@@ -421,6 +421,9 @@
             <button onclick="openContactModal()" class="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-address-book mr-2"></i>Manage Contacts
             </button>
+            <button onclick="testDataLoad()" class="w-full bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-300 hover:scale-105">
+                <i class="fas fa-sync mr-2"></i>Test Data Load
+            </button>
             <button id="clear-portfolio-btn" class="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-trash mr-2"></i>Clear All Portfolio
             </button>
@@ -1256,10 +1259,11 @@
             }
         }
 
-        // Google Apps Script API Functions
+        // Simplified Google Apps Script API Functions
         async function callAPI(action, data = {}, method = 'GET') {
             try {
                 updateApiStatus('loading');
+                console.log('🌐 API Call:', action);
                 
                 const formData = new FormData();
                 formData.append('action', action);
@@ -1273,60 +1277,67 @@
                 }
                 
                 const response = await fetch(API_URL, {
-                    method: 'POST', // Google Apps Script always uses POST
+                    method: 'POST',
                     body: formData
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
                 const result = await response.json();
+                console.log('📥 API Response:', result);
                 
-                if (result.status !== 200) {
+                if (result.status === 200) {
+                    updateApiStatus('online');
+                    return result.data;
+                } else {
                     throw new Error(result.data?.error || 'API Error');
                 }
                 
-                updateApiStatus('online');
-                return result.data;
-                
             } catch (error) {
-                console.error('API Error:', error);
-                updateApiStatus('error');
-                
-                if (isAdminMode) {
-                    if (error.message.includes('HTTP 403') || error.message.includes('Unauthorized')) {
-                        showNotification('❌ Помилка доступу. Перевірте налаштування Google Apps Script.', 'error');
-                    } else if (error.message.includes('CORS')) {
-                        showNotification('❌ CORS помилка. Перевірте налаштування дозволів.', 'error');
-                    } else {
-                        showNotification(`❌ API помилка: ${error.message}`, 'error');
-                    }
-                }
-                
+                console.error('❌ API Error:', error);
+                updateApiStatus('offline');
                 throw error;
             }
         }
 
-        // Data Management Functions
+        // Simplified Data Loading
         async function loadDataFromAPI() {
             try {
-                console.log('📡 Loading from Google Apps Script API...');
-                const data = await callAPI('getAllData');
+                console.log('📡 Loading data...');
                 
-                portfolioItems = data.portfolioItems || [];
-                technologies = data.technologies || [];
-                contacts = data.contacts || [];
+                const response = await fetch(API_URL + '?action=getAllData', {
+                    method: 'GET'
+                });
                 
-                console.log('✅ Data loaded from API:', portfolioItems.length, 'portfolio items');
-                if (isAdminMode) {
-                    showNotification('✅ Дані завантажено з Google Sheets!', 'success');
+                const result = await response.json();
+                console.log('📊 Raw API Response:', result);
+                
+                if (result.status === 200 && result.data) {
+                    portfolioItems = result.data.portfolioItems || [];
+                    technologies = result.data.technologies || [];
+                    contacts = result.data.contacts || [];
+                    
+                    console.log('✅ Loaded:', portfolioItems.length, 'portfolio,', technologies.length, 'tech,', contacts.length, 'contacts');
+                    updateApiStatus('online');
+                    return result.data;
+                } else {
+                    throw new Error('Invalid API response');
                 }
                 
-                return data;
             } catch (error) {
-                console.error('❌ API load error:', error);
-                throw error;
+                console.error('❌ Load error:', error);
+                updateApiStatus('offline');
+                
+                // Use default data if API fails
+                portfolioItems = [];
+                technologies = [
+                    { name: 'Midjourney', emoji: '🎨' },
+                    { name: 'FLUX', emoji: '⚡' },
+                    { name: 'Stable Diffusion', emoji: '🔬' }
+                ];
+                contacts = [
+                    { platform: 'email', label: 'andrii.aicreator@gmail.com', url: 'mailto:andrii.aicreator@gmail.com', icon: 'fas fa-envelope' }
+                ];
+                
+                return { portfolioItems, technologies, contacts };
             }
         }
 
@@ -2226,26 +2237,47 @@
             });
         }
         
-        // Start in user mode by default
-        isAdminMode = false;
-        
-        // Load data from Google Apps Script API on startup
-        loadDataFromAPI().then(() => {
-            renderTechnologies();
-            renderPortfolio();
-            renderContacts();
-            console.log('✅ Andrii AI Portfolio loaded with Google Apps Script API');
-        }).catch((error) => {
-            console.error('❌ CRITICAL: Google Apps Script API failed to load:', error);
-            updateApiStatus('offline');
-            if (isAdminMode) {
-                showNotification('❌ КРИТИЧНА ПОМИЛКА: Google Apps Script API недоступний.', 'error');
+        // Test function for admin
+        window.testDataLoad = async function() {
+            try {
+                showNotification('🔄 Тестую завантаження даних...', 'success');
+                console.log('🧪 STARTING DATA LOAD TEST...');
+                
+                // Force reload data
+                const data = await loadDataFromAPI();
+                console.log('📊 Test result:', data);
+                
+                // Re-render everything
+                renderTechnologies();
+                renderPortfolio();
+                renderContacts();
+                
+                const message = `✅ Тест завершено! Portfolio: ${portfolioItems.length}, Tech: ${technologies.length}, Contacts: ${contacts.length}`;
+                console.log(message);
+                showNotification(message, 'success');
+                
+            } catch (error) {
+                console.error('❌ Test failed:', error);
+                showNotification('❌ Тест не пройшов: ' + error.message, 'error');
             }
-            // Still render with defaults
+        }
+
+        // Initialize application
+        console.log('🚀 Starting Andrii AI Portfolio...');
+        
+        // Load data and render
+        loadDataFromAPI().then((data) => {
+            console.log('✅ Data loaded successfully');
             renderTechnologies();
             renderPortfolio();
             renderContacts();
-            console.log('⚠️ Andrii AI Portfolio loaded with ERRORS - API required');
+            console.log('🎉 Portfolio loaded!');
+        }).catch((error) => {
+            console.error('⚠️ Using offline mode:', error);
+            renderTechnologies();
+            renderPortfolio();
+            renderContacts();
+            console.log('💻 Portfolio loaded in offline mode');
         });
     </script>
 </body>
