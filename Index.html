@@ -72,6 +72,96 @@
             100% { transform: translateX(-100px) translateY(-100px); }
         }
         
+        /* Enhanced Particle Effects */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: linear-gradient(45deg, #8b5cf6, #ec4899);
+            border-radius: 50%;
+            animation: particle-float 8s linear infinite;
+            opacity: 0.6;
+        }
+        
+        @keyframes particle-float {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Mouse Trail Effect */
+        .mouse-trail {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Enhanced Hover Effects */
+        .epic-hover {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .epic-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent
+            );
+            transition: left 0.6s ease;
+        }
+        
+        .epic-hover:hover::before {
+            left: 100%;
+        }
+        
+        /* Glowing Border Animation */
+        .glow-border {
+            position: relative;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border: 1px solid transparent;
+        }
+        
+        .glow-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 2px;
+            background: linear-gradient(45deg, #8b5cf6, #ec4899, #3b82f6, #8b5cf6);
+            border-radius: inherit;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: border-rotate 3s linear infinite;
+        }
+        
+        @keyframes border-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         /* Neon Effects */
         .neon-text {
             color: #ffffff;
@@ -120,64 +210,132 @@
         .notification.success { background: #10b981; }
         .notification.error { background: #ef4444; }
         
-        /* Simple Portfolio Grid - Works everywhere */
+        /* Advanced Masonry Portfolio Grid */
         .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
+            columns: 3;
+            column-gap: 2rem;
+            break-inside: auto;
         }
         
         .portfolio-item {
+            display: inline-block;
             width: 100%;
+            margin-bottom: 2rem;
+            break-inside: avoid;
+            page-break-inside: avoid;
             background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 24px;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
         
         .portfolio-item:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 30px 60px rgba(139, 92, 246, 0.3), 0 0 30px rgba(139, 92, 246, 0.2);
-            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 
+                0 40px 80px rgba(139, 92, 246, 0.4), 
+                0 0 40px rgba(139, 92, 246, 0.3),
+                0 0 0 1px rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.6);
+            z-index: 10;
         }
         
         .portfolio-item img {
             width: 100%;
             height: auto;
+            display: block;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            transition: transform 0.4s ease, filter 0.4s ease;
+            border-radius: 20px 20px 0 0;
         }
         
         .portfolio-item:hover img {
-            transform: scale(1.05);
+            transform: scale(1.08);
+            filter: brightness(1.1) contrast(1.1);
         }
         
         .portfolio-item video, .portfolio-item iframe {
             width: 100%;
-            height: 250px;
+            height: auto;
+            min-height: 200px;
             object-fit: cover;
+            border-radius: 20px 20px 0 0;
         }
         
-        /* Responsive adjustments */
-        @media (max-width: 1024px) {
+        /* Portfolio item overlay effects */
+        .portfolio-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(139, 92, 246, 0.1) 0%,
+                rgba(59, 130, 246, 0.1) 50%,
+                rgba(236, 72, 153, 0.1) 100%
+            );
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            border-radius: 24px;
+            pointer-events: none;
+        }
+        
+        .portfolio-item:hover::before {
+            opacity: 1;
+        }
+        
+        /* Responsive Masonry */
+        @media (max-width: 1200px) {
             .portfolio-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 1.5rem;
+                columns: 2;
+                column-gap: 1.5rem;
+            }
+            
+            .portfolio-item {
+                margin-bottom: 1.5rem;
             }
         }
         
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             .portfolio-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
+                columns: 1;
+                column-gap: 0;
+            }
+            
+            .portfolio-item {
+                margin-bottom: 2rem;
+                max-width: 100%;
             }
             
             .portfolio-item video, .portfolio-item iframe {
-                height: 300px;
+                min-height: 250px;
             }
         }
+        
+        /* Loading animation for portfolio items */
+        .portfolio-item {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            animation: portfolioFadeIn 0.6s ease forwards;
+        }
+        
+        @keyframes portfolioFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Stagger animation delays */
+        .portfolio-item:nth-child(1) { animation-delay: 0.1s; }
+        .portfolio-item:nth-child(2) { animation-delay: 0.2s; }
+        .portfolio-item:nth-child(3) { animation-delay: 0.3s; }
+        .portfolio-item:nth-child(4) { animation-delay: 0.4s; }
+        .portfolio-item:nth-child(5) { animation-delay: 0.5s; }
+        .portfolio-item:nth-child(6) { animation-delay: 0.6s; }
 
         /* Lightbox Styles */
         .lightbox { 
@@ -464,7 +622,6 @@
                     <label class="block text-sm font-medium mb-2 text-gray-300">Category</label>
                     <select id="portfolio-category" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" required>
                         <option value="avatars">AI Avatars</option>
-                        <option value="voice-work">Voice Work</option>
                         <option value="image-generation">Image Generation</option>
                         <option value="video-creation">Video Creation</option>
                         <option value="ecommerce">E-commerce</option>
@@ -683,10 +840,10 @@
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- AI Avatars -->
-                <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
+                <div class="service-card epic-hover glow-border p-8 rounded-3xl relative group overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10">
-                        <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
+                        <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
                             <i class="fas fa-user-circle text-3xl text-white"></i>
                         </div>
                         <h3 class="text-2xl font-bold mb-4 text-white" data-translate="service-avatars-title">👤 AI Avatars</h3>
@@ -862,7 +1019,6 @@
                 <select id="category-select" class="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-sm text-white focus:border-purple-400 focus:outline-none">
                     <option value="all">All Categories</option>
                     <option value="avatars">AI Avatars</option>
-                    <option value="voice-work">Voice Work</option>
                     <option value="image-generation">Image Generation</option>
                     <option value="video-creation">Video Creation</option>
                     <option value="ecommerce">E-commerce</option>
@@ -893,9 +1049,6 @@
                 <div class="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
                     <button onclick="openPortfolioModal('avatars')" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
                         <i class="fas fa-user-circle mr-2"></i>AI Avatars
-                    </button>
-                    <button onclick="openPortfolioModal('voice-work')" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm">
-                        <i class="fas fa-microphone mr-2"></i>Voice Work
                     </button>
                     <button onclick="openPortfolioModal('image-generation')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm">
                         <i class="fas fa-image mr-2"></i>Image Generation
@@ -981,7 +1134,49 @@
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
+    <!-- Mouse Trail -->
+    <div class="mouse-trail" id="mouseTrail"></div>
+
     <script type="module">
+        // Mouse Trail Effect
+        let mouseTrail = document.getElementById('mouseTrail');
+        let mouseX = 0, mouseY = 0;
+        let trailX = 0, trailY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function animateTrail() {
+            trailX += (mouseX - trailX) * 0.1;
+            trailY += (mouseY - trailY) * 0.1;
+            
+            mouseTrail.style.left = trailX + 'px';
+            mouseTrail.style.top = trailY + 'px';
+            
+            requestAnimationFrame(animateTrail);
+        }
+        
+        animateTrail();
+        
+        // Add floating particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 8000);
+        }
+        
+        // Create particles periodically
+        setInterval(createParticle, 2000);
+        
         // GOOGLE APPS SCRIPT API CONFIGURATION
         const API_URL = 'https://script.google.com/macros/s/AKfycbxG9GEJ8zCJibd1n47NE4mvRH2gxa5p_dqDmCELFOXjN6jXUIXuAueBttIYelfmBywy1Q/exec';
         const ADMIN_PASSWORD = 'andrii2025';
@@ -1508,22 +1703,37 @@
             
             technologies.forEach((tech, index) => {
                 const techDiv = document.createElement('div');
-                techDiv.className = 'epic-card text-center p-6 rounded-2xl hover:scale-110 transform transition-all duration-500 relative group tech-card';
+                techDiv.className = 'epic-card epic-hover glow-border text-center p-6 rounded-2xl hover:scale-110 transform transition-all duration-500 relative group tech-card';
                 techDiv.style.animationDelay = `${index * 100}ms`;
+                
+                // Random gradient colors for variety
+                const gradients = [
+                    'from-purple-500 to-pink-500',
+                    'from-blue-500 to-cyan-500', 
+                    'from-green-500 to-teal-500',
+                    'from-orange-500 to-red-500',
+                    'from-indigo-500 to-purple-500',
+                    'from-pink-500 to-rose-500'
+                ];
+                const randomGradient = gradients[index % gradients.length];
+                
                 techDiv.innerHTML = `
-                    <div class="text-4xl mb-4 transition-transform duration-500 group-hover:scale-125 group-hover:rotate-12">${tech.emoji}</div>
-                    <h4 class="font-bold text-white text-lg">${tech.name}</h4>
-                    <button class="admin-only absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 hover:scale-110 transition-all duration-300 flex items-center justify-center" onclick="removeTechnology(${index})" style="display: none;">×</button>
+                    <div class="w-16 h-16 bg-gradient-to-br ${randomGradient} rounded-2xl flex items-center justify-center mx-auto mb-4 glow-box group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
+                        <div class="text-2xl">${tech.emoji}</div>
+                    </div>
+                    <h4 class="font-bold text-white text-lg group-hover:text-cyan-300 transition-colors duration-300">${tech.name}</h4>
+                    <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-white/10 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-500"></div>
+                    <button class="admin-only absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 hover:scale-110 transition-all duration-300 flex items-center justify-center z-20" onclick="removeTechnology(${index})" style="display: none;">×</button>
                 `;
                 grid.appendChild(techDiv);
             });
             
-            // Add staggered animation
+            // Add staggered animation with enhanced effects
             document.querySelectorAll('.tech-card').forEach((card, index) => {
                 setTimeout(() => {
                     card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100);
+                    card.style.transform = 'translateY(0) scale(1)';
+                }, index * 150);
             });
         }
 
