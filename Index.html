@@ -2016,10 +2016,35 @@
                 } else if (item.url.includes('drive.google.com')) {
                     const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
+                        // Спроба використати Google Drive embed з fallback
                         if (isLightbox) {
-                            mediaContent = `<iframe class="drive-lightbox" style="width: 90vw; height: 80vh;" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
+                            mediaContent = `
+                                <iframe class="drive-lightbox" style="width: 90vw; height: 80vh;" 
+                                    src="https://drive.google.com/file/d/${fileId}/preview" 
+                                    frameborder="0" allowfullscreen allow="autoplay"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                </iframe>
+                                <div style="display: none; text-align: center; padding: 2rem; background: #f3f4f6; border-radius: 8px;">
+                                    <i class="fab fa-google-drive text-4xl text-blue-600 mb-4"></i>
+                                    <p class="text-gray-700 mb-4">Відео не може бути відтворене вбудовано</p>
+                                    <a href="${item.url}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                        <i class="fab fa-google-drive mr-2"></i>Відкрити в Google Drive
+                                    </a>
+                                </div>`;
                         } else {
-                            mediaContent = `<iframe class="${aspectRatioClass}" style="width: 100%;" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
+                            mediaContent = `
+                                <iframe class="${aspectRatioClass}" style="width: 100%; min-height: 300px;" 
+                                    src="https://drive.google.com/file/d/${fileId}/preview" 
+                                    frameborder="0" allowfullscreen allow="autoplay"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                </iframe>
+                                <div style="display: none; text-align: center; padding: 1.5rem; background: #f3f4f6; border-radius: 8px;">
+                                    <i class="fab fa-google-drive text-2xl text-blue-600 mb-2"></i>
+                                    <p class="text-gray-700 text-sm mb-2">Відео потребує прямого перегляду</p>
+                                    <a href="${item.url}" target="_blank" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                                        Відкрити відео
+                                    </a>
+                                </div>`;
                         }
                     }
                 } else if (item.url.includes('dropbox.com')) {
@@ -2037,14 +2062,14 @@
                     }
                 } else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
                     if (isLightbox) {
-                        mediaContent = `<video class="video-lightbox" style="width: 90vw; height: 80vh; object-fit: contain;" controls>
+                        mediaContent = `<video class="video-lightbox" style="width: 90vw; height: 80vh; object-fit: contain;" controls preload="metadata">
                             <source src="${item.url}" type="video/mp4">
-                            Your browser does not support the video tag.
+                            <p>Відео не може бути завантажене. <a href="${item.url}" target="_blank">Відкрити в новій вкладці</a></p>
                         </video>`;
                     } else {
-                        mediaContent = `<video class="${aspectRatioClass}" style="width: 100%; object-fit: cover;" controls>
+                        mediaContent = `<video class="${aspectRatioClass}" style="width: 100%; object-fit: cover;" controls preload="metadata">
                             <source src="${item.url}" type="video/mp4">
-                            Your browser does not support the video tag.
+                            <p>Відео не може бути завантажене. <a href="${item.url}" target="_blank">Відкрити в новій вкладці</a></p>
                         </video>`;
                     }
                 }
