@@ -208,10 +208,19 @@
         
         .portfolio-item video, .portfolio-item iframe {
             width: 100%;
-            height: auto;
-            min-height: 200px;
+            min-height: 280px;
             border-radius: 20px 20px 0 0;
             display: block;
+            background: #000;
+        }
+        
+        .portfolio-item iframe {
+            border: none;
+            outline: none;
+        }
+        
+        .portfolio-item video {
+            object-fit: cover;
         }
         
 
@@ -1966,50 +1975,83 @@
                 if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
                     const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
                     if (videoId) {
-                        const height = isLightbox ? '80vh' : '250px';
-                        const width = isLightbox ? '90vw' : '100%';
-                        mediaContent = `<iframe style="width: ${width}; height: ${height};" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                        if (isLightbox) {
+                            mediaContent = `<iframe width="90%" height="80%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                        } else {
+                            mediaContent = `<iframe width="100%" height="280" src="https://www.youtube.com/embed/${videoId}?controls=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                        }
                     }
                 } else if (item.url.includes('drive.google.com')) {
                     const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
-                        let height, width;
                         if (isLightbox) {
-                            height = '80vh';
-                            width = '90vw';
+                            mediaContent = `<iframe width="90%" height="80%" src="https://drive.google.com/file/d/${fileId}/preview?usp=sharing" frameborder="0" allow="autoplay" allowfullscreen></iframe>`;
                         } else {
-                            height = window.innerWidth < 640 ? '250px' : '250px';
-                            width = '100%';
+                            mediaContent = `<iframe width="100%" height="280" src="https://drive.google.com/file/d/${fileId}/preview?usp=sharing" frameborder="0" allow="autoplay" allowfullscreen></iframe>`;
                         }
-                        mediaContent = `<iframe style="width: ${width}; height: ${height};" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
+                    } else {
+                        // Fallback для неправильних Google Drive посилань
+                        mediaContent = `<div style="width: 100%; height: 280px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0;">
+                            <div style="text-align: center;">
+                                <i class="fab fa-google-drive" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                <p style="margin: 0 0 1rem 0;">Google Drive Video</p>
+                                <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 8px; color: white; text-decoration: none;">Open in Drive</a>
+                            </div>
+                        </div>`;
                     }
                 } else if (item.url.includes('dropbox.com')) {
-                    const directUrl = item.url.replace('dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
-                    let height, width;
-                    if (isLightbox) {
-                        height = '80vh';
-                        width = '90vw';
-                    } else {
-                        height = window.innerWidth < 640 ? '250px' : '250px';
-                        width = '100%';
+                    // Кращий Dropbox обробник
+                    let directUrl = item.url;
+                    if (directUrl.includes('dropbox.com') && !directUrl.includes('dl.dropboxusercontent.com')) {
+                        directUrl = directUrl.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '').replace('?dl=1', '');
                     }
-                    mediaContent = `<video style="width: ${width}; height: ${height}; object-fit: cover;" controls>
-                        <source src="${directUrl}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>`;
+                    
+                    if (isLightbox) {
+                        mediaContent = `<video width="90%" height="80%" controls style="object-fit: contain; background: black;">
+                            <source src="${directUrl}" type="video/mp4">
+                            <p style="color: white;">Відео не може бути відтворене. <a href="${item.url}" target="_blank" style="color: #4285f4;">Відкрити в Dropbox</a></p>
+                        </video>`;
+                    } else {
+                        mediaContent = `<video width="100%" height="280" controls style="object-fit: cover; border-radius: 20px 20px 0 0; background: black;">
+                            <source src="${directUrl}" type="video/mp4">
+                            <div style="width: 100%; height: 280px; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); display: flex; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0;">
+                                <div style="text-align: center;">
+                                    <i class="fab fa-dropbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                    <p style="margin: 0 0 1rem 0;">Dropbox Video</p>
+                                    <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 8px; color: white; text-decoration: none;">Open Video</a>
+                                </div>
+                            </div>
+                        </video>`;
+                    }
                 } else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
-                    let height, width;
                     if (isLightbox) {
-                        height = '80vh';
-                        width = '90vw';
+                        mediaContent = `<video width="90%" height="80%" controls style="object-fit: contain; background: black;">
+                            <source src="${item.url}" type="video/mp4">
+                            <source src="${item.url}" type="video/webm">
+                            <p style="color: white;">Your browser does not support this video format. <a href="${item.url}" target="_blank" style="color: #4285f4;">Download video</a></p>
+                        </video>`;
                     } else {
-                        height = window.innerWidth < 640 ? '250px' : '250px';
-                        width = '100%';
+                        mediaContent = `<video width="100%" height="280" controls style="object-fit: cover; border-radius: 20px 20px 0 0; background: black;">
+                            <source src="${item.url}" type="video/mp4">
+                            <source src="${item.url}" type="video/webm">
+                            <div style="width: 100%; height: 280px; background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); display: flex; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0;">
+                                <div style="text-align: center;">
+                                    <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                    <p style="margin: 0 0 1rem 0;">Video file</p>
+                                    <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 8px; color: white; text-decoration: none;">Download</a>
+                                </div>
+                            </div>
+                        </video>`;
                     }
-                    mediaContent = `<video style="width: ${width}; height: ${height}; object-fit: cover;" controls>
-                        <source src="${item.url}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>`;
+                } else {
+                    // Fallback для невідомих відео URL
+                    mediaContent = `<div style="width: 100%; height: 280px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); display: flex; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0;">
+                        <div style="text-align: center;">
+                            <i class="fas fa-external-link-alt" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <p style="margin: 0 0 1rem 0;">External Video</p>
+                            <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 8px; color: white; text-decoration: none;">Open Video</a>
+                        </div>
+                    </div>`;
                 }
             }
             
@@ -2574,6 +2616,41 @@
                 showNotification('❌ Тест не пройшов: ' + error.message, 'error');
             }
         }
+
+        // Debug function for video testing
+        window.debugVideoIssues = function() {
+            console.log('🎬 VIDEO DEBUG INFO:');
+            console.log('Portfolio items:', portfolioItems);
+            
+            portfolioItems.forEach((item, index) => {
+                if (getMediaType(item) === 'videos') {
+                    console.log(`Video ${index}:`, {
+                        url: item.url,
+                        mediaType: item.mediaType,
+                        category: item.category
+                    });
+                    
+                    if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
+                        const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
+                        console.log('YouTube video ID:', videoId);
+                        console.log('YouTube embed URL:', `https://www.youtube.com/embed/${videoId}`);
+                    }
+                    
+                    if (item.url.includes('drive.google.com')) {
+                        const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
+                        console.log('Google Drive file ID:', fileId);
+                        console.log('Google Drive preview URL:', `https://drive.google.com/file/d/${fileId}/preview`);
+                    }
+                }
+            });
+            
+            // Test iframe creation
+            console.log('Creating test YouTube iframe...');
+            const testDiv = document.createElement('div');
+            testDiv.innerHTML = '<iframe width="300" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>';
+            document.body.appendChild(testDiv);
+            console.log('Test iframe added to page');
+        };
 
         // Initialize application
         console.log('🚀 Starting Andrii AI Portfolio...');
