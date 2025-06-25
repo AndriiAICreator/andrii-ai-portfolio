@@ -145,9 +145,16 @@
         }
         
         .portfolio-item {
-            opacity: 0;
-            transform: translateY(30px) scale(0.95);
-            animation: portfolioFadeIn 0.6s ease forwards;
+            opacity: 1 !important;
+            transform: translateY(0) scale(1) !important;
+            min-height: 200px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%) !important;
+        }
+        
+        .portfolio-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
         
         @keyframes portfolioFadeIn {
@@ -1523,17 +1530,31 @@
             // Show items in batches
             const itemsToShow = filteredItems.slice(currentlyShown, currentlyShown + ITEMS_PER_PAGE);
             
+            console.log('📦 Items to show:', itemsToShow.length);
+            
             itemsToShow.forEach((item, relativeIndex) => {
+                console.log('🎨 Rendering item:', item);
+                
                 const absoluteIndex = portfolioItems.indexOf(item);
                 const mediaType = getMediaType(item);
                 const mediaContent = createMediaContent(item);
+                
+                console.log('🖼️ Media content created:', mediaContent.length > 0 ? 'YES' : 'NO');
                 
                 const itemDiv = document.createElement('div');
                 itemDiv.className = `portfolio-item cursor-pointer relative ${item.category} ${mediaType}`;
                 itemDiv.dataset.index = absoluteIndex;
                 itemDiv.style.animationDelay = `${relativeIndex * 100}ms`;
+                
+                // Add padding and content wrapper
                 itemDiv.innerHTML = `
-                    ${mediaContent}
+                    <div class="portfolio-content">
+                        ${mediaContent}
+                        <div class="p-4">
+                            <p class="text-sm text-gray-300 capitalize">${item.category}</p>
+                            <span class="text-xs text-gray-500">${item.mediaType || 'media'}</span>
+                        </div>
+                    </div>
                     <button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${absoluteIndex})" style="display: none;">×</button>
                 `;
                 
@@ -1544,6 +1565,7 @@
                 });
                 
                 grid.appendChild(itemDiv);
+                console.log('✅ Item added to grid');
             });
             
             currentlyShown += itemsToShow.length;
