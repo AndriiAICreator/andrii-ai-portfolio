@@ -8,13 +8,10 @@
     
     <!-- Favicon - Robot Icon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23ffffff'/><circle cx='50' cy='50' r='40' fill='%232563eb'/><rect x='35' y='35' width='8' height='8' rx='2' fill='%23ffffff'/><rect x='57' y='35' width='8' height='8' rx='2' fill='%23ffffff'/><rect x='40' y='55' width='20' height='6' rx='3' fill='%23ffffff'/><rect x='30' y='20' width='6' height='15' rx='3' fill='%232563eb'/><rect x='64' y='20' width='6' height='15' rx='3' fill='%232563eb'/></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23ffffff'/><circle cx='50' cy='50' r='40' fill='%232563eb'/><rect x='35' y='35' width='8' height='8' rx='2' fill='%23ffffff'/><rect x='57' y='35' width='8' height='8' rx='2' fill='%23ffffff'/><rect x='40' y='55' width='20' height='6' rx='3' fill='%23ffffff'/><rect x='30' y='20' width='6' height='15' rx='3' fill='%232563eb'/></svg>">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <!-- Backup Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         body { 
@@ -24,23 +21,10 @@
             overflow-x: hidden;
         }
         
-        /* Epic Gradient Backgrounds */
         .gradient-bg { 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             position: relative;
             overflow: hidden;
-            width: 100%;
-            max-width: 100vw;
-        }
-        .gradient-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" /><stop offset="100%" style="stop-color:rgba(255,255,255,0);stop-opacity:0" /></radialGradient></defs><circle cx="20" cy="20" r="3" fill="url(%23g)" /><circle cx="80" cy="40" r="2" fill="url(%23g)" /><circle cx="40" cy="80" r="4" fill="url(%23g)" /><circle cx="90" cy="90" r="2" fill="url(%23g)" /><circle cx="10" cy="60" r="3" fill="url(%23g)" /></svg>') repeat;
-            animation: sparkle 20s linear infinite;
         }
         
         .epic-card {
@@ -48,7 +32,6 @@
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.2);
             box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
-            contain: layout style;
         }
         
         .service-card {
@@ -71,57 +54,10 @@
             75% { transform: translateY(-15px) rotate(-2deg); }
         }
         
-        @keyframes sparkle {
-            0% { transform: translateX(0) translateY(0); }
-            100% { transform: translateX(-100px) translateY(-100px); }
-        }
-        
-        .mouse-trail {
-            position: fixed;
-            width: 30px;
-            height: 30px;
-            background: radial-gradient(circle, 
-                rgba(139, 92, 246, 0.9) 0%, 
-                rgba(236, 72, 153, 0.6) 30%,
-                rgba(59, 130, 246, 0.4) 60%,
-                transparent 100%
-            );
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transition: all 0.15s ease-out;
-            transform: translate(-50%, -50%);
-            box-shadow: 
-                0 0 20px rgba(139, 92, 246, 0.5),
-                0 0 40px rgba(236, 72, 153, 0.3),
-                0 0 60px rgba(59, 130, 246, 0.2);
-            animation: mouseGlow 2s ease-in-out infinite alternate;
-        }
-        
-        .simple-glow:hover {
-            box-shadow: 
-                0 0 20px rgba(139, 92, 246, 0.3),
-                0 0 40px rgba(139, 92, 246, 0.2);
-        }
-        
-        .neon-text {
-            color: #ffffff;
-            text-shadow: 
-                0 0 5px #fff,
-                0 0 10px #fff,
-                0 0 15px #8b5cf6,
-                0 0 20px #8b5cf6,
-                0 0 35px #8b5cf6,
-                0 0 40px #8b5cf6;
-        }
-        
         .glow-box {
-            box-shadow: 
-                0 0 20px rgba(139, 92, 246, 0.3),
-                0 0 40px rgba(139, 92, 246, 0.2),
-                0 0 60px rgba(139, 92, 246, 0.1),
-                inset 0 0 20px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
         }
+        
         .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 2rem; }
         .tech-card {
             opacity: 0;
@@ -133,17 +69,15 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
         .admin-panel { display: none; }
         .admin-mode .admin-panel { display: block; }
         .admin-mode .admin-only { display: block !important; }
         .admin-only { display: none; }
-        .portfolio-item { position: relative; }
         .admin-mode .portfolio-item:hover .delete-btn { 
             display: flex !important; 
-            align-items: center; 
-            justify-content: center;
-            z-index: 20;
         }
+        
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; }
         .modal.active { display: flex; align-items: center; justify-content: center; }
         .notification { position: fixed; top: 20px; right: 20px; z-index: 200; padding: 12px 24px; border-radius: 8px; color: white; font-weight: 500; transform: translateX(400px); transition: transform 0.3s ease; }
@@ -163,7 +97,6 @@
             width: 100%;
             margin-bottom: 2rem;
             break-inside: avoid;
-            page-break-inside: avoid;
             background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.2);
@@ -175,10 +108,7 @@
         
         .portfolio-item:hover {
             transform: translateY(-15px) scale(1.03);
-            box-shadow: 
-                0 40px 80px rgba(139, 92, 246, 0.4), 
-                0 0 40px rgba(139, 92, 246, 0.3),
-                0 0 0 1px rgba(139, 92, 246, 0.2);
+            box-shadow: 0 40px 80px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.3);
             border-color: rgba(139, 92, 246, 0.6);
             z-index: 10;
         }
@@ -188,13 +118,12 @@
             height: auto;
             display: block;
             object-fit: cover;
-            transition: transform 0.4s ease, filter 0.4s ease;
+            transition: transform 0.4s ease;
             border-radius: 20px 20px 0 0;
         }
         
         .portfolio-item:hover img {
             transform: scale(1.08);
-            filter: brightness(1.1) contrast(1.1);
         }
         
         .portfolio-item video, .portfolio-item iframe {
@@ -205,54 +134,14 @@
             border: none;
         }
         
-        .portfolio-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, 
-                rgba(139, 92, 246, 0.1) 0%,
-                rgba(59, 130, 246, 0.1) 50%,
-                rgba(236, 72, 153, 0.1) 100%
-            );
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            border-radius: 24px;
-            pointer-events: none;
-        }
-        
-        .portfolio-item:hover::before {
-            opacity: 1;
-        }
-        
-        /* Responsive Masonry */
+        /* Responsive */
         @media (max-width: 1200px) {
-            .portfolio-grid {
-                columns: 2;
-                column-gap: 1.5rem;
-            }
-            
-            .portfolio-item {
-                margin-bottom: 1.5rem;
-            }
+            .portfolio-grid { columns: 2; column-gap: 1.5rem; }
         }
         
         @media (max-width: 768px) {
-            .portfolio-grid {
-                columns: 1;
-                column-gap: 0;
-            }
-            
-            .portfolio-item {
-                margin-bottom: 2rem;
-                max-width: 100%;
-            }
-            
-            .portfolio-item video, .portfolio-item iframe {
-                min-height: 250px;
-            }
+            .portfolio-grid { columns: 1; column-gap: 0; }
+            .portfolio-item video, .portfolio-item iframe { min-height: 250px; }
         }
         
         .portfolio-item {
@@ -267,13 +156,6 @@
                 transform: translateY(0) scale(1);
             }
         }
-        
-        .portfolio-item:nth-child(1) { animation-delay: 0.1s; }
-        .portfolio-item:nth-child(2) { animation-delay: 0.2s; }
-        .portfolio-item:nth-child(3) { animation-delay: 0.3s; }
-        .portfolio-item:nth-child(4) { animation-delay: 0.4s; }
-        .portfolio-item:nth-child(5) { animation-delay: 0.5s; }
-        .portfolio-item:nth-child(6) { animation-delay: 0.6s; }
 
         /* Lightbox Styles */
         .lightbox { 
@@ -308,10 +190,7 @@
         .lightbox video, .lightbox iframe { 
             max-width: 90vw; 
             max-height: 90vh; 
-            width: auto;
-            height: auto;
             border-radius: 8px;
-            display: block;
         }
         .lightbox-nav { 
             position: fixed; 
@@ -336,12 +215,8 @@
             border-color: rgba(255,255,255,0.6);
             transform: translateY(-50%) scale(1.1);
         }
-        .lightbox-prev { 
-            left: 30px; 
-        }
-        .lightbox-next { 
-            right: 30px; 
-        }
+        .lightbox-prev { left: 30px; }
+        .lightbox-next { right: 30px; }
         .lightbox-close { 
             position: fixed; 
             top: 30px; 
@@ -382,43 +257,16 @@
         
         @media (max-width: 768px) {
             .lightbox { padding: 10px; }
-            .lightbox-nav { 
-                width: 50px; 
-                height: 50px; 
-                font-size: 20px; 
-            }
+            .lightbox-nav { width: 50px; height: 50px; font-size: 20px; }
             .lightbox-prev { left: 15px; }
             .lightbox-next { right: 15px; }
-            .lightbox-close { 
-                top: 15px; 
-                right: 15px; 
-                width: 45px;
-                height: 45px;
-                font-size: 20px;
-            }
-            .lightbox-counter {
-                bottom: 15px;
-                font-size: 12px;
-                padding: 6px 12px;
-            }
-        }
-        
-        .lightbox-content {
-            touch-action: pan-x;
+            .lightbox-close { top: 15px; right: 15px; width: 45px; height: 45px; font-size: 20px; }
+            .lightbox-counter { bottom: 15px; font-size: 12px; padding: 6px 12px; }
         }
         
         html {
             overflow-x: hidden;
             scroll-behavior: smooth;
-        }
-        
-        * {
-            box-sizing: border-box;
-        }
-        
-        .container {
-            max-width: 100%;
-            overflow-x: hidden;
         }
         
         .api-status {
@@ -434,70 +282,15 @@
             display: none;
         }
         
-        .admin-mode .api-status {
-            display: block;
-        }
-        .api-status.online {
-            background: #10b981;
-            color: white;
-        }
-        .api-status.offline {
-            background: #ef4444;
-            color: white;
-        }
-        .api-status.loading {
-            background: #f59e0b;
-            color: white;
-        }
+        .admin-mode .api-status { display: block; }
+        .api-status.online { background: #10b981; color: white; }
+        .api-status.offline { background: #ef4444; color: white; }
+        .api-status.loading { background: #f59e0b; color: white; }
         
         @media (max-width: 768px) {
-            #admin-login {
-                bottom: 8px !important;
-                right: 8px !important;
-                z-index: 30 !important;
-            }
-            
-            .admin-panel {
-                bottom: 40px !important;
-                left: 8px !important;
-                right: 8px !important;
-                max-width: none !important;
-            }
-            
-            .hero-section {
-                padding-top: 80px !important;
-            }
-            
-            .gradient-bg {
-                margin-top: 0 !important;
-                padding-top: 100px !important;
-            }
-            
-            .service-card {
-                margin-bottom: 1rem;
-            }
-            
             .tech-grid {
                 grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
                 gap: 0.75rem;
-            }
-            
-            .portfolio-filter {
-                font-size: 0.875rem !important;
-                padding: 0.5rem 1rem !important;
-                margin-bottom: 0.5rem !important;
-            }
-            
-            #category-filter {
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                gap: 0.5rem !important;
-                margin-bottom: 2rem !important;
-            }
-            
-            #category-select {
-                width: 100% !important;
-                font-size: 0.875rem !important;
             }
         }
     </style>
@@ -509,7 +302,7 @@
         <i class="fas fa-cloud"></i> Connecting...
     </div>
 
-    <!-- Admin Login - Hidden -->
+    <!-- Admin Login -->
     <div id="admin-login" class="fixed bottom-2 right-2 z-50">
         <button id="admin-toggle" class="bg-gray-900/50 text-gray-500 p-1 rounded text-xs hover:bg-gray-700 hover:text-white transition-all duration-300 opacity-30 hover:opacity-100">
             ⚙
@@ -540,17 +333,13 @@
             <button id="clear-portfolio-btn" class="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-trash mr-2"></i>Clear All Portfolio
             </button>
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
-                <i class="fas fa-server mr-2"></i>
-                <strong>Google Apps Script:</strong> All data synced via Google Sheets & Drive in real-time!
-            </div>
         </div>
     </div>
 
     <!-- Technology Modal -->
     <div id="tech-modal" class="modal">
         <div class="bg-gray-800 text-white rounded-lg p-6 max-w-md w-full mx-4 border border-gray-600">
-            <h3 class="text-xl font-bold mb-4 text-white" data-translate="add-tech-title">🛠️ Add Technology</h3>
+            <h3 class="text-xl font-bold mb-4 text-white">🛠️ Add Technology</h3>
             <form id="tech-form" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2 text-gray-300">Technology Name</label>
@@ -571,7 +360,7 @@
     <!-- Portfolio Upload Modal -->
     <div id="portfolio-modal" class="modal">
         <div class="bg-gray-800 text-white rounded-lg p-6 max-w-md w-full mx-4 border border-gray-600">
-            <h3 class="text-xl font-bold mb-4 text-white" data-translate="add-portfolio-title">📁 Add Portfolio Item</h3>
+            <h3 class="text-xl font-bold mb-4 text-white">📁 Add Portfolio Item</h3>
             <form id="portfolio-form" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2 text-gray-300">Category</label>
@@ -593,21 +382,18 @@
 
                 <div>
                     <label class="block text-sm font-medium mb-2 text-gray-300">File/URL</label>
-                    <input type="text" id="portfolio-url" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" placeholder="Image URL, YouTube, Google Drive, Dropbox, etc.">
+                    <input type="text" id="portfolio-url" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" placeholder="Image URL, YouTube, Dropbox, etc.">
                     <div class="mt-2">
                         <label class="block text-sm font-medium text-gray-300 mb-1">Or upload file directly:</label>
                         <input type="file" id="portfolio-file" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" accept="image/*,video/*">
                     </div>
                     <div class="mt-2 text-xs text-gray-400">
-                        <strong class="text-gray-300">🔥 Google Drive Upload (Recommended):</strong><br>
-                        • Select file directly - uploaded to Google Drive<br>
-                        • Images: JPG, PNG, GIF, WebP (max 50MB)<br>
-                        • Videos: MP4, MOV, WebM (max 50MB)<br><br>
-                        <strong class="text-gray-300">🌐 External URLs (Also supported):</strong><br>
+                        <strong class="text-gray-300">🎬 Video platforms:</strong><br>
                         • YouTube: youtube.com/watch?v=...<br>
-                        • Google Drive: drive.google.com/file/d/.../view<br>
                         • Dropbox: dropbox.com/s/.../video.mp4<br>
-                        • Direct image/video URLs
+                        • Direct video URLs<br><br>
+                        <strong class="text-gray-300">📸 Image uploads:</strong><br>
+                        • JPG, PNG, GIF, WebP (max 50MB)
                     </div>
                 </div>
                 <div class="flex gap-2">
@@ -712,9 +498,8 @@
                 <div class="floating mb-8">
                     <div class="w-40 h-40 mx-auto bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 rounded-full flex items-center justify-center shadow-2xl glow-box relative">
                         <div class="absolute inset-2 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-                            <i class="fas fa-robot text-6xl text-white neon-text"></i>
+                            <i class="fas fa-robot text-6xl text-white"></i>
                         </div>
-                        <div class="absolute -inset-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full opacity-30 blur-lg animate-pulse"></div>
                     </div>
                 </div>
                 <div class="bg-black/30 backdrop-blur-md rounded-3xl p-8 mx-auto max-w-5xl border border-white/20">
@@ -739,15 +524,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Floating Particles -->
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute top-1/4 left-1/4 w-4 h-4 bg-purple-500 rounded-full opacity-60 animate-ping"></div>
-            <div class="absolute top-1/3 right-1/4 w-2 h-2 bg-pink-500 rounded-full opacity-40 animate-pulse"></div>
-            <div class="absolute bottom-1/4 left-1/3 w-3 h-3 bg-blue-500 rounded-full opacity-50 animate-bounce"></div>
-            <div class="absolute top-1/2 right-1/3 w-2 h-2 bg-yellow-500 rounded-full opacity-60 animate-ping"></div>
-            <div class="absolute bottom-1/3 right-1/4 w-4 h-4 bg-cyan-500 rounded-full opacity-30 animate-pulse"></div>
-        </div>
     </section>
 
     <!-- About Section -->
@@ -762,7 +538,6 @@
             
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="epic-card text-center p-8 rounded-3xl hover:scale-105 transform transition-all duration-500 group relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10">
                         <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
                             <i class="fas fa-brain text-3xl text-white"></i>
@@ -772,7 +547,6 @@
                     </div>
                 </div>
                 <div class="epic-card text-center p-8 rounded-3xl hover:scale-105 transform transition-all duration-500 group relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-500/20 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10">
                         <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
                             <i class="fas fa-palette text-3xl text-white"></i>
@@ -782,7 +556,6 @@
                     </div>
                 </div>
                 <div class="epic-card text-center p-8 rounded-3xl hover:scale-105 transform transition-all duration-500 group relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10">
                         <div class="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
                             <i class="fas fa-rocket text-3xl text-white"></i>
@@ -806,140 +579,114 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- AI Avatars -->
                 <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10">
                         <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-all duration-500">
                             <i class="fas fa-user-circle text-3xl text-white"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white" data-translate="service-avatars-title">👤 AI Avatars</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed" data-translate="service-avatars-desc">
+                        <h3 class="text-2xl font-bold mb-4 text-white">👤 AI Avatars</h3>
+                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
                             I create realistic AI avatars for business, advertising, presentations, social media, games, apps and any other needs.
                         </p>
                         <ul class="text-gray-400 space-y-3">
-                            <li data-translate="service-avatars-1" class="flex items-center"><span class="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>Corporate representatives</li>
-                            <li data-translate="service-avatars-2" class="flex items-center"><span class="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>Social media characters</li>
-                            <li data-translate="service-avatars-3" class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Gaming and app avatars</li>
-                            <li data-translate="service-avatars-4" class="flex items-center"><span class="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>Virtual hosts</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>Corporate representatives</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>Social media characters</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Gaming and app avatars</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>Virtual hosts</li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Voice Services -->
                 <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-500/20 to-teal-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10">
                         <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
                             <i class="fas fa-microphone text-3xl text-white"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white" data-translate="service-voice-title">🎙️ AI Voice</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed" data-translate="service-voice-desc">
+                        <h3 class="text-2xl font-bold mb-4 text-white">🎙️ AI Voice</h3>
+                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
                             Professional voiceover for texts, avatars and audiobooks in 70+ languages. Video translation and voiceover.
                         </p>
                         <ul class="text-gray-400 space-y-3">
-                            <li data-translate="service-voice-1" class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3"></span>70+ world languages</li>
-                            <li data-translate="service-voice-2" class="flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-3"></span>Audiobook narration</li>
-                            <li data-translate="service-voice-3" class="flex items-center"><span class="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>Video translation</li>
-                            <li data-translate="service-voice-4" class="flex items-center"><span class="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>Avatar voices</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3"></span>70+ world languages</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-3"></span>Audiobook narration</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>Video translation</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>Avatar voices</li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Image Generation -->
                 <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-rose-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10">
                         <div class="w-20 h-20 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
                             <i class="fas fa-image text-3xl text-white"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white" data-translate="service-images-title">🎨 Image Generation</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed" data-translate="service-images-desc">
+                        <h3 class="text-2xl font-bold mb-4 text-white">🎨 Image Generation</h3>
+                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
                             I create unique images using Midjourney, FLUX, Stable Diffusion, Krea and other AI services.
                         </p>
                         <ul class="text-gray-400 space-y-3">
-                            <li data-translate="service-images-1" class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Realistic photographs</li>
-                            <li data-translate="service-images-2" class="flex items-center"><span class="w-2 h-2 bg-rose-400 rounded-full mr-3"></span>Creative illustrations</li>
-                            <li data-translate="service-images-3" class="flex items-center"><span class="w-2 h-2 bg-red-400 rounded-full mr-3"></span>Cartoon characters</li>
-                            <li data-translate="service-images-4" class="flex items-center"><span class="w-2 h-2 bg-orange-400 rounded-full mr-3"></span>Concept art</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Realistic photographs</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-rose-400 rounded-full mr-3"></span>Creative illustrations</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-400 rounded-full mr-3"></span>Cartoon characters</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-orange-400 rounded-full mr-3"></span>Concept art</li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Video Generation -->
                 <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-red-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10">
                         <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
                             <i class="fas fa-video text-3xl text-white"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white" data-translate="service-video-title">🎬 AI Video</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed" data-translate="service-video-desc">
+                        <h3 class="text-2xl font-bold mb-4 text-white">🎬 AI Video</h3>
+                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
                             I generate videos using Kling AI, Runway, Luma, PikaLabs, Google Veo 3, Minimax. I select the optimal service for each task.
                         </p>
                         <ul class="text-gray-400 space-y-3">
-                            <li data-translate="service-video-1" class="flex items-center"><span class="w-2 h-2 bg-orange-400 rounded-full mr-3"></span>Promotional videos</li>
-                            <li data-translate="service-video-2" class="flex items-center"><span class="w-2 h-2 bg-red-400 rounded-full mr-3"></span>Character animation</li>
-                            <li data-translate="service-video-3" class="flex items-center"><span class="w-2 h-2 bg-yellow-400 rounded-full mr-3"></span>Presentation videos</li>
-                            <li data-translate="service-video-4" class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Creative content</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-orange-400 rounded-full mr-3"></span>Promotional videos</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-400 rounded-full mr-3"></span>Character animation</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-yellow-400 rounded-full mr-3"></span>Presentation videos</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Creative content</li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- E-commerce -->
                 <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-blue-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10">
                         <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
                             <i class="fas fa-shopping-cart text-3xl text-white"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white" data-translate="service-ecommerce-title">🛒 E-commerce Creatives</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed" data-translate="service-ecommerce-desc">
+                        <h3 class="text-2xl font-bold mb-4 text-white">🛒 E-commerce Creatives</h3>
+                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
                             I create advertising creatives with real products. Training separate AI models on your products for maximum quality.
                         </p>
                         <ul class="text-gray-400 space-y-3">
-                            <li data-translate="service-ecommerce-1" class="flex items-center"><span class="w-2 h-2 bg-indigo-400 rounded-full mr-3"></span>Product photos in various scenes</li>
-                            <li data-translate="service-ecommerce-2" class="flex items-center"><span class="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>Clothing on real people</li>
-                            <li data-translate="service-ecommerce-3" class="flex items-center"><span class="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>Advertising banners</li>
-                            <li data-translate="service-ecommerce-4" class="flex items-center"><span class="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>Catalog images</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-indigo-400 rounded-full mr-3"></span>Product photos in various scenes</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>Clothing on real people</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>Advertising banners</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>Catalog images</li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Virtual Photoshoot -->
                 <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10">
                         <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
                             <i class="fas fa-camera text-3xl text-white"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white" data-translate="service-photoshoot-title">📸 Virtual Photoshoots</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed" data-translate="service-photoshoot-desc">
+                        <h3 class="text-2xl font-bold mb-4 text-white">📸 Virtual Photoshoots</h3>
+                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
                             Training AI model on a specific person to create photos in different styles, locations and looks without a real photoshoot.
                         </p>
                         <ul class="text-gray-400 space-y-3">
-                            <li data-translate="service-photoshoot-1" class="flex items-center"><span class="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>Portraits in various styles</li>
-                            <li data-translate="service-photoshoot-2" class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Professional photos</li>
-                            <li data-translate="service-photoshoot-3" class="flex items-center"><span class="w-2 h-2 bg-red-400 rounded-full mr-3"></span>Creative looks</li>
-                            <li data-translate="service-photoshoot-4" class="flex items-center"><span class="w-2 h-2 bg-orange-400 rounded-full mr-3"></span>Social media content</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Video Editing -->
-                <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-orange-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-20 h-20 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
-                            <i class="fas fa-cut text-3xl text-white"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white" data-translate="service-editing-title">✂️ Video Editing</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed" data-translate="service-editing-desc">
-                            Video editing and post-production using Adobe Premiere Pro, After Effects, and other industry-standard tools.
-                        </p>
-                        <ul class="text-gray-400 space-y-3">
-                            <li data-translate="service-editing-1" class="flex items-center"><span class="w-2 h-2 bg-yellow-400 rounded-full mr-3"></span>AI content editing</li>
-                            <li data-translate="service-editing-2" class="flex items-center"><span class="w-2 h-2 bg-orange-400 rounded-full mr-3"></span>Color correction & grading</li>
-                            <li data-translate="service-editing-3" class="flex items-center"><span class="w-2 h-2 bg-red-400 rounded-full mr-3"></span>Motion graphics & effects</li>
-                            <li data-translate="service-editing-4" class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Post-production workflow</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>Portraits in various styles</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Professional photos</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-400 rounded-full mr-3"></span>Creative looks</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-orange-400 rounded-full mr-3"></span>Social media content</li>
                         </ul>
                     </div>
                 </div>
@@ -951,7 +698,7 @@
     <section class="py-20 bg-gradient-to-b from-black to-gray-900 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent" data-translate="tech-title">Technologies I Use</h2>
+                <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Technologies I Use</h2>
                 <button class="admin-only epic-card px-6 py-3 rounded-2xl text-white hover:scale-110 transform transition-all duration-300" onclick="openTechModal()">
                     <i class="fas fa-plus mr-2"></i>Add Technology
                 </button>
@@ -967,8 +714,8 @@
     <section id="portfolio" class="py-20 bg-gradient-to-b from-gray-900 to-black relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent" data-translate="portfolio-title">Portfolio</h2>
-                <p class="text-xl md:text-2xl text-gray-300" data-translate="portfolio-subtitle">Examples of my work</p>
+                <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">Portfolio</h2>
+                <p class="text-xl md:text-2xl text-gray-300">Examples of my work</p>
             </div>
 
             <!-- Portfolio Filter -->
@@ -978,7 +725,7 @@
                 <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="videos">🎬 Videos</button>
             </div>
             
-            <!-- Category Filter (only shows when "All" is selected) -->
+            <!-- Category Filter -->
             <div id="category-filter" class="flex flex-wrap justify-center gap-2 mb-12">
                 <label class="text-sm font-medium text-gray-300 mr-4">Category:</label>
                 <select id="category-select" class="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-sm text-white focus:border-purple-400 focus:outline-none">
@@ -1001,27 +748,23 @@
                 <button id="load-more-btn" class="epic-card px-8 py-4 rounded-full font-bold text-lg text-white hover:scale-110 transform transition-all duration-300 relative overflow-hidden group shadow-lg hover:shadow-purple-500/50 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
                     <span class="relative z-10">
                         <i class="fas fa-images mr-3"></i>
-                        <span data-translate="load-more-portfolio">📸 Завантажити ще портфоліо</span>
+                        <span>Load More Portfolio</span>
                         <span id="load-more-count" class="ml-2 opacity-75"></span>
                     </span>
                 </button>
                 <p class="text-gray-400 text-sm mt-3" id="portfolio-status">
-                    Показано <span id="shown-count">0</span> з <span id="total-count">0</span> робіт
+                    Shown <span id="shown-count">0</span> of <span id="total-count">0</span> items
                 </p>
             </div>
 
             <!-- Add Portfolio Buttons (Admin Only) -->
             <div class="admin-only text-center mt-12 space-y-4">
-                <p class="text-gray-600 mb-6" data-translate="portfolio-note">Upload your work here to show clients</p>
-                
-                <!-- Video Upload Tips -->
-                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-left max-w-4xl mx-auto">
-                    <h4 class="font-semibold text-yellow-800 mb-2">📹 Video Upload Tips:</h4>
-                    <ul class="text-sm text-yellow-700 space-y-1">
-                        <li><strong>YouTube:</strong> Use only copyright-free music or your own music</li>
-                        <li><strong>Google Drive:</strong> Upload video → Share → "Anyone with link can view"</li>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left max-w-4xl mx-auto">
+                    <h4 class="font-semibold text-blue-800 mb-2">📹 Video Upload Tips:</h4>
+                    <ul class="text-sm text-blue-700 space-y-1">
+                        <li><strong>YouTube:</strong> Upload as "Unlisted" - works perfectly for embedding</li>
                         <li><strong>Dropbox:</strong> Upload video → Create link → Works great for any video</li>
-                        <li><strong>Alternative:</strong> Use free music from YouTube Audio Library or Pixabay</li>
+                        <li><strong>Vimeo:</strong> Professional video hosting with great quality</li>
                     </ul>
                 </div>
                 
@@ -1050,12 +793,12 @@
     <section id="contact" class="py-20 bg-gradient-to-b from-black to-gray-900 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent" data-translate="contact-title">Contact Me</h2>
+                <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">Contact Me</h2>
                 <div class="flex flex-col items-center mb-6">
                     <div class="w-24 h-24 mb-4 rounded-full overflow-hidden shadow-lg">
                         <img src="https://raw.githubusercontent.com/AndriiAICreator/andrii-ai-portfolio/main/icon.png" alt="Andrii" class="w-full h-full object-cover">
                     </div>
-                    <p class="text-xl text-gray-600" data-translate="contact-subtitle">Ready to bring your ideas to life</p>
+                    <p class="text-xl text-gray-600">Ready to bring your ideas to life</p>
                 </div>
             </div>
 
@@ -1076,16 +819,16 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gradient-to-t from-black to-gray-900 text-white py-12 relative" style="max-width: 100vw; overflow: hidden; position: relative; transform: translateZ(0);">
+    <footer class="bg-gradient-to-t from-black to-gray-900 text-white py-12 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center">
                 <h3 class="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">✨ Andrii AI Creator</h3>
-                <p class="text-gray-400 mb-6" data-translate="footer-text">Bringing your ideas to life with artificial intelligence</p>
+                <p class="text-gray-400 mb-6">Bringing your ideas to life with artificial intelligence</p>
                 <div id="footer-contacts" class="flex justify-center space-x-6">
                     <!-- Contacts will be loaded here -->
                 </div>
                 <div class="mt-8 pt-8 border-t border-gray-800 text-gray-400">
-                    <p>&copy; 2025 Andrii AI Creator. <span data-translate="footer-rights">All rights reserved</span>.</p>
+                    <p>&copy; 2025 Andrii AI Creator. All rights reserved.</p>
                 </div>
             </div>
         </div>
@@ -1113,25 +856,10 @@
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
-    <!-- Mouse Trail -->
-    <div class="mouse-trail" id="mouseTrail"></div>
-
     <script type="module">
-        // Simple Mouse Trail
-        let mouseTrail = document.getElementById('mouseTrail');
-        
-        document.addEventListener('mousemove', (e) => {
-            mouseTrail.style.left = e.clientX + 'px';
-            mouseTrail.style.top = e.clientY + 'px';
-        });
-        
         // GOOGLE APPS SCRIPT API CONFIGURATION
         const API_URL = 'https://script.google.com/macros/s/AKfycbxG9GEJ8zCJibd1n47NE4mvRH2gxa5p_dqDmCELFOXjN6jXUIXuAueBttIYelfmBywy1Q/exec';
         const ADMIN_PASSWORD = 'andrii2025';
-        
-        // Production mode - online only
-        console.log('🌐 Online mode: using Google Apps Script API');
-        console.log('🔗 Andrii AI Portfolio - Google Apps Script Mode');
         
         // Admin Configuration
         let isAdminMode = false;
@@ -1165,10 +893,7 @@
                 'about-speed': 'Швидкість',
                 'about-speed-desc': 'Швидке виконання проектів',
                 'services-title': 'Мої послуги',
-                'services-subtitle': 'Професійні AI рішення для вашого бізнесу',
-                'load-more-portfolio': '📸 Завантажити ще портфоліо',
-                'footer-text': 'Втілюю ваші ідеї за допомогою штучного інтелекту',
-                'footer-rights': 'Всі права захищені'
+                'services-subtitle': 'Професійні AI рішення для вашого бізнесу'
             },
             en: {
                 'nav-about': 'About',
@@ -1189,10 +914,7 @@
                 'about-speed': 'Speed',
                 'about-speed-desc': 'Fast project delivery',
                 'services-title': 'My Services',
-                'services-subtitle': 'Professional AI solutions for your business',
-                'load-more-portfolio': '📸 Load More Portfolio',
-                'footer-text': 'Bringing your ideas to life with artificial intelligence',
-                'footer-rights': 'All rights reserved'
+                'services-subtitle': 'Professional AI solutions for your business'
             }
         };
 
@@ -1240,10 +962,6 @@
             
             document.title = titles[lang];
             document.querySelector('meta[name="description"]').content = descriptions[lang];
-            
-            // Add fade-in animation
-            document.body.classList.add('fade-in');
-            setTimeout(() => document.body.classList.remove('fade-in'), 500);
         }
         
         // Initialize language
@@ -1286,11 +1004,10 @@
             }
         }
 
-        // Simple Google Apps Script API Functions
+        // API Functions
         async function callAPI(action, data = {}, method = 'GET') {
             try {
                 updateApiStatus('loading');
-                console.log('🌐 API Call:', action);
                 
                 const formData = new FormData();
                 formData.append('action', action);
@@ -1309,7 +1026,6 @@
                 });
                 
                 const result = await response.json();
-                console.log('📥 API Response:', result);
                 
                 if (result.status === 200) {
                     updateApiStatus('online');
@@ -1325,24 +1041,20 @@
             }
         }
 
-        // Simple Data Loading
+        // Data Loading
         async function loadDataFromAPI() {
             try {
-                console.log('📡 Loading data...');
-                
                 const response = await fetch(API_URL + '?action=getAllData', {
                     method: 'GET'
                 });
                 
                 const result = await response.json();
-                console.log('📊 Raw API Response:', result);
                 
                 if (result.status === 200 && result.data) {
                     portfolioItems = result.data.portfolioItems || [];
                     technologies = result.data.technologies || [];
                     contacts = result.data.contacts || [];
                     
-                    console.log('✅ Loaded:', portfolioItems.length, 'portfolio,', technologies.length, 'tech,', contacts.length, 'contacts');
                     updateApiStatus('online');
                     return result.data;
                 } else {
@@ -1372,8 +1084,6 @@
             if (!isAdminMode) return;
             
             try {
-                console.log('💾 Saving to Google Apps Script API...');
-                
                 const data = {
                     portfolioItems,
                     technologies,
@@ -1382,9 +1092,8 @@
                 
                 await callAPI('saveAllData', data, 'POST');
                 
-                console.log('✅ Data saved to API');
                 if (isAdminMode) {
-                    showNotification('✅ Дані збережено в Google Sheets!', 'success');
+                    showNotification('✅ Data saved successfully!', 'success');
                 }
                 
             } catch (error) {
@@ -1396,15 +1105,14 @@
         // File Upload Functions
         async function uploadFileToAPI(file, category) {
             try {
-                showNotification('📤 Завантажую файл до Google Drive...', 'success');
+                showNotification('📤 Uploading file...', 'success');
                 
-                // Convert file to base64
                 const base64 = await fileToBase64(file);
                 
                 const formData = new FormData();
                 formData.append('action', 'uploadFile');
                 formData.append('password', ADMIN_PASSWORD);
-                formData.append('file', base64.split(',')[1]); // Remove data:mime;base64, prefix
+                formData.append('file', base64.split(',')[1]);
                 formData.append('filename', file.name);
                 formData.append('mimeType', file.type);
                 formData.append('category', category);
@@ -1420,13 +1128,11 @@
                     throw new Error(result.data?.error || 'Upload failed');
                 }
                 
-                console.log('📤 File uploaded to Google Drive:', result.data.url);
-                showNotification('✅ Файл успішно завантажено до Google Drive!', 'success');
-                
+                showNotification('✅ File uploaded successfully!', 'success');
                 return result.data.url;
             } catch (error) {
                 console.error('❌ Error uploading file:', error);
-                showNotification('❌ Помилка завантаження файлу', 'error');
+                showNotification('❌ Upload error', 'error');
                 throw error;
             }
         }
@@ -1440,16 +1146,11 @@
             });
         }
 
-        // Main save function
-        async function saveData() {
-            await saveDataToAPI();
-        }
-
         // Contact Management Functions
         window.removeContact = function(index) {
             if (confirm('Are you sure you want to remove this contact?')) {
                 contacts.splice(index, 1);
-                saveData();
+                saveDataToAPI();
                 renderContacts();
                 showNotification('Contact removed successfully', 'success');
             }
@@ -1480,11 +1181,11 @@
             if (isAdminMode) {
                 document.body.classList.add('admin-mode');
                 localStorage.setItem('adminMode', 'true');
-                showNotification('⚙️ Адмін режим', 'success');
+                showNotification('⚙️ Admin mode enabled', 'success');
             } else {
                 document.body.classList.remove('admin-mode');
                 localStorage.removeItem('adminMode');
-                showNotification('👤 Режим користувача', 'success');
+                showNotification('👤 User mode', 'success');
             }
         }
 
@@ -1538,7 +1239,6 @@
                 techDiv.className = 'epic-card text-center p-6 rounded-2xl hover:scale-110 transform transition-all duration-500 relative group tech-card overflow-hidden';
                 techDiv.style.animationDelay = `${index * 100}ms`;
                 
-                // Random gradient colors for variety
                 const gradients = [
                     'from-purple-500 to-pink-500',
                     'from-blue-500 to-cyan-500', 
@@ -1549,19 +1249,7 @@
                 ];
                 const randomGradient = gradients[index % gradients.length];
                 
-                // Add consistent hover background based on gradient colors
-                const bgColors = [
-                    'from-purple-500/20 to-pink-500/20',
-                    'from-blue-500/20 to-cyan-500/20', 
-                    'from-green-500/20 to-teal-500/20',
-                    'from-orange-500/20 to-red-500/20',
-                    'from-indigo-500/20 to-purple-500/20',
-                    'from-pink-500/20 to-rose-500/20'
-                ];
-                const randomBgColor = bgColors[index % bgColors.length];
-                
                 techDiv.innerHTML = `
-                    <div class="absolute inset-0 bg-gradient-to-br ${randomBgColor} opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10">
                         <div class="w-16 h-16 bg-gradient-to-br ${randomGradient} rounded-2xl flex items-center justify-center mx-auto mb-4 glow-box group-hover:scale-110 transition-all duration-500">
                             <div class="text-2xl">${tech.emoji}</div>
@@ -1573,7 +1261,6 @@
                 grid.appendChild(techDiv);
             });
             
-            // Add staggered animation with enhanced effects
             document.querySelectorAll('.tech-card').forEach((card, index) => {
                 setTimeout(() => {
                     card.style.opacity = '1';
@@ -1583,7 +1270,6 @@
         }
 
         function renderContacts() {
-            // Render contact section
             const contactGrid = document.getElementById('contact-grid');
             contactGrid.innerHTML = '';
             
@@ -1727,32 +1413,21 @@
             const url = item.url || item;
             if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) return 'photos';
             if (url.includes('youtube.com') || url.includes('youtu.be') || 
-                url.includes('drive.google.com') || url.includes('dropbox.com') ||
+                url.includes('dropbox.com') || url.includes('vimeo.com') ||
                 url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) return 'videos';
             return 'photos';
         }
         
-        // SIMPLIFIED Media Content Creation - back to basics!
+        // SIMPLIFIED Media Content Creation
         function createMediaContent(item, isLightbox = false) {
             let mediaContent = '';
             const mediaType = getMediaType(item);
             
             if (mediaType === 'photos' || item.mediaType === 'photo') {
-                if (item.url.includes('drive.google.com')) {
-                    const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
-                    if (fileId) {
-                        if (isLightbox) {
-                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w1920" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w1920';">`;
-                        } else {
-                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w800" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w800';">`;
-                        }
-                    }
-                } else if (item.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
-                    if (isLightbox) {
-                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;">`;
-                    } else {
-                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
-                    }
+                if (isLightbox) {
+                    mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;">`;
+                } else {
+                    mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
                 }
             }
             else if (mediaType === 'videos' || item.mediaType === 'video') {
@@ -1765,13 +1440,13 @@
                             mediaContent = `<iframe width="100%" height="280" src="https://www.youtube.com/embed/${videoId}?controls=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                         }
                     }
-                } else if (item.url.includes('drive.google.com')) {
-                    const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
-                    if (fileId) {
+                } else if (item.url.includes('vimeo.com')) {
+                    const videoId = item.url.match(/vimeo\.com\/(\d+)/)?.[1];
+                    if (videoId) {
                         if (isLightbox) {
-                            mediaContent = `<iframe width="90%" height="80%" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
+                            mediaContent = `<iframe width="90%" height="80%" src="https://player.vimeo.com/video/${videoId}?autoplay=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
                         } else {
-                            mediaContent = `<iframe width="100%" height="280" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
+                            mediaContent = `<iframe width="100%" height="280" src="https://player.vimeo.com/video/${videoId}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
                         }
                     }
                 } else if (item.url.includes('dropbox.com')) {
@@ -1895,7 +1570,6 @@
         
         function updateLoadMoreButton() {
             const loadMoreContainer = document.getElementById('load-more-container');
-            const loadMoreBtn = document.getElementById('load-more-btn');
             const loadMoreCount = document.getElementById('load-more-count');
             const shownCount = document.getElementById('shown-count');
             const totalCount = document.getElementById('total-count');
@@ -1920,15 +1594,15 @@
         // CRUD Functions
         window.removeTechnology = function(index) {
             technologies.splice(index, 1);
-            saveData();
+            saveDataToAPI();
             renderTechnologies();
             showNotification('Technology removed', 'success');
         }
 
         window.removePortfolioItem = function(index) {
             portfolioItems.splice(index, 1);
-            saveData();
-            renderPortfolio();
+            saveDataToAPI();
+            renderPortfolio(true);
             showNotification('Portfolio item removed', 'success');
         }
 
@@ -1967,7 +1641,7 @@
                 const emoji = document.getElementById('tech-emoji').value;
                 
                 technologies.push({ name, emoji });
-                saveData();
+                saveDataToAPI();
                 renderTechnologies();
                 closeTechModal();
                 showNotification('Technology added successfully', 'success');
@@ -1991,17 +1665,19 @@
                         const file = fileInput.files[0];
                         
                         if (file.size > 50 * 1024 * 1024) {
-                            showNotification('❌ Файл занадто великий. Максимум 50MB.', 'error');
+                            showNotification('❌ File too large. Max 50MB.', 'error');
                             return;
                         }
+                
                         
                         finalUrl = await uploadFileToAPI(file, category);
                     } else if (!urlInput) {
-                        showNotification('❌ Введіть URL або виберіть файл', 'error');
+                        showNotification('❌ Enter URL or select file', 'error');
                         return;
                     }
                     
-                    portfolioItems.push({ 
+                    // ADD NEW ITEMS AT BEGINNING (UNSHIFT INSTEAD OF PUSH)
+                    portfolioItems.unshift({ 
                         category, 
                         mediaType, 
                         url: finalUrl,
@@ -2009,14 +1685,14 @@
                         isUploaded: !!fileInput.files[0]
                     });
                     
-                    await saveData();
-                    renderPortfolio();
+                    await saveDataToAPI();
+                    renderPortfolio(true); // Full reset to show new item first
                     closePortfolioModal();
-                    showNotification('✅ Портфоліо додано успішно!', 'success');
+                    showNotification('✅ Portfolio added successfully!', 'success');
                     
                 } catch (error) {
                     console.error('Error adding portfolio item:', error);
-                    showNotification('❌ Помилка додавання портфоліо', 'error');
+                    showNotification('❌ Error adding portfolio', 'error');
                 }
             });
         }
@@ -2031,7 +1707,7 @@
                 const icon = getContactIcon(platform);
                 
                 contacts.push({ platform, label, url, icon });
-                saveData();
+                saveDataToAPI();
                 renderContacts();
                 closeContactModal();
                 showNotification('Contact added successfully', 'success');
@@ -2042,22 +1718,6 @@
         function filterPortfolio() {
             currentlyShown = 0;
             renderPortfolio(true);
-        }
-
-        function shouldShowItem(item, mediaFilter, categoryFilter) {
-            if (mediaFilter !== 'all') {
-                if (!item.classList.contains(mediaFilter)) {
-                    return false;
-                }
-            }
-            
-            if (mediaFilter === 'all' && categoryFilter !== 'all') {
-                if (!item.classList.contains(categoryFilter)) {
-                    return false;
-                }
-            }
-            
-            return true;
         }
 
         document.querySelectorAll('.portfolio-filter').forEach(button => {
@@ -2095,11 +1755,11 @@
         const clearPortfolioBtn = document.getElementById('clear-portfolio-btn');
         if (clearPortfolioBtn) {
             clearPortfolioBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to clear all portfolio items? This will delete everything from Google Sheets!')) {
+                if (confirm('Are you sure you want to clear all portfolio items?')) {
                     portfolioItems = [];
-                    saveData();
-                    renderPortfolio();
-                    showNotification('Portfolio cleared from Google Sheets', 'success');
+                    saveDataToAPI();
+                    renderPortfolio(true);
+                    showNotification('Portfolio cleared', 'success');
                 }
             });
         }
@@ -2164,25 +1824,6 @@
             });
         });
 
-        // Close admin panel when clicking outside
-        document.addEventListener('click', function(e) {
-            const adminPanel = document.getElementById('admin-panel');
-            const adminToggle = document.getElementById('admin-toggle');
-            
-            if (adminPanel && adminToggle && !adminPanel.contains(e.target) && !adminToggle.contains(e.target)) {
-                adminPanel.style.display = 'none';
-            }
-        });
-
-        if (adminToggle) {
-            adminToggle.addEventListener('click', function() {
-                const adminPanel = document.getElementById('admin-panel');
-                if (adminPanel) {
-                    adminPanel.style.display = adminPanel.style.display === 'block' ? 'none' : 'block';
-                }
-            });
-        }
-
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -2195,28 +1836,6 @@
                     });
                 }
             });
-        });
-        
-        // Add scroll animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-        
-        document.querySelectorAll('.service-card, section').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
         });
 
         // Mobile Menu Toggle
@@ -2343,82 +1962,52 @@
         // Test function for admin
         window.testDataLoad = async function() {
             try {
-                showNotification('🔄 Тестую завантаження даних...', 'success');
-                console.log('🧪 STARTING DATA LOAD TEST...');
+                showNotification('🔄 Testing data load...', 'success');
                 
-                // Force reload data
                 const data = await loadDataFromAPI();
-                console.log('📊 Test result:', data);
                 
-                // Re-render everything
                 renderTechnologies();
-                renderPortfolio();
+                renderPortfolio(true);
                 renderContacts();
                 
-                const message = `✅ Тест завершено! Portfolio: ${portfolioItems.length}, Tech: ${technologies.length}, Contacts: ${contacts.length}`;
-                console.log(message);
+                const message = `✅ Test complete! Portfolio: ${portfolioItems.length}, Tech: ${technologies.length}, Contacts: ${contacts.length}`;
                 showNotification(message, 'success');
                 
             } catch (error) {
                 console.error('❌ Test failed:', error);
-                showNotification('❌ Тест не пройшов: ' + error.message, 'error');
+                showNotification('❌ Test failed: ' + error.message, 'error');
             }
         }
 
         // Initialize application
-        console.log('🚀 Starting Andrii AI Portfolio...');
-        
-        // Load data and render
         loadDataFromAPI().then((data) => {
-            console.log('✅ Data loaded successfully');
             renderTechnologies();
-            renderPortfolio(true); // Full render from start
+            renderPortfolio(true);
             renderContacts();
             
-            // Initialize Load More Button after DOM is ready
+            // Initialize Load More Button
             setTimeout(() => {
                 const loadMoreButton = document.getElementById('load-more-btn');
                 if (loadMoreButton) {
                     loadMoreButton.addEventListener('click', function() {
                         this.style.transform = 'scale(0.95)';
-                        this.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Завантажую...';
-                        
-                        setTimeout(() => {
-                            renderPortfolio(false); // Add more items without reset
-                            this.style.transform = 'scale(1)';
-                            this.querySelector('span').innerHTML = '<i class="fas fa-images mr-3"></i>Завантажити ще портфоліо<span id="load-more-count" class="ml-2 opacity-75"></span>';
-                            updateLoadMoreButton(); // Update button
-                        }, 500);
-                    });
-                }
-            }, 100);
-            
-            console.log('🎉 Portfolio loaded!');
-        }).catch((error) => {
-            console.error('⚠️ Using offline mode:', error);
-            renderTechnologies();
-            renderPortfolio(true); // Full render from start
-            renderContacts();
-            
-            // Initialize Load More Button for offline mode too
-            setTimeout(() => {
-                const loadMoreButtonOffline = document.getElementById('load-more-btn');
-                if (loadMoreButtonOffline) {
-                    loadMoreButtonOffline.addEventListener('click', function() {
-                        this.style.transform = 'scale(0.95)';
-                        this.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Завантажую...';
+                        this.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Loading...';
                         
                         setTimeout(() => {
                             renderPortfolio(false);
                             this.style.transform = 'scale(1)';
-                            this.querySelector('span').innerHTML = '<i class="fas fa-images mr-3"></i>Завантажити ще портфоліо<span id="load-more-count" class="ml-2 opacity-75"></span>';
+                            this.querySelector('span').innerHTML = '<i class="fas fa-images mr-3"></i>Load More Portfolio<span id="load-more-count" class="ml-2 opacity-75"></span>';
                             updateLoadMoreButton();
                         }, 500);
                     });
                 }
             }, 100);
             
-            console.log('💻 Portfolio loaded in offline mode');
+        }).catch((error) => {
+            console.error('⚠️ Using offline mode:', error);
+            renderTechnologies();
+            renderPortfolio(true);
+            renderContacts();
         });
 
     </script>
