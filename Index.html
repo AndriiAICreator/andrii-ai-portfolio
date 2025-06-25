@@ -76,9 +76,6 @@
             100% { transform: translateX(-100px) translateY(-100px); }
         }
         
-        /* Disable auto particles that cause footer movement */
-        
-        /* Enhanced Mouse Trail Effect */
         .mouse-trail {
             position: fixed;
             width: 30px;
@@ -101,18 +98,12 @@
             animation: mouseGlow 2s ease-in-out infinite alternate;
         }
         
-        /* Removed auto-glow animation that causes movement */
-        
-        /* Clean hover effects - no running lights */
-        
-        /* Simple Glow Effect */
         .simple-glow:hover {
             box-shadow: 
                 0 0 20px rgba(139, 92, 246, 0.3),
                 0 0 40px rgba(139, 92, 246, 0.2);
         }
         
-        /* Neon Effects */
         .neon-text {
             color: #ffffff;
             text-shadow: 
@@ -160,7 +151,7 @@
         .notification.success { background: #10b981; }
         .notification.error { background: #ef4444; }
         
-        /* Advanced Masonry Portfolio Grid */
+        /* Portfolio Grid */
         .portfolio-grid {
             columns: 3;
             column-gap: 2rem;
@@ -214,9 +205,6 @@
             border: none;
         }
         
-
-        
-        /* Portfolio item overlay effects */
         .portfolio-item::before {
             content: '';
             position: absolute;
@@ -267,7 +255,6 @@
             }
         }
         
-        /* Loading animation for portfolio items */
         .portfolio-item {
             opacity: 0;
             transform: translateY(30px) scale(0.95);
@@ -281,7 +268,6 @@
             }
         }
         
-        /* Stagger animation delays */
         .portfolio-item:nth-child(1) { animation-delay: 0.1s; }
         .portfolio-item:nth-child(2) { animation-delay: 0.2s; }
         .portfolio-item:nth-child(3) { animation-delay: 0.3s; }
@@ -381,7 +367,6 @@
             transform: scale(1.1);
         }
         
-        /* Counter display */
         .lightbox-counter {
             position: fixed;
             bottom: 30px;
@@ -418,12 +403,10 @@
             }
         }
         
-        /* Touch gestures for mobile */
         .lightbox-content {
             touch-action: pan-x;
         }
         
-        /* Scroll stabilization */
         html {
             overflow-x: hidden;
             scroll-behavior: smooth;
@@ -438,7 +421,6 @@
             overflow-x: hidden;
         }
         
-        /* API Status Indicator - Only for Admin */
         .api-status {
             position: fixed;
             top: 80px;
@@ -449,10 +431,9 @@
             font-size: 12px;
             font-weight: 500;
             transition: all 0.3s ease;
-            display: none; /* Hidden by default */
+            display: none;
         }
         
-        /* Show API status only in admin mode */
         .admin-mode .api-status {
             display: block;
         }
@@ -469,7 +450,6 @@
             color: white;
         }
         
-        /* Mobile Navigation Styles */
         @media (max-width: 768px) {
             #admin-login {
                 bottom: 8px !important;
@@ -502,7 +482,6 @@
                 gap: 0.75rem;
             }
             
-            /* Portfolio filters mobile */
             .portfolio-filter {
                 font-size: 0.875rem !important;
                 padding: 0.5rem 1rem !important;
@@ -1138,7 +1117,7 @@
     <div class="mouse-trail" id="mouseTrail"></div>
 
     <script type="module">
-        // Simplified Mouse Trail - no auto animation
+        // Simple Mouse Trail
         let mouseTrail = document.getElementById('mouseTrail');
         
         document.addEventListener('mousemove', (e) => {
@@ -1146,16 +1125,12 @@
             mouseTrail.style.top = e.clientY + 'px';
         });
         
-        // Disable auto particles that cause unwanted movement
-        // Particles only create on mouse movement now
-        
         // GOOGLE APPS SCRIPT API CONFIGURATION
         const API_URL = 'https://script.google.com/macros/s/AKfycbxG9GEJ8zCJibd1n47NE4mvRH2gxa5p_dqDmCELFOXjN6jXUIXuAueBttIYelfmBywy1Q/exec';
         const ADMIN_PASSWORD = 'andrii2025';
         
         // Production mode - online only
         console.log('🌐 Online mode: using Google Apps Script API');
-        
         console.log('🔗 Andrii AI Portfolio - Google Apps Script Mode');
         
         // Admin Configuration
@@ -1165,7 +1140,7 @@
         let contacts = [];
         
         // Portfolio Pagination
-        const ITEMS_PER_PAGE = 12; // Показувати по 12 елементів
+        const ITEMS_PER_PAGE = 12;
         let currentlyShown = 0;
         let filteredItems = [];
 
@@ -1191,67 +1166,6 @@
                 'about-speed-desc': 'Швидке виконання проектів',
                 'services-title': 'Мої послуги',
                 'services-subtitle': 'Професійні AI рішення для вашого бізнесу',
-                'service-avatars-title': 'AI Аватари',
-                'service-avatars-desc': 'Створюю реалістичні AI аватари для бізнесу, реклами, презентацій, соціальних мереж, ігор, додатків та будь-яких інших потреб.',
-                'service-avatars-1': '• Корпоративні представники',
-                'service-avatars-2': '• Персонажі для соцмереж',
-                'service-avatars-3': '• Аватари для ігор та додатків',
-                'service-avatars-4': '• Віртуальні ведучі',
-                'service-voice-title': 'Озвучка AI',
-                'service-voice-desc': 'Професійна озвучка текстів, аватарів та аудіокниг на 70+ мовах. Переклад та озвучка відео контенту.',
-                'service-voice-1': '• 70+ мов світу',
-                'service-voice-2': '• Озвучка аудіокниг',
-                'service-voice-3': '• Переклад відео',
-                'service-voice-4': '• Голоси для аватарів',
-                'service-images-title': 'Генерація зображень',
-                'service-images-desc': 'Створюю унікальні зображення за допомогою Midjourney, FLUX, Stable Diffusion, Krea та інших AI сервісів.',
-                'service-images-1': '• Реалістичні фотографії',
-                'service-images-2': '• Креативні ілюстрації',
-                'service-images-3': '• Персонажі мультфільмів',
-                'service-images-4': '• Концепт-арт',
-                'service-video-title': 'AI Відео',
-                'service-video-desc': 'Генерую відео за допомогою Kling AI, Runway, Luma, PikaLabs, Google Veo 3, Minimax. Підбираю оптимальний сервіс для кожної задачі.',
-                'service-video-1': '• Рекламні ролики',
-                'service-video-2': '• Анімація персонажів',
-                'service-video-3': '• Презентаційні відео',
-                'service-video-4': '• Креативний контент',
-                'service-ecommerce-title': 'E-commerce креативи',
-                'service-ecommerce-desc': 'Створюю рекламні креативи з реальними товарами. Тренування окремих AI моделей на ваші продукти для максимальної якості.',
-                'service-ecommerce-1': '• Фото товарів у різних сценах',
-                'service-ecommerce-2': '• Одяг на реальних людях',
-                'service-ecommerce-3': '• Рекламні банери',
-                'service-ecommerce-4': '• Каталожні зображення',
-                'service-photoshoot-title': 'Віртуальні фотосесії',
-                'service-photoshoot-desc': 'Тренування AI моделі на конкретну людину для створення фото в різних стилях, локаціях та образах без реальної фотосесії.',
-                'service-photoshoot-1': '• Портрети в різних стилях',
-                'service-photoshoot-2': '• Професійні фото',
-                'service-photoshoot-3': '• Креативні образи',
-                'service-photoshoot-4': '• Соціальні мережі',
-                'service-editing-title': 'Монтаж відео',
-                'service-editing-desc': 'Монтаж відео та пост-продакшн за допомогою Adobe Premiere Pro, After Effects та інших галузевих інструментів.',
-                'service-editing-1': '• Монтаж AI контенту',
-                'service-editing-2': '• Кольорокорекція та грейдинг',
-                'service-editing-3': '• Motion графіка та ефекти',
-                'service-editing-4': '• Workflow пост-продакшну',
-                'tech-title': 'Технології, які я використовую',
-                'portfolio-title': 'Портфоліо',
-                'portfolio-subtitle': 'Приклади мо×х робіт',
-                'portfolio-note': 'Завантажте свої роботи сюди, щоб показати клієнтам',
-                'contact-title': 'Зв\'язатися зі мною',
-                'contact-subtitle': 'Готовий втілити ваші ідеї в життя',
-                'contact-name': 'Ваше ім\'я',
-                'contact-email': 'Email',
-                'contact-service': 'Послуга',
-                'contact-select': 'Оберіть послугу',
-                'contact-avatars': 'AI Аватари',
-                'contact-voice': 'Озвучка',
-                'contact-images': 'Генерація зображень',
-                'contact-videos': 'AI Відео',
-                'contact-ecommerce': 'E-commerce',
-                'contact-photoshoot': 'Віртуальна фотосесія',
-                'contact-message': 'Повідомлення',
-                'contact-placeholder': 'Розкажіть про ваш проект...',
-                'contact-submit': 'Відправити повідомлення',
                 'load-more-portfolio': '📸 Завантажити ще портфоліо',
                 'footer-text': 'Втілюю ваші ідеї за допомогою штучного інтелекту',
                 'footer-rights': 'Всі права захищені'
@@ -1276,67 +1190,6 @@
                 'about-speed-desc': 'Fast project delivery',
                 'services-title': 'My Services',
                 'services-subtitle': 'Professional AI solutions for your business',
-                'service-avatars-title': 'AI Avatars',
-                'service-avatars-desc': 'I create realistic AI avatars for business, advertising, presentations, social media, games, apps and any other needs.',
-                'service-avatars-1': '• Corporate representatives',
-                'service-avatars-2': '• Social media characters',
-                'service-avatars-3': '• Gaming and app avatars',
-                'service-avatars-4': '• Virtual hosts',
-                'service-voice-title': 'AI Voice',
-                'service-voice-desc': 'Professional voiceover for texts, avatars and audiobooks in 70+ languages. Video translation and voiceover.',
-                'service-voice-1': '• 70+ world languages',
-                'service-voice-2': '• Audiobook narration',
-                'service-voice-3': '• Video translation',
-                'service-voice-4': '• Avatar voices',
-                'service-images-title': 'Image Generation',
-                'service-images-desc': 'I create unique images using Midjourney, FLUX, Stable Diffusion, Krea and other AI services.',
-                'service-images-1': '• Realistic photographs',
-                'service-images-2': '• Creative illustrations',
-                'service-images-3': '• Cartoon characters',
-                'service-images-4': '• Concept art',
-                'service-video-title': 'AI Video',
-                'service-video-desc': 'I generate videos using Kling AI, Runway, Luma, PikaLabs, Google Veo 3, Minimax. I select the optimal service for each task.',
-                'service-video-1': '• Promotional videos',
-                'service-video-2': '• Character animation',
-                'service-video-3': '• Presentation videos',
-                'service-video-4': '• Creative content',
-                'service-ecommerce-title': 'E-commerce Creatives',
-                'service-ecommerce-desc': 'I create advertising creatives with real products. Training separate AI models on your products for maximum quality.',
-                'service-ecommerce-1': '• Product photos in various scenes',
-                'service-ecommerce-2': '• Clothing on real people',
-                'service-ecommerce-3': '• Advertising banners',
-                'service-ecommerce-4': '• Catalog images',
-                'service-photoshoot-title': 'Virtual Photoshoots',
-                'service-photoshoot-desc': 'Training AI model on a specific person to create photos in different styles, locations and looks without a real photoshoot.',
-                'service-photoshoot-1': '• Portraits in various styles',
-                'service-photoshoot-2': '• Professional photos',
-                'service-photoshoot-3': '• Creative looks',
-                'service-photoshoot-4': '• Social media content',
-                'service-editing-title': 'Video Editing',
-                'service-editing-desc': 'Video editing and post-production using Adobe Premiere Pro, After Effects, and other industry-standard tools.',
-                'service-editing-1': '• AI content editing',
-                'service-editing-2': '• Color correction & grading',
-                'service-editing-3': '• Motion graphics & effects',
-                'service-editing-4': '• Post-production workflow',
-                'tech-title': 'Technologies I Use',
-                'portfolio-title': 'Portfolio',
-                'portfolio-subtitle': 'Examples of my work',
-                'portfolio-note': 'Upload your work here to show clients',
-                'contact-title': 'Contact Me',
-                'contact-subtitle': 'Ready to bring your ideas to life',
-                'contact-name': 'Your Name',
-                'contact-email': 'Email',
-                'contact-service': 'Service',
-                'contact-select': 'Select a service',
-                'contact-avatars': 'AI Avatars',
-                'contact-voice': 'Voice Services',
-                'contact-images': 'Image Generation',
-                'contact-videos': 'AI Video',
-                'contact-ecommerce': 'E-commerce',
-                'contact-photoshoot': 'Virtual Photoshoot',
-                'contact-message': 'Message',
-                'contact-placeholder': 'Tell me about your project...',
-                'contact-submit': 'Send Message',
                 'load-more-portfolio': '📸 Load More Portfolio',
                 'footer-text': 'Bringing your ideas to life with artificial intelligence',
                 'footer-rights': 'All rights reserved'
@@ -1433,7 +1286,7 @@
             }
         }
 
-        // Simplified Google Apps Script API Functions
+        // Simple Google Apps Script API Functions
         async function callAPI(action, data = {}, method = 'GET') {
             try {
                 updateApiStatus('loading');
@@ -1472,7 +1325,7 @@
             }
         }
 
-        // Simplified Data Loading
+        // Simple Data Loading
         async function loadDataFromAPI() {
             try {
                 console.log('📡 Loading data...');
@@ -1879,60 +1732,7 @@
             return 'photos';
         }
         
-        function detectVideoAspectRatio(item) {
-            // Спочатку перевіряємо збережену інформацію про пропорції
-            if (item.aspectRatio && item.aspectRatio !== 'auto') {
-                return `video-${item.aspectRatio}`;
-            }
-            
-            // Визначаємо пропорції відео за назвою файлу або категорією
-            const url = item.url || '';
-            const fileName = url.toLowerCase();
-            
-            // Шукаємо підказки в назві файлу
-            if (fileName.includes('story') || fileName.includes('stories') || 
-                fileName.includes('reel') || fileName.includes('tiktok') ||
-                fileName.includes('9_16') || fileName.includes('9x16') ||
-                fileName.includes('vertical')) {
-                return 'video-9-16'; // Вертикальне відео (TikTok, Stories)
-            }
-            
-            if (fileName.includes('landscape') || fileName.includes('youtube') ||
-                fileName.includes('16_9') || fileName.includes('16x9') ||
-                fileName.includes('horizontal')) {
-                return 'video-16-9'; // Горизонтальне відео (YouTube)
-            }
-            
-            if (fileName.includes('square') || fileName.includes('1_1') || 
-                fileName.includes('1x1') || fileName.includes('instagram_post')) {
-                return 'video-1-1'; // Квадратне відео (Instagram Post)
-            }
-            
-            if (fileName.includes('ultrawide') || fileName.includes('21_9') || 
-                fileName.includes('21x9') || fileName.includes('cinema')) {
-                return 'video-21-9'; // Ультраширокий формат
-            }
-            
-            if (fileName.includes('4_3') || fileName.includes('4x3') || 
-                fileName.includes('classic')) {
-                return 'video-4-3'; // Класичний формат
-            }
-            
-            // За замовчуванням для YouTube - 16:9, для інших - визначаємо за категорією
-            if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                return 'video-16-9';
-            }
-            
-            // За категорією проекту
-            if (item.category === 'video-creation' && 
-                (fileName.includes('tiktok') || fileName.includes('stories'))) {
-                return 'video-9-16';
-            }
-            
-            // За замовчуванням - стандартний розмір
-            return 'video-default';
-        }
-
+        // SIMPLIFIED Media Content Creation - back to basics!
         function createMediaContent(item, isLightbox = false) {
             let mediaContent = '';
             const mediaType = getMediaType(item);
@@ -1941,26 +1741,17 @@
                 if (item.url.includes('drive.google.com')) {
                     const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
-                        // Використовуємо Google Drive thumbnail API для зображень
                         if (isLightbox) {
-                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w1920" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w1920'; if (this.onerror) { this.onerror=null; this.parentNode.innerHTML='<div style=\\'width:100%;height:400px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;color:white;border-radius:8px\\'><div style=\\'text-align:center\\'><i class=\\'fab fa-google-drive\\' style=\\'font-size:4rem;margin-bottom:1rem\\'></i><p>Google Drive Image</p><a href=\\'${item.url}\\' target=\\'_blank\\' style=\\'background:rgba(255,255,255,0.2);padding:0.75rem 1.5rem;border-radius:8px;color:white;text-decoration:none\\'><i class=\\'fas fa-external-link-alt mr-2\\'></i>Відкрити в Drive</a></div></div>'; }">`;
+                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w1920" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w1920';">`;
                         } else {
-                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w800" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w800'; if (this.onerror) { this.onerror=null; this.parentNode.innerHTML='<div style=\\'width:100%;height:250px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;color:white;border-radius:20px 20px 0 0\\'><div style=\\'text-align:center\\'><i class=\\'fab fa-google-drive\\' style=\\'font-size:3rem;margin-bottom:1rem\\'></i><p>Google Drive Image</p><a href=\\'${item.url}\\' target=\\'_blank\\' style=\\'background:rgba(255,255,255,0.2);padding:0.5rem 1rem;border-radius:6px;color:white;text-decoration:none\\'><i class=\\'fas fa-external-link-alt mr-1\\'></i>Відкрити в Drive</a></div></div>'; }">`;
+                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w800" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w800';">`;
                         }
-                    } else {
-                        mediaContent = `<div style="width: 100%; height: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0;">
-                            <div style="text-align: center;">
-                                <i class="fab fa-google-drive" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                                <p style="margin: 0 0 1rem 0;">Google Drive Image</p>
-                                <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 8px; color: white; text-decoration: none;">Open in Drive</a>
-                            </div>
-                        </div>`;
                     }
                 } else if (item.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
                     if (isLightbox) {
-                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.parentNode.innerHTML='<div style=\\'width:100%;height:400px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;color:white;border-radius:8px\\'><div style=\\'text-align:center\\'><i class=\\'fas fa-exclamation-triangle\\' style=\\'font-size:4rem;margin-bottom:1rem\\'></i><p>Image failed to load</p></div></div>'">`;
+                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;">`;
                     } else {
-                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.parentNode.innerHTML='<div style=\\'width:100%;height:250px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;color:white;border-radius:20px 20px 0 0\\'><div style=\\'text-align:center\\'><i class=\\'fas fa-exclamation-triangle\\' style=\\'font-size:3rem;margin-bottom:1rem\\'></i><p>Image failed to load</p></div></div>'">`;
+                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
                     }
                 }
             }
@@ -1977,24 +1768,13 @@
                 } else if (item.url.includes('drive.google.com')) {
                     const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
-                        // Повертаємося до простішого iframe рішення
                         if (isLightbox) {
                             mediaContent = `<iframe width="90%" height="80%" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
                         } else {
                             mediaContent = `<iframe width="100%" height="280" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
                         }
-                    } else {
-                        // Fallback для неправильних Google Drive посилань
-                        mediaContent = `<div style="width: 100%; height: 280px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0;">
-                            <div style="text-align: center;">
-                                <i class="fab fa-google-drive" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                                <p style="margin: 0 0 1rem 0;">Google Drive Video</p>
-                                <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 8px; color: white; text-decoration: none;">Open in Drive</a>
-                            </div>
-                        </div>`;
                     }
                 } else if (item.url.includes('dropbox.com')) {
-                    // Кращий Dropbox обробник
                     let directUrl = item.url;
                     if (directUrl.includes('dropbox.com') && !directUrl.includes('dl.dropboxusercontent.com')) {
                         directUrl = directUrl.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '').replace('?dl=1', '');
@@ -2003,18 +1783,11 @@
                     if (isLightbox) {
                         mediaContent = `<video width="90%" height="80%" controls style="object-fit: contain; background: black;">
                             <source src="${directUrl}" type="video/mp4">
-                            <p style="color: white;">Відео не може бути відтворене. <a href="${item.url}" target="_blank" style="color: #4285f4;">Відкрити в Dropbox</a></p>
+                            <p style="color: white;">Video cannot be played. <a href="${item.url}" target="_blank" style="color: #4285f4;">Open in Dropbox</a></p>
                         </video>`;
                     } else {
                         mediaContent = `<video width="100%" height="280" controls style="object-fit: cover; border-radius: 20px 20px 0 0; background: black;">
                             <source src="${directUrl}" type="video/mp4">
-                            <div style="width: 100%; height: 280px; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); display: flex; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0;">
-                                <div style="text-align: center;">
-                                    <i class="fab fa-dropbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                                    <p style="margin: 0 0 1rem 0;">Dropbox Video</p>
-                                    <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 8px; color: white; text-decoration: none;">Open Video</a>
-                                </div>
-                            </div>
                         </video>`;
                     }
                 } else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
@@ -2022,30 +1795,13 @@
                         mediaContent = `<video width="90%" height="80%" controls style="object-fit: contain; background: black;">
                             <source src="${item.url}" type="video/mp4">
                             <source src="${item.url}" type="video/webm">
-                            <p style="color: white;">Your browser does not support this video format. <a href="${item.url}" target="_blank" style="color: #4285f4;">Download video</a></p>
                         </video>`;
                     } else {
                         mediaContent = `<video width="100%" height="280" controls style="object-fit: cover; border-radius: 20px 20px 0 0; background: black;">
                             <source src="${item.url}" type="video/mp4">
                             <source src="${item.url}" type="video/webm">
-                            <div style="width: 100%; height: 280px; background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); display: flex; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0;">
-                                <div style="text-align: center;">
-                                    <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                                    <p style="margin: 0 0 1rem 0;">Video file</p>
-                                    <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 8px; color: white; text-decoration: none;">Download</a>
-                                </div>
-                            </div>
                         </video>`;
                     }
-                } else {
-                    // Fallback для невідомих відео URL
-                    mediaContent = `<div style="width: 100%; height: 280px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); display: flex; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0;">
-                        <div style="text-align: center;">
-                            <i class="fas fa-external-link-alt" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                            <p style="margin: 0 0 1rem 0;">External Video</p>
-                            <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 8px; color: white; text-decoration: none;">Open Video</a>
-                        </div>
-                    </div>`;
                 }
             }
             
@@ -2084,10 +1840,10 @@
                 return;
             }
             
-            // Застосовуємо поточні фільтри
+            // Apply current filters
             applyCurrentFilters();
             
-            // Показуємо елементи порціями
+            // Show items in batches
             const itemsToShow = filteredItems.slice(currentlyShown, currentlyShown + ITEMS_PER_PAGE);
             
             itemsToShow.forEach((item, relativeIndex) => {
@@ -2218,8 +1974,6 @@
             });
         }
 
-
-
         const portfolioForm = document.getElementById('portfolio-form');
         if (portfolioForm) {
             portfolioForm.addEventListener('submit', async function(e) {
@@ -2286,8 +2040,8 @@
 
         // Portfolio Filter
         function filterPortfolio() {
-            currentlyShown = 0; // Скидаємо лічильник
-            renderPortfolio(true); // Повний ререндер з новими фільтрами
+            currentlyShown = 0;
+            renderPortfolio(true);
         }
 
         function shouldShowItem(item, mediaFilter, categoryFilter) {
@@ -2611,65 +2365,6 @@
             }
         }
 
-        // Debug function for video testing
-        window.debugVideoIssues = function() {
-            console.log('🎬 VIDEO DEBUG INFO:');
-            console.log('📱 User Agent:', navigator.userAgent);
-            console.log('Portfolio items:', portfolioItems);
-            
-            portfolioItems.forEach((item, index) => {
-                if (getMediaType(item) === 'videos') {
-                    console.log(`Video ${index}:`, {
-                        url: item.url,
-                        mediaType: item.mediaType,
-                        category: item.category
-                    });
-                    
-                    if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
-                        const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
-                        console.log('YouTube video ID:', videoId);
-                        console.log('YouTube embed URL:', `https://www.youtube.com/embed/${videoId}`);
-                    }
-                    
-                    if (item.url.includes('drive.google.com')) {
-                        const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
-                        console.log('Google Drive file ID:', fileId);
-                        console.log('Google Drive preview URL:', `https://drive.google.com/file/d/${fileId}/preview`);
-                    }
-                }
-            });
-            
-            // Check current iframes on page
-            setTimeout(() => {
-                console.log('📊 CURRENT IFRAME STATUS:');
-                const allIframes = document.querySelectorAll('iframe');
-                allIframes.forEach((iframe, i) => {
-                    console.log(`Iframe ${i}:`, {
-                        src: iframe.src,
-                        width: iframe.width,
-                        height: iframe.height,
-                        display: iframe.style.display
-                    });
-                });
-            }, 2000);
-        };
-        
-        // Простий детектор проблем з відео
-        function checkVideoIssues() {
-            setTimeout(() => {
-                console.log('🔍 Checking video status...');
-                const iframes = document.querySelectorAll('iframe[src*="drive.google.com"]');
-                console.log(`📊 Found ${iframes.length} Google Drive iframes`);
-                
-                iframes.forEach((iframe, i) => {
-                    console.log(`📹 Iframe ${i}: ${iframe.src}`);
-                });
-            }, 2000);
-        }
-        
-        // Запускаємо перевірку після завантаження
-        window.addEventListener('load', checkVideoIssues);
-
         // Initialize application
         console.log('🚀 Starting Andrii AI Portfolio...');
         
@@ -2677,7 +2372,7 @@
         loadDataFromAPI().then((data) => {
             console.log('✅ Data loaded successfully');
             renderTechnologies();
-            renderPortfolio(true); // Повний рендер з початку
+            renderPortfolio(true); // Full render from start
             renderContacts();
             
             // Initialize Load More Button after DOM is ready
@@ -2689,10 +2384,10 @@
                         this.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Завантажую...';
                         
                         setTimeout(() => {
-                            renderPortfolio(false); // Додаємо ще елементи без ресету
+                            renderPortfolio(false); // Add more items without reset
                             this.style.transform = 'scale(1)';
                             this.querySelector('span').innerHTML = '<i class="fas fa-images mr-3"></i>Завантажити ще портфоліо<span id="load-more-count" class="ml-2 opacity-75"></span>';
-                            updateLoadMoreButton(); // Оновлюємо кнопку
+                            updateLoadMoreButton(); // Update button
                         }, 500);
                     });
                 }
@@ -2702,7 +2397,7 @@
         }).catch((error) => {
             console.error('⚠️ Using offline mode:', error);
             renderTechnologies();
-            renderPortfolio(true); // Повний рендер з початку
+            renderPortfolio(true); // Full render from start
             renderContacts();
             
             // Initialize Load More Button for offline mode too
@@ -2725,6 +2420,7 @@
             
             console.log('💻 Portfolio loaded in offline mode');
         });
+
     </script>
 </body>
 </html>
