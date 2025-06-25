@@ -1950,24 +1950,26 @@
                 if (item.url.includes('drive.google.com')) {
                     const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
+                        // Використовуємо Google Drive thumbnail API для зображень
                         if (isLightbox) {
-                            mediaContent = `<img src="https://lh3.googleusercontent.com/d/${fileId}=w1920" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.src='https://drive.google.com/thumbnail?id=${fileId}&sz=w1920'; this.onerror=null;">`;
+                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w1920" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w1920'; if (this.onerror) { this.onerror=null; this.parentNode.innerHTML='<div style=\\'width:100%;height:400px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;color:white;border-radius:8px\\'><div style=\\'text-align:center\\'><i class=\\'fab fa-google-drive\\' style=\\'font-size:4rem;margin-bottom:1rem\\'></i><p>Google Drive Image</p><a href=\\'${item.url}\\' target=\\'_blank\\' style=\\'background:rgba(255,255,255,0.2);padding:0.75rem 1.5rem;border-radius:8px;color:white;text-decoration:none\\'><i class=\\'fas fa-external-link-alt mr-2\\'></i>Відкрити в Drive</a></div></div>'; }">`;
                         } else {
-                            mediaContent = `<img src="https://lh3.googleusercontent.com/d/${fileId}=w800" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.src='https://drive.google.com/thumbnail?id=${fileId}&sz=w800'; this.onerror=null;">`;
+                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w800" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w800'; if (this.onerror) { this.onerror=null; this.parentNode.innerHTML='<div style=\\'width:100%;height:250px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;color:white;border-radius:20px 20px 0 0\\'><div style=\\'text-align:center\\'><i class=\\'fab fa-google-drive\\' style=\\'font-size:3rem;margin-bottom:1rem\\'></i><p>Google Drive Image</p><a href=\\'${item.url}\\' target=\\'_blank\\' style=\\'background:rgba(255,255,255,0.2);padding:0.5rem 1rem;border-radius:6px;color:white;text-decoration:none\\'><i class=\\'fas fa-external-link-alt mr-1\\'></i>Відкрити в Drive</a></div></div>'; }">`;
                         }
                     } else {
-                        mediaContent = `<div class="h-48 bg-blue-100 flex items-center justify-center text-blue-600">
-                            <div class="text-center">
-                                <i class="fab fa-google-drive text-4xl mb-2"></i>
-                                <p><a href="${item.url}" target="_blank" class="underline">Open in Google Drive</a></p>
+                        mediaContent = `<div style="width: 100%; height: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0;">
+                            <div style="text-align: center;">
+                                <i class="fab fa-google-drive" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                <p style="margin: 0 0 1rem 0;">Google Drive Image</p>
+                                <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 8px; color: white; text-decoration: none;">Open in Drive</a>
                             </div>
                         </div>`;
                     }
                 } else if (item.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
                     if (isLightbox) {
-                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.parentNode.innerHTML='<div class=\\'h-48 bg-red-100 flex items-center justify-center text-red-600\\'><div class=\\'text-center\\'><i class=\\'fas fa-exclamation-triangle text-4xl mb-2\\'></i><p>Image failed to load</p></div></div>'">`;
+                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.parentNode.innerHTML='<div style=\\'width:100%;height:400px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;color:white;border-radius:8px\\'><div style=\\'text-align:center\\'><i class=\\'fas fa-exclamation-triangle\\' style=\\'font-size:4rem;margin-bottom:1rem\\'></i><p>Image failed to load</p></div></div>'">`;
                     } else {
-                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.parentNode.innerHTML='<div class=\\'h-48 bg-red-100 flex items-center justify-center text-red-600\\'><div class=\\'text-center\\'><i class=\\'fas fa-exclamation-triangle text-4xl mb-2\\'></i><p>Image failed to load</p></div></div>'">`;
+                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.parentNode.innerHTML='<div style=\\'width:100%;height:250px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;color:white;border-radius:20px 20px 0 0\\'><div style=\\'text-align:center\\'><i class=\\'fas fa-exclamation-triangle\\' style=\\'font-size:3rem;margin-bottom:1rem\\'></i><p>Image failed to load</p></div></div>'">`;
                     }
                 }
             }
@@ -1984,10 +1986,59 @@
                 } else if (item.url.includes('drive.google.com')) {
                     const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
+                        // Спроба використати iframe з fallback
                         if (isLightbox) {
-                            mediaContent = `<iframe width="90%" height="80%" src="https://drive.google.com/file/d/${fileId}/preview?usp=sharing" frameborder="0" allow="autoplay" allowfullscreen></iframe>`;
+                            mediaContent = `
+                                <div style="width: 90%; height: 80%; position: relative;">
+                                    <iframe 
+                                        id="drive-iframe-${fileId}" 
+                                        width="100%" 
+                                        height="100%" 
+                                        src="https://drive.google.com/file/d/${fileId}/preview" 
+                                        frameborder="0" 
+                                        allow="autoplay" 
+                                        allowfullscreen
+                                        style="display: block;"
+                                        onload="console.log('Drive iframe loaded successfully')"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    </iframe>
+                                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: none; align-items: center; justify-content: center; color: white; border-radius: 8px; position: absolute; top: 0; left: 0;">
+                                        <div style="text-align: center;">
+                                            <i class="fab fa-google-drive" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+                                            <p style="margin: 0 0 1rem 0; font-size: 1.2rem;">Google Drive відео</p>
+                                            <p style="margin: 0 0 1rem 0; font-size: 0.9rem; opacity: 0.8;">Неможливо відобразити в iframe</p>
+                                            <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.75rem 1.5rem; border-radius: 8px; color: white; text-decoration: none; font-weight: bold;">
+                                                <i class="fas fa-external-link-alt mr-2"></i>Відкрити в Drive
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>`;
                         } else {
-                            mediaContent = `<iframe width="100%" height="280" src="https://drive.google.com/file/d/${fileId}/preview?usp=sharing" frameborder="0" allow="autoplay" allowfullscreen></iframe>`;
+                            mediaContent = `
+                                <div style="width: 100%; height: 280px; position: relative;">
+                                    <iframe 
+                                        id="drive-iframe-${fileId}" 
+                                        width="100%" 
+                                        height="100%" 
+                                        src="https://drive.google.com/file/d/${fileId}/preview" 
+                                        frameborder="0" 
+                                        allow="autoplay" 
+                                        allowfullscreen
+                                        style="display: block; border-radius: 20px 20px 0 0;"
+                                        onload="console.log('Drive iframe loaded successfully')"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    </iframe>
+                                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: none; align-items: center; justify-content: center; color: white; border-radius: 20px 20px 0 0; position: absolute; top: 0; left: 0;">
+                                        <div style="text-align: center;">
+                                            <i class="fab fa-google-drive" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                            <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">Google Drive відео</p>
+                                            <p style="margin: 0 0 1rem 0; font-size: 0.8rem; opacity: 0.8;">CSP блокує iframe на комп'ютері</p>
+                                            <a href="${item.url}" target="_blank" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 6px; color: white; text-decoration: none; font-weight: 500;">
+                                                <i class="fas fa-external-link-alt mr-1"></i>Відкрити в Drive
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>`;
                         }
                     } else {
                         // Fallback для неправильних Google Drive посилань
@@ -2640,6 +2691,24 @@
                         const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                         console.log('Google Drive file ID:', fileId);
                         console.log('Google Drive preview URL:', `https://drive.google.com/file/d/${fileId}/preview`);
+                        
+                        // Test CSP
+                        console.log('🔒 Testing CSP for Google Drive iframe...');
+                        const testIframe = document.createElement('iframe');
+                        testIframe.src = `https://drive.google.com/file/d/${fileId}/preview`;
+                        testIframe.style.width = '1px';
+                        testIframe.style.height = '1px';
+                        testIframe.style.position = 'absolute';
+                        testIframe.style.left = '-9999px';
+                        testIframe.onload = () => console.log('✅ Google Drive iframe works on this device');
+                        testIframe.onerror = () => console.log('❌ Google Drive iframe blocked by CSP');
+                        document.body.appendChild(testIframe);
+                        
+                        setTimeout(() => {
+                            if (testIframe.parentNode) {
+                                testIframe.parentNode.removeChild(testIframe);
+                            }
+                        }, 3000);
                     }
                 }
             });
@@ -2651,6 +2720,24 @@
             document.body.appendChild(testDiv);
             console.log('Test iframe added to page');
         };
+        
+        // CSP Error Detection
+        window.addEventListener('securitypolicyviolation', function(e) {
+            console.log('🚫 CSP Violation detected:', e.violatedDirective);
+            console.log('🔗 Blocked URI:', e.blockedURI);
+            
+            if (e.blockedURI.includes('drive.google.com')) {
+                console.log('🎬 Google Drive iframe blocked - showing fallback');
+                // Знайти всі Google Drive iframe та показати fallback
+                const driveIframes = document.querySelectorAll('iframe[src*="drive.google.com"]');
+                driveIframes.forEach(iframe => {
+                    if (iframe.nextElementSibling) {
+                        iframe.style.display = 'none';
+                        iframe.nextElementSibling.style.display = 'flex';
+                    }
+                });
+            }
+        });
 
         // Initialize application
         console.log('🚀 Starting Andrii AI Portfolio...');
