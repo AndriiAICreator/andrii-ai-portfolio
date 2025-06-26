@@ -1842,7 +1842,7 @@
             
             // Apply current filters
             applyCurrentFilters();
-            
+            filteredItems.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
             // Show items in batches
             const itemsToShow = filteredItems.slice(currentlyShown, currentlyShown + ITEMS_PER_PAGE);
             
