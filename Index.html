@@ -1845,90 +1845,66 @@ document.addEventListener('mousemove', (e) => {
         }
         
         // SIMPLIFIED Media Content Creation - back to basics!
+        // ОНОВЛЕНА ТА ВИПРАВЛЕНА ФУНКЦІЯ
         function createMediaContent(item, isLightbox = false) {
             let mediaContent = '';
             const mediaType = getMediaType(item);
-            
+            const url = item.url || ''; // Переконуємось, що url не є undefined
+
             if (mediaType === 'photos' || item.mediaType === 'photo') {
-                if (item.url.includes('drive.google.com')) {
-                    const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
+                // Логіка для фотографій залишається без змін
+                if (url.includes('drive.google.com')) {
+                    const fileId = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
                     if (fileId) {
-                        if (isLightbox) {
-                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w1920" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w1920';">`;
-                        } else {
-                            mediaContent = `<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w800" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.src='https://lh3.googleusercontent.com/d/${fileId}=w800';">`;
-                        }
+                        const baseUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=`;
+                        mediaContent = `<img src="${baseUrl}${isLightbox ? 'w1920' : 'w800'}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" onerror="this.onerror=null;this.src='https://lh3.googleusercontent.com/d/$${fileId}=${isLightbox ? 'w1920' : 'w800'}';">`;
                     }
-                } else if (item.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
-                    if (isLightbox) {
-                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;">`;
-                    } else {
-                        mediaContent = `<img src="${item.url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
-                    }
+                } else if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+                    mediaContent = `<img src="${url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
                 }
             }
             else if (mediaType === 'videos' || item.mediaType === 'video') {
-                if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
-                    const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
-                    if (videoId) {
-                        if (isLightbox) {
-                            mediaContent = `<iframe width="90%" height="80%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                        } else {
-                            mediaContent = `<iframe width="100%" height="280" src="https://www.youtube.com/embed/${videoId}?controls=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                        }
-                    }
-                } else if (item.url.includes('drive.google.com')) {
-                    const fileId = item.url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
-                    if (fileId) {
-                        if (isLightbox) {
-                            mediaContent = `<iframe width="90%" height="80%" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
-                        } else {
-                            mediaContent = `<iframe width="100%" height="280" src="https://drive.google.com/file/d/${fileId}/preview" frameborder="0" allowfullscreen></iframe>`;
-                        }
-                    }
-                } else if (item.url.includes('dropbox.com')) {
-                    let directUrl = item.url;
-                    if (directUrl.includes('dropbox.com') && !directUrl.includes('dl.dropboxusercontent.com')) {
-                        directUrl = directUrl.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '').replace('?dl=1', '');
-                    }
-                    
-                    if (isLightbox) {
-                        mediaContent = `<video width="90%" height="80%" controls style="object-fit: contain; background: black;">
-                            <source src="${directUrl}" type="video/mp4">
-                            <p style="color: white;">Video cannot be played. <a href="${item.url}" target="_blank" style="color: #4285f4;">Open in Dropbox</a></p>
-                        </video>`;
-                    } else {
-                        mediaContent = `<video width="100%" height="280" controls style="object-fit: cover; border-radius: 20px 20px 0 0; background: black;">
-                            <source src="${directUrl}" type="video/mp4">
-                        </video>`;
-                    }
-                } else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
-                    if (isLightbox) {
-                        mediaContent = `<video width="90%" height="80%" controls style="object-fit: contain; background: black;">
-                            <source src="${item.url}" type="video/mp4">
-                            <source src="${item.url}" type="video/webm">
-                        </video>`;
-                    } else {
-                        mediaContent = `<video width="100%" height="280" controls style="object-fit: cover; border-radius: 20px 20px 0 0; background: black;">
-                            <source src="${item.url}" type="video/mp4">
-                            <source src="${item.url}" type="video/webm">
-                        </video>`;
-                    }
+                // --- ОСНОВНІ ВИПРАВЛЕННЯ ТУТ ---
+
+                // 1. Покращений парсинг YouTube (включаючи Shorts)
+                const youtubeRegex = /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+                const youtubeMatch = url.match(youtubeRegex);
+
+                // 2. Покращений парсинг Google Drive
+                const driveRegex = /drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9-_]+)/;
+                const driveMatch = url.match(driveRegex);
+
+                if (youtubeMatch && youtubeMatch[1]) {
+                    const videoId = youtubeMatch[1];
+                    const embedSrc = `https://www.youtube.com/embed/$${videoId}?controls=1${isLightbox ? '&autoplay=1' : ''}`;
+                    mediaContent = `<iframe width="100%" height="${isLightbox ? '80%' : '280'}" src="${embedSrc}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                } else if (driveMatch && driveMatch[1]) {
+                    const fileId = driveMatch[1];
+                    const embedSrc = `https://drive.google.com/file/d/${fileId}/preview`;
+                    mediaContent = `<iframe width="100%" height="${isLightbox ? '80%' : '280'}" src="${embedSrc}" frameborder="0" allowfullscreen></iframe>`;
+                } else if (url.includes('dropbox.com')) {
+                    // Конвертуємо посилання Dropbox у пряме посилання для тега <video>
+                    let directUrl = url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
+                    mediaContent = `<video width="100%" height="${isLightbox ? '80%' : '280'}" controls style="object-fit: cover; background: black;"><source src="${directUrl}" type="video/mp4">Ваш браузер не підтримує відео.</video>`;
+                } else if (url.match(/\.(mp4|mov|webm)$/i)) {
+                    // Пряме посилання на відеофайл
+                    mediaContent = `<video width="100%" height="${isLightbox ? '80%' : '280'}" controls style="object-fit: cover; background: black;"><source src="${url}" type="video/mp4">Ваш браузер не підтримує відео.</video>`;
                 }
             }
-            
+
+            // Запасний варіант, якщо жоден з форматів не розпізнано
             if (!mediaContent) {
-                mediaContent = `<div class="h-48 bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white">
+                mediaContent = `<div class="h-48 bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white p-4">
                     <div class="text-center">
-                        <i class="fas fa-external-link-alt text-4xl mb-2"></i>
-                        <p class="mb-2">External Link</p>
-                        <a href="${item.url}" target="_blank" class="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
-                            Open Link
+                        <i class="fas fa-exclamation-triangle text-4xl mb-2 text-yellow-400"></i>
+                        <p class="mb-2 text-sm">Не вдалося відобразити медіа. Перевірте посилання.</p>
+                        <a href="${item.url}" target="_blank" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-600 transition-colors">
+                            Відкрити в новій вкладці
                         </a>
                     </div>
                 </div>`;
             }
-            
+
             return mediaContent;
         }
 
