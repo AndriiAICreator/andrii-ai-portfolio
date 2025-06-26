@@ -1847,60 +1847,56 @@ document.addEventListener('mousemove', (e) => {
         // SIMPLIFIED Media Content Creation - back to basics!
         // ОНОВЛЕНА ТА ВИПРАВЛЕНА ФУНКЦІЯ
      // ФІНАЛЬНА ВИПРАВЛЕНА ВЕРСІЯ ФУНКЦІЇ
+        // СПРОЩЕНА ТА ВИПРАВЛЕНА ВЕРСІЯ ФУНКЦІЇ
         function createMediaContent(item, isLightbox = false) {
-            let mediaContent = '';
-            const url = item.url || ''; 
+            const url = item.url || '';
 
-            // --- 1. Коректна логіка для YouTube (включаючи Shorts) ---
+            // --- 1. Обробка YouTube (включаючи Shorts) ---
             const youtubeRegex = /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
             const youtubeMatch = url.match(youtubeRegex);
             if (youtubeMatch && youtubeMatch[1]) {
                 const videoId = youtubeMatch[1];
                 const embedSrc = `https://www.youtube.com/embed/${videoId}?controls=1&rel=0${isLightbox ? '&autoplay=1' : ''}`;
-                mediaContent = `<iframe width="100%" height="${isLightbox ? '95%' : '280'}" src="${embedSrc}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"></iframe>`;
-                return mediaContent; 
+                return `<iframe width="100%" height="${isLightbox ? '95%' : '280'}" src="${embedSrc}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"></iframe>`;
             }
 
-            // --- 2. Найнадійніша логіка для Google Drive ---
+            // --- 2. Обробка Google Drive (відео та фото) ---
             const driveRegex = /drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9-_]+)/;
             const driveMatch = url.match(driveRegex);
             if (driveMatch && driveMatch[1]) {
                 const fileId = driveMatch[1];
-                // Використовуємо 'uc?export=view' - це найнадійніший спосіб, щоб уникнути помилок відтворення
-                const embedSrc = `https://drive.google.com/uc?export=view&id=${fileId}`;
-                mediaContent = `<iframe width="100%" height="${isLightbox ? '95%' : '280'}" src="${embedSrc}" frameborder="0" allowfullscreen style="border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"></iframe>`;
-                return mediaContent; 
+                // Для відео використовуємо /preview, як і раніше
+                if (item.mediaType === 'video') {
+                    const embedSrc = `https://drive.google.com/file/d/${fileId}/preview`;
+                    return `<iframe width="100%" height="${isLightbox ? '95%' : '280'}" src="${embedSrc}" frameborder="0" allowfullscreen style="border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"></iframe>`;
+                }
+                // Для фото використовуємо thumbnail
+                if (item.mediaType === 'photo') {
+                    const baseUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=`;
+                    return `<img src="${baseUrl}${isLightbox ? 'w1920' : 'w800'}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
+                }
             }
             
-            // --- 3. Логіка для інших типів відео (Dropbox, прямі посилання) ---
+            // --- 3. Обробка інших типів відео (Dropbox, прямі посилання) ---
             if (url.includes('dropbox.com')) {
                 let directUrl = url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
-                mediaContent = `<video width="100%" height="${isLightbox ? '95%' : '280'}" controls style="background:black; border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"><source src="${directUrl}" type="video/mp4"></video>`;
-                return mediaContent;
+                return `<video width="100%" height="${isLightbox ? '95%' : '280'}" controls style="background:black; border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"><source src="${directUrl}" type="video/mp4"></video>`;
             }
             if (url.match(/\.(mp4|mov|webm)$/i)) {
-                mediaContent = `<video width="100%" height="${isLightbox ? '95%' : '280'}" controls style="background:black; border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"><source src="${url}"></video>`;
-                return mediaContent;
+                return `<video width="100%" height="${isLightbox ? '95%' : '280'}" controls style="background:black; border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"><source src="${url}"></video>`;
             }
 
-            // --- 4. Логіка для зображень ---
-            if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i) || (url.includes('drive.google.com') && item.mediaType === 'photo')) {
-                 const photoId = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)?.[1];
-                 if(photoId) {
-                    const baseUrl = `https://drive.google.com/thumbnail?id=${photoId}&sz=`;
-                    mediaContent = `<img src="${baseUrl}${isLightbox ? 'w1920' : 'w800'}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
-                 } else {
-                    mediaContent = `<img src="${url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
-                 }
-                 return mediaContent;
+            // --- 4. Обробка звичайних зображень ---
+            if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+                 return `<img src="${url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
             }
 
             // --- Запасний варіант, якщо нічого не спрацювало ---
             return `<div class="h-48 bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white p-4">
                         <div class="text-center">
                             <i class="fas fa-exclamation-triangle text-4xl mb-2 text-yellow-400"></i>
-                            <p class="mb-2 text-sm">Не вдалося відобразити медіа. Перевірте посилання.</p>
-                            <a href="${item.url}" target="_blank" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-600 transition-colors">
+                            <p class="mb-2 text-sm">Не вдалося відобразити медіа. Перевірте посилання або права доступу.</p>
+                            <a href="${url}" target="_blank" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-600 transition-colors">
                                 Відкрити в новій вкладці
                             </a>
                         </div>
