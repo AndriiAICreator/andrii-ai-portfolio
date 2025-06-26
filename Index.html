@@ -249,9 +249,15 @@
                 columns: 1;
                 column-gap: 0;
             }
-            .tech-card h4 {
-        font-size: 1rem; /* Зменшуємо розмір шрифту */
-            }
+           .tech-card h4 {
+        font-size: 0.875rem; /* Зменшуємо шрифт (відповідає text-sm в Tailwind) */
+        text-align: center;  /* Залишаємо вирівнювання по центру, але... */
+        line-height: 1.4;    /* Трохи збільшуємо інтервал між рядками для читабельності */
+        min-height: 2.5rem;  /* Задаємо мінімальну висоту, щоб картки не "стрибали" по висоті */
+        display: flex;       /* Включаємо Flexbox */
+        align-items: center; /* Центруємо текст вертикально */
+        justify-content: center; /* Центруємо текст горизонтально */
+    }
             .portfolio-item {
                 margin-bottom: 2rem;
                 max-width: 100%;
