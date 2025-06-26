@@ -81,27 +81,39 @@
             100% { transform: translateX(-100px) translateY(-100px); }
         }
         
-        .mouse-trail {
-            position: fixed;
-            width: 30px;
-            height: 30px;
-            background: radial-gradient(circle, 
-                rgba(139, 92, 246, 0.9) 0%, 
-                rgba(236, 72, 153, 0.6) 30%,
-                rgba(59, 130, 246, 0.4) 60%,
-                transparent 100%
-            );
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transition: all 0.15s ease-out;
-            transform: translate(-50%, -50%);
-            box-shadow: 
-                0 0 20px rgba(139, 92, 246, 0.5),
-                0 0 40px rgba(236, 72, 153, 0.3),
-                0 0 60px rgba(59, 130, 246, 0.2);
-            animation: mouseGlow 2s ease-in-out infinite alternate;
-        }
+        #spotlight-overlay {
+    /* Робимо шар невидимим для кліків миші */
+    pointer-events: none;
+
+    /* Розміщуємо його поверх усього контенту */
+    position: fixed;
+    z-index: 9998;
+    inset: 0; /* Це скорочення для top:0; right:0; bottom:0; left:0; */
+
+    /* Колір та прозорість "темряви" */
+    background: radial-gradient(
+        circle at center,
+        rgba(15, 15, 35, 0.8),
+        rgba(0, 0, 10, 0.98)
+    );
+
+    /* ОСНОВНА МАГІЯ:
+       Ми використовуємо маску, щоб вирізати "отвір світла".
+       Позиція маски буде керуватися через JavaScript. */
+    mask-image: radial-gradient(
+        circle 150px at var(--x, -200px) var(--y, -200px),
+        black 0%,
+        transparent 100%
+    );
+
+    /* Робимо анімацію плавною */
+    transition: mask-size 0.2s ease-out;
+}
+
+/* Збільшуємо розмір світла при наведенні на посилання/кнопки */
+body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
+    mask-size: 250px;
+}
         
         .simple-glow:hover {
             box-shadow: 
@@ -517,6 +529,7 @@
 </head>
 
 <body class="bg-gray-50">
+<div id="spotlight-overlay"></div>
     <!-- API Status Indicator -->
     <div id="api-status" class="api-status loading">
         <i class="fas fa-cloud"></i> Connecting...
@@ -1126,17 +1139,15 @@
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
-    <!-- Mouse Trail -->
-    <div class="mouse-trail" id="mouseTrail"></div>
 
     <script type="module">
-        // Simple Mouse Trail
-        let mouseTrail = document.getElementById('mouseTrail');
-        
-        document.addEventListener('mousemove', (e) => {
-            mouseTrail.style.left = e.clientX + 'px';
-            mouseTrail.style.top = e.clientY + 'px';
-        });
+        const spotlight = document.getElementById('spotlight-overlay');
+
+window.addEventListener('mousemove', (e) => {
+    // Оновлюємо CSS змінні, які керують позицією "прожектора"
+    spotlight.style.setProperty('--x', e.clientX + 'px');
+    spotlight.style.setProperty('--y', e.clientY + 'px');
+});
         
         // GOOGLE APPS SCRIPT API CONFIGURATION
         const API_URL = 'https://script.google.com/macros/s/AKfycbz0Zaexc8XWf9KPQ6NMOnKhBUkW0Luh1aMDcgwP5mOX-Q17g87-WpahjybogY9PquhUYQ/exec';
