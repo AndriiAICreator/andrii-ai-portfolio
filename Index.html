@@ -986,23 +986,23 @@
 
             <!-- Portfolio Filter -->
             <div class="flex flex-wrap justify-center gap-4 mb-8">
-                <button class="portfolio-filter active px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" data-filter="all">All</button>
-                <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="photos">📸 Photos</button>
-                <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="videos">🎬 Videos</button>
-            </div>
+    <button class="portfolio-filter active px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" data-filter="all" data-translate="filter-all">All</button>
+    <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="photos" data-translate="filter-photos">📸 Photos</button>
+    <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="videos" data-translate="filter-videos">🎬 Videos</button>
+</div>
             
             <!-- Category Filter (only shows when "All" is selected) -->
-            <div id="category-filter" class="flex flex-wrap justify-center gap-2 mb-12">
-                <label class="text-sm font-medium text-gray-300 mr-4">Category:</label>
-                <select id="category-select" class="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-sm text-white focus:border-purple-400 focus:outline-none">
-                    <option value="all">All Categories</option>
-                    <option value="avatars">AI Avatars</option>
-                    <option value="image-generation">Image Generation</option>
-                    <option value="video-creation">Video Creation</option>
-                    <option value="ecommerce">E-commerce</option>
-                    <option value="virtual-shoots">Virtual Shoots</option>
-                </select>
-            </div>
+          <div id="category-filter" class="flex flex-wrap justify-center gap-2 mb-12">
+    <label class="text-sm font-medium text-gray-300 mr-4">Category:</label>
+    <select id="category-select" class="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-sm text-white focus:border-purple-400 focus:outline-none">
+        <option value="all" data-translate="category-all">All Categories</option>
+        <option value="avatars" data-translate="category-avatars">AI Avatars</option>
+        <option value="image-generation" data-translate="category-image-gen">Image Generation</option>
+        <option value="video-creation" data-translate="category-video-create">Video Creation</option>
+        <option value="ecommerce" data-translate="category-ecommerce">E-commerce</option>
+        <option value="virtual-shoots" data-translate="category-virtual-shoots">Virtual Shoots</option>
+    </select>
+</div>
 
             <!-- Portfolio Grid -->
             <div id="portfolio-grid" class="portfolio-grid">
@@ -1159,7 +1159,7 @@
 
         // Translations
         const translations = {
-            uk: {
+           uk: {
                 'nav-about': 'Про мене',
                 'nav-services': 'Послуги',
                 'nav-portfolio': 'Портфоліо',
@@ -1177,11 +1177,68 @@
                 'about-creativity-desc': 'Втілюю будь-які творчі ідеї',
                 'about-speed': 'Швидкість',
                 'about-speed-desc': 'Швидке виконання проектів',
-                'services-title': 'Мої послуги',
+                'services-title': 'Мої Послуги',
                 'services-subtitle': 'Професійні AI рішення для вашого бізнесу',
-                'load-more-portfolio': '📸 Завантажити ще портфоліо',
+                'service-avatars-title': '👤 AI Аватари',
+                'service-avatars-desc': 'Створюю реалістичні AI аватари для бізнесу, реклами, презентацій, соцмереж, ігор, додатків та будь-яких інших потреб.',
+                'service-avatars-1': 'Корпоративні представники',
+                'service-avatars-2': 'Персонажі для соцмереж',
+                'service-avatars-3': 'Аватари для ігор та додатків',
+                'service-avatars-4': 'Віртуальні ведучі',
+                'service-voice-title': '🎙️ AI Озвучка',
+                'service-voice-desc': 'Професійна озвучка текстів, аватарів та аудіокниг на 70+ мовах. Переклад та озвучка відео.',
+                'service-voice-1': '70+ мов світу',
+                'service-voice-2': 'Озвучка аудіокниг',
+                'service-voice-3': 'Переклад відео',
+                'service-voice-4': 'Голоси для аватарів',
+                'service-images-title': '🎨 Генерація зображень',
+                'service-images-desc': 'Створюю унікальні зображення за допомогою Midjourney, FLUX, Stable Diffusion, Krea та інших AI-сервісів.',
+                'service-images-1': 'Реалістичні фотографії',
+                'service-images-2': 'Креативні ілюстрації',
+                'service-images-3': 'Мультиплікаційні персонажі',
+                'service-images-4': 'Концепт-арти',
+                'service-video-title': '🎬 AI Відео',
+                'service-video-desc': 'Генерую відео за допомогою Kling AI, Runway, Luma, PikaLabs, Google Veo 3, Minimax. Підбираю оптимальний сервіс під кожне завдання.',
+                'service-video-1': 'Рекламні ролики',
+                'service-video-2': 'Анімація персонажів',
+                'service-video-3': 'Відео для презентацій',
+                'service-video-4': 'Креативний контент',
+                'service-ecommerce-title': '🛒 Креативи для E-commerce',
+                'service-ecommerce-desc': 'Створюю рекламні креативи з реальними товарами. Навчання окремих AI моделей на ваших товарах для максимальної якості.',
+                'service-ecommerce-1': 'Фото товарів у різних сценах',
+                'service-ecommerce-2': 'Одяг на реальних людях',
+                'service-ecommerce-3': 'Рекламні банери',
+                'service-ecommerce-4': 'Зображення для каталогів',
+                'service-photoshoot-title': '📸 Віртуальні фотосесії',
+                'service-photoshoot-desc': 'Навчання AI моделі на конкретній людині для створення фото у різних стилях, локаціях та образах без реальної фотосесії.',
+                'service-photoshoot-1': 'Портрети у різних стилях',
+                'service-photoshoot-2': 'Професійні фотографії',
+                'service-photoshoot-3': 'Творчі образи',
+                'service-photoshoot-4': 'Контент для соціальних мереж',
+                'service-editing-title': '✂️ Монтаж Відео',
+                'service-editing-desc': 'Монтаж та пост-продакшн відео з використанням Adobe Premiere Pro, After Effects та інших професійних інструментів.',
+                'service-editing-1': 'Редагування AI контенту',
+                'service-editing-2': 'Корекція кольору',
+                'service-editing-3': 'Графіка та ефекти',
+                'service-editing-4': 'Пост-продакшн',
+                'tech-title': 'Технології, які я використовую',
+                'portfolio-title': 'Портфоліо',
+                'portfolio-subtitle': 'Приклади моїх робіт',
+                'contact-title': 'Зв\'яжіться зі мною',
+                'contact-subtitle': 'Готовий втілити ваші ідеї в життя',
                 'footer-text': 'Втілюю ваші ідеї за допомогою штучного інтелекту',
-                'footer-rights': 'Всі права захищені'
+                'footer-rights': 'Всі права захищені',
+                'load-more-portfolio': '📸 Завантажити ще',
+                // Фільтри та інше
+                'filter-all': 'Всі',
+                'filter-photos': '📸 Фото',
+                'filter-videos': '🎬 Відео',
+                'category-all': 'Всі категорії',
+                'category-avatars': 'AI Аватари',
+                'category-image-gen': 'Генерація зображень',
+                'category-video-create': 'Створення відео',
+                'category-ecommerce': 'E-commerce',
+                'category-virtual-shoots': 'Віртуальні фотосесії'
             },
             en: {
                 'nav-about': 'About',
