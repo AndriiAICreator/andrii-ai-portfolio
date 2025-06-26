@@ -8,10 +8,11 @@
     
     <!-- Favicon - Robot Icon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23ffffff'/><circle cx='50' cy='50' r='40' fill='%232563eb'/><rect x='35' y='35' width='8' height='8' rx='2' fill='%23ffffff'/><rect x='57' y='35' width='8' height='8' rx='2' fill='%23ffffff'/><rect x='40' y='55' width='20' height='6' rx='3' fill='%23ffffff'/><rect x='30' y='20' width='6' height='15' rx='3' fill='%232563eb'/><rect x='64' y='20' width='6' height='15' rx='3' fill='%232563eb'/></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23ffffff'/><circle cx='50' cy='50' r='40' fill='%232563eb'/><rect x='35' y='35' width='8' height='8' rx='2' fill='%23ffffff'/><rect x='57' y='35' width='8' height='8' rx='2' fill='%23ffffff'/><rect x='40' y='55' width='20' height='6' rx='3' fill='%23ffffff'/><rect x='30' y='20' width='6' height='15' rx='3' fill='%232563eb'/></svg>">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
     
     <style>
         body { 
@@ -21,7 +22,6 @@
             overflow-x: hidden;
         }
         
-        /* Epic Gradient Backgrounds */
         .gradient-bg { 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             position: relative;
@@ -29,30 +29,15 @@
             width: 100%;
             max-width: 100vw;
         }
-        .gradient-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" /><stop offset="100%" style="stop-color:rgba(255,255,255,0);stop-opacity:0" /></radialGradient></defs><circle cx="20" cy="20" r="3" fill="url(%23g)" /><circle cx="80" cy="40" r="2" fill="url(%23g)" /><circle cx="40" cy="80" r="4" fill="url(%23g)" /><circle cx="90" cy="90" r="2" fill="url(%23g)" /><circle cx="10" cy="60" r="3" fill="url(%23g)" /></svg>') repeat;
-            animation: sparkle 20s linear infinite;
-        }
-        
+
         .epic-card {
             background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.2);
             box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+            contain: layout style;
         }
         
-        .service-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
         .service-card:hover { 
             transform: translateY(-20px) scale(1.05);
             box-shadow: 0 50px 100px rgba(139, 92, 246, 0.3), 0 0 50px rgba(139, 92, 246, 0.2);
@@ -62,64 +47,15 @@
         .floating { animation: floating 6s ease-in-out infinite; }
         @keyframes floating {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-15px) rotate(2deg); }
             50% { transform: translateY(-30px) rotate(0deg); }
-            75% { transform: translateY(-15px) rotate(-2deg); }
         }
-        
-        @keyframes sparkle {
-            0% { transform: translateX(0) translateY(0); }
-            100% { transform: translateX(-100px) translateY(-100px); }
-        }
-        
-        .simple-glow:hover {
-            box-shadow: 
-                0 0 20px rgba(139, 92, 246, 0.3),
-                0 0 40px rgba(139, 92, 246, 0.2);
-        }
-        
-        .neon-text {
-            color: #ffffff;
-            text-shadow: 
-                0 0 5px #fff,
-                0 0 10px #fff,
-                0 0 15px #8b5cf6,
-                0 0 20px #8b5cf6,
-                0 0 35px #8b5cf6,
-                0 0 40px #8b5cf6;
-        }
-        
-        .glow-box {
-            box-shadow: 
-                0 0 20px rgba(139, 92, 246, 0.3),
-                0 0 40px rgba(139, 92, 246, 0.2),
-                0 0 60px rgba(139, 92, 246, 0.1),
-                inset 0 0 20px rgba(255, 255, 255, 0.1);
-        }
-        
-        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 2rem; }
-        .tech-card {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+
         .admin-panel { display: none; }
         .admin-mode .admin-panel { display: block; }
         .admin-mode .admin-only { display: block !important; }
         .admin-only { display: none; }
         .portfolio-item { position: relative; }
-        .admin-mode .portfolio-item:hover .delete-btn { 
-            display: flex !important; 
-            align-items: center; 
-            justify-content: center;
-            z-index: 20;
-        }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; }
         .modal.active { display: flex; align-items: center; justify-content: center; }
         .notification { position: fixed; top: 20px; right: 20px; z-index: 200; padding: 12px 24px; border-radius: 8px; color: white; font-weight: 500; transform: translateX(400px); transition: transform 0.3s ease; }
         .notification.show { transform: translateX(0); }
@@ -128,308 +64,91 @@
         
         /* Portfolio Grid - Masonry Layout */
         .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            align-items: start;
+            columns: 3;
+            column-gap: 2rem;
         }
         
         .portfolio-item {
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 2rem;
+            break-inside: avoid;
             background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-            backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 24px;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
-            cursor: pointer;
         }
         
         .portfolio-item:hover {
             transform: translateY(-15px) scale(1.03);
-            box-shadow: 
-                0 40px 80px rgba(139, 92, 246, 0.4), 
-                0 0 40px rgba(139, 92, 246, 0.3),
-                0 0 0 1px rgba(139, 92, 246, 0.2);
+            box-shadow: 0 40px 80px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.3);
             border-color: rgba(139, 92, 246, 0.6);
             z-index: 10;
         }
         
-        .portfolio-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-            object-fit: cover;
-            transition: transform 0.4s ease, filter 0.4s ease;
-            border-radius: 20px 20px 0 0;
-        }
-        
-        .portfolio-item:hover img {
-            transform: scale(1.08);
-            filter: brightness(1.1) contrast(1.1);
-        }
-        
-        .portfolio-item video, .portfolio-item iframe {
-            width: 100%;
-            height: 200px;
-            border-radius: 20px 20px 0 0;
-            display: block;
-            border: none;
-        }
-        
-        .portfolio-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, 
-                rgba(139, 92, 246, 0.1) 0%,
-                rgba(59, 130, 246, 0.1) 50%,
-                rgba(236, 72, 153, 0.1) 100%
-            );
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            border-radius: 24px;
-            pointer-events: none;
-        }
-        
-        .portfolio-item:hover::before {
-            opacity: 1;
-        }
-        
-        /* Responsive Grid */
-        @media (max-width: 1200px) {
-            .portfolio-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 1rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .portfolio-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 1rem;
-            }
-            
-            .portfolio-item video, .portfolio-item iframe {
-                height: 150px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .portfolio-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-        }
-        
-        .portfolio-item {
-            opacity: 0;
-            transform: translateY(30px) scale(0.95);
-            animation: portfolioFadeIn 0.6s ease forwards;
-        }
-        
         @keyframes portfolioFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         
-        .portfolio-item:nth-child(1) { animation-delay: 0.1s; }
-        .portfolio-item:nth-child(2) { animation-delay: 0.2s; }
-        .portfolio-item:nth-child(3) { animation-delay: 0.3s; }
-        .portfolio-item:nth-child(4) { animation-delay: 0.4s; }
-        .portfolio-item:nth-child(5) { animation-delay: 0.5s; }
-        .portfolio-item:nth-child(6) { animation-delay: 0.6s; }
-
+        /* Responsive Masonry */
+        @media (max-width: 1200px) { .portfolio-grid { columns: 2; column-gap: 1.5rem; } }
+        @media (max-width: 768px) { .portfolio-grid { columns: 1; column-gap: 0; } }
+        
         /* Lightbox Styles */
-        .lightbox { 
-            display: none; 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(0,0,0,0.95); 
-            z-index: 300;
-            padding: 20px;
-        }
-        .lightbox.active { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-        }
-        .lightbox-content { 
-            max-width: 90vw; 
-            max-height: 90vh; 
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .lightbox img { 
-            max-width: 90vw; 
-            max-height: 90vh; 
-            width: auto; 
-            height: auto; 
-            object-fit: contain; 
-            border-radius: 8px; 
-        }
-        .lightbox video, .lightbox iframe { 
-            max-width: 90vw; 
-            max-height: 90vh; 
-            width: auto;
-            height: auto;
-            border-radius: 8px;
-            display: block;
-        }
-        .lightbox-nav { 
-            position: fixed; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            background: rgba(0,0,0,0.7); 
-            color: white; 
-            border: 2px solid rgba(255,255,255,0.3);
-            width: 60px; 
-            height: 60px; 
-            border-radius: 50%; 
-            cursor: pointer; 
-            font-size: 24px; 
-            z-index: 310;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        .lightbox-nav:hover { 
-            background: rgba(255,255,255,0.2); 
-            border-color: rgba(255,255,255,0.6);
-            transform: translateY(-50%) scale(1.1);
-        }
-        .lightbox-prev { 
-            left: 30px; 
-        }
-        .lightbox-next { 
-            right: 30px; 
-        }
-        .lightbox-close { 
-            position: fixed; 
-            top: 30px; 
-            right: 30px; 
-            background: rgba(0,0,0,0.7); 
-            color: white; 
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 24px; 
-            cursor: pointer; 
-            z-index: 310;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        .lightbox-close:hover { 
-            color: #ff4444; 
-            background: rgba(255,68,68,0.2);
-            border-color: #ff4444;
-            transform: scale(1.1);
-        }
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 300; padding: 20px; }
+        .lightbox.active { display: flex; align-items: center; justify-content: center; }
+        .lightbox-content { max-width: 90vw; max-height: 90vh; position: relative; }
+        .lightbox-nav { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.7); color: white; border: 2px solid rgba(255,255,255,0.3); width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 24px; z-index: 310; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6); transform: translateY(-50%) scale(1.1); }
+        .lightbox-prev { left: 30px; }
+        .lightbox-next { right: 30px; }
+        .lightbox-close { position: fixed; top: 30px; right: 30px; background: rgba(0,0,0,0.7); color: white; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; width: 50px; height: 50px; font-size: 24px; cursor: pointer; z-index: 310; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .lightbox-close:hover { color: #ff4444; background: rgba(255,68,68,0.2); border-color: #ff4444; transform: scale(1.1); }
+        .lightbox-counter { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; z-index: 310; }
         
-        .lightbox-counter {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            z-index: 310;
-        }
+        html { scroll-behavior: smooth; }
         
-        @media (max-width: 768px) {
-            .lightbox { padding: 10px; }
-            .lightbox-nav { 
-                width: 50px; 
-                height: 50px; 
-                font-size: 20px; 
-            }
-            .lightbox-prev { left: 15px; }
-            .lightbox-next { right: 15px; }
-            .lightbox-close { 
-                top: 15px; 
-                right: 15px; 
-                width: 45px;
-                height: 45px;
-                font-size: 20px;
-            }
-            .lightbox-counter {
-                bottom: 15px;
-                font-size: 12px;
-                padding: 6px 12px;
-            }
-        }
+        .api-status { position: fixed; top: 80px; left: 20px; z-index: 50; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; transition: all 0.3s ease; display: none; }
+        .admin-mode .api-status { display: block; }
+        .api-status.online { background: #10b981; color: white; }
+        .api-status.offline { background: #ef4444; color: white; }
+        .api-status.loading { background: #f59e0b; color: white; }
     </style>
 </head>
 
-<body>
-    <!-- Admin Login -->
-    <div id="admin-login" class="fixed bottom-2 right-2 z-50">
-        <button id="admin-toggle" class="bg-gray-900/50 text-gray-500 p-1 rounded text-xs hover:bg-gray-700 hover:text-white transition-all duration-300 opacity-30 hover:opacity-100">
-            ⚙
-        </button>
-    </div>
+<body class="bg-gray-900">
+    <!-- UI Elements (Modals, Nav, etc.) -->
+    <div id="api-status" class="api-status loading"><i class="fas fa-cloud"></i> Connecting...</div>
+    <div id="admin-login" class="fixed bottom-2 right-2 z-50"> <button id="admin-toggle" class="bg-gray-900/50 text-gray-500 p-1 rounded text-xs hover:bg-gray-700 hover:text-white transition-all duration-300 opacity-30 hover:opacity-100">⚙</button> </div>
+    <div id="admin-panel" class="admin-panel fixed bottom-12 right-2 bg-gray-800 text-white rounded-lg shadow-lg p-4 z-40 max-w-sm border border-gray-600"> <h3 class="font-bold mb-4 text-white">🛠️ Admin Panel</h3> <div class="space-y-2"> <button onclick="openPortfolioModal()" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Add Portfolio Item</button> <button onclick="openTechModal()" class="w-full bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Manage Technologies</button> <button onclick="openContactModal()" class="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Manage Contacts</button> </div> </div>
+    <div id="portfolio-modal" class="modal"> <div class="bg-gray-800 text-white rounded-lg p-6 max-w-md w-full mx-4 border border-gray-600"> <h3 class="text-xl font-bold mb-4">📁 Add Portfolio Item</h3> <form id="portfolio-form" class="space-y-4"> <div> <label>Category</label> <select id="portfolio-category" class="w-full px-3 py-2 bg-gray-700 rounded-lg" required> <option value="avatars">AI Avatars</option> <option value="image-generation">Image Generation</option> <option value="video-creation">Video Creation</option> <option value="ecommerce">E-commerce</option> <option value="virtual-shoots">Virtual Shoots</option> </select> </div> <div> <label>Media Type</label> <select id="portfolio-media-type" class="w-full px-3 py-2 bg-gray-700 rounded-lg" required> <option value="photo">📸 Photo</option> <option value="video">🎬 Video</option> </select> </div> <div> <label>File/URL</label> <input type="text" id="portfolio-url" class="w-full px-3 py-2 bg-gray-700 rounded-lg" placeholder="YouTube, Dropbox, or direct URL"> <label class="mt-2 inline-block">Or upload file:</label> <input type="file" id="portfolio-file" class="w-full bg-gray-700 rounded-lg text-sm"> </div> <div class="flex gap-2"> <button type="submit" class="flex-1 bg-blue-500 py-2 rounded-lg">Add</button> <button type="button" onclick="closePortfolioModal()" class="flex-1 bg-gray-600 py-2 rounded-lg">Cancel</button> </div> </form> </div> </div>
+    <div id="tech-modal" class="modal"></div>
+    <div id="contact-modal" class="modal"></div>
+    <div id="password-modal" class="modal"> <div class="bg-gray-800 text-white rounded-lg p-6 max-w-sm w-full mx-4"> <h3 class="text-xl font-bold mb-4">🔐 Admin Access</h3> <form id="password-form" class="space-y-4"> <input type="password" id="admin-password" class="w-full px-3 py-2 bg-gray-700 rounded-lg" required> <div class="flex gap-2"> <button type="submit" class="flex-1 bg-blue-500 py-2 rounded-lg">Login</button> <button type="button" onclick="closePasswordModal()" class="flex-1 bg-gray-600 py-2 rounded-lg">Cancel</button> </div> </form> </div> </div>
+    <nav class="bg-black/80 backdrop-filter backdrop-blur-lg border-b border-purple-500/30 shadow-2xl fixed w-full top-0 z-40"> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> <div class="flex justify-between items-center h-16"> <div class="font-bold text-2xl bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">✨ Andrii AI</div> <div class="hidden md:flex space-x-8"> <a href="#about" class="text-gray-300 hover:text-cyan-400">About</a> <a href="#services" class="text-gray-300 hover:text-purple-400">Services</a> <a href="#portfolio" class="text-gray-300 hover:text-pink-400">Portfolio</a> <a href="#contact" class="text-gray-300 hover:text-green-400">Contact</a> </div> </div> </div> </nav>
 
-    <!-- Admin Panel -->
-    <div id="admin-panel" class="admin-panel fixed bottom-12 right-2 bg-gray-800 text-white rounded-lg shadow-lg p-4 z-40 max-w-sm border border-gray-600">
-        <h3 class="font-bold mb-4 text-white">🛠️ Admin Panel</h3>
-        <div class="space-y-2">
-            <button id="add-technology-btn" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-plus mr-2"></i>Add Technology
-            </button>
-            <button onclick="openContactModal()" class="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-address-book mr-2"></i>Manage Contacts
-            </button>
-            <button onclick="testDataLoad()" class="w-full bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-sync mr-2"></i>Test Data Load
-            </button>
-            <button id="clear-portfolio-btn" class="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-trash mr-2"></i>Clear All Portfolio
-            </button>
-        </div>
-    </div>
+    <!-- Page Content -->
+    <main>
+        <section class="gradient-bg text-white py-20 mt-16 relative min-h-screen flex items-center">
+             <!-- Hero content -->
+        </section>
 
-    <!-- Modals -->
-    <div id="tech-modal" class="modal">
-        <div class="bg-gray-800 text-white rounded-lg p-6 max-w-md w-full mx-4 border border-gray-600">
-            <h3 class="text-xl font-bold mb-4 text-white">🛠️ Add Technology</h3>
-            <form id="tech-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium mb-2 text-gray-300">Technology Name</label>
-                    <input type="text" id="tech-name" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" required>
+        <section id="portfolio" class="py-20 bg-gradient-to-b from-gray-900 to-black relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">Portfolio</h2>
+                    <p class="text-xl text-gray-300">Examples of my work</p>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium mb-2 text-gray-300">Emoji/Icon</label>
-                    <input type="text" id="tech-emoji" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" placeholder="🎨" required>
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button class="portfolio-filter active px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white" data-filter="all">All</button>
+                    <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 border-2 border-gray-600" data-filter="photos">📸 Photos</button>
+                    <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 border-2 border-gray-600" data-filter="videos">🎬 Videos</button>
                 </div>
-                <div class="flex gap-2">
-                    <button type="submit" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-105">Add</button>
-                    <button type="button" onclick="closeTechModal()" class="flex-1 bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition-all duration-300 hover:scale-105">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="portfolio-modal" class="modal">
-        <div class="bg-gray-800 text-white rounded-lg p-6 max-w-md w-full mx-4 border border-gray-600">
-            <h3 class="text-xl font-bold mb-4 text-white">📁 Add Portfolio Item</h3>
-            <form id="portfolio-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium mb-2 text-gray-300">Category</label>
-                    <select id="portfolio-category" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" required>
+                <div id="category-filter" class="flex justify-center gap-2 mb-12">
+                    <select id="category-select" class="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white">
+                        <option value="all">All Categories</option>
                         <option value="avatars">AI Avatars</option>
                         <option value="image-generation">Image Generation</option>
                         <option value="video-creation">Video Creation</option>
@@ -437,1433 +156,309 @@
                         <option value="virtual-shoots">Virtual Shoots</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium mb-2 text-gray-300">Media Type</label>
-                    <select id="portfolio-media-type" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" required>
-                        <option value="photo">📸 Photo</option>
-                        <option value="video">🎬 Video</option>
-                    </select>
-                </div>
-
-                <div id="file-upload-section">
-                    <label class="block text-sm font-medium mb-2 text-gray-300">Upload Photo</label>
-                    <input type="file" id="portfolio-file" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" accept="image/*">
-                    <div class="mt-2 text-xs text-gray-400">
-                        Supported: JPG, PNG, GIF, WebP (max 10MB)
-                    </div>
-                </div>
-
-                <div id="url-input-section" style="display: none;">
-                    <label class="block text-sm font-medium mb-2 text-gray-300">Video URL</label>
-                    <input type="text" id="portfolio-url" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" placeholder="YouTube, Vimeo, or direct video link">
-                    <div class="mt-2 text-xs text-gray-400">
-                        Examples:<br>
-                        • YouTube: youtube.com/watch?v=...<br>
-                        • Vimeo: vimeo.com/123456789<br>
-                        • Direct: your-domain.com/video.mp4
-                    </div>
-                </div>
-
-                <div class="flex gap-2">
-                    <button type="submit" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-105">Add</button>
-                    <button type="button" onclick="closePortfolioModal()" class="flex-1 bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition-all duration-300 hover:scale-105">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="contact-modal" class="modal">
-        <div class="bg-gray-800 text-white rounded-lg p-6 max-w-md w-full mx-4 border border-gray-600">
-            <h3 class="text-xl font-bold mb-4 text-white">📞 Add/Edit Contact</h3>
-            <form id="contact-form-modal" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium mb-2 text-gray-300">Platform</label>
-                    <select id="contact-platform" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" required>
-                        <option value="email">Email</option>
-                        <option value="telegram">Telegram</option>
-                        <option value="instagram">Instagram</option>
-                        <option value="tiktok">TikTok</option>
-                        <option value="linkedin">LinkedIn</option>
-                        <option value="youtube">YouTube</option>
-                        <option value="twitter">Twitter</option>
-                        <option value="whatsapp">WhatsApp</option>
-                        <option value="facebook">Facebook</option>
-                        <option value="discord">Discord</option>
-                        <option value="phone">Phone</option>
-                        <option value="website">Website</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-2 text-gray-300">Label</label>
-                    <input type="text" id="contact-label" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" placeholder="e.g., @dream_ailab" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-2 text-gray-300">URL/Link</label>
-                    <input type="text" id="contact-url" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" placeholder="Full URL or email/phone" required>
-                </div>
-                <div class="flex gap-2">
-                    <button type="submit" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-105">Save</button>
-                    <button type="button" onclick="closeContactModal()" class="flex-1 bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition-all duration-300 hover:scale-105">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="password-modal" class="modal">
-        <div class="bg-gray-800 text-white rounded-lg p-6 max-w-md w-full mx-4 border border-gray-600">
-            <h3 class="text-xl font-bold mb-4 text-white">🔐 Admin Access</h3>
-            <form id="password-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium mb-2 text-gray-300">Password</label>
-                    <input type="password" id="admin-password" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-purple-400 focus:outline-none" required>
-                </div>
-                <div class="flex gap-2">
-                    <button type="submit" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-105">Login</button>
-                    <button type="button" onclick="closePasswordModal()" class="flex-1 bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition-all duration-300 hover:scale-105">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <nav class="bg-black/80 backdrop-filter backdrop-blur-lg border-b border-purple-500/30 shadow-2xl fixed w-full top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="font-bold text-2xl bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">✨ Andrii AI</div>
-                
-                <div class="hidden md:flex space-x-8">
-                    <a href="#about" class="text-gray-300 hover:text-cyan-400 transition-all duration-300 hover:scale-110 font-semibold">About</a>
-                    <a href="#services" class="text-gray-300 hover:text-purple-400 transition-all duration-300 hover:scale-110 font-semibold">Services</a>
-                    <a href="#portfolio" class="text-gray-300 hover:text-pink-400 transition-all duration-300 hover:scale-110 font-semibold">Portfolio</a>
-                    <a href="#contact" class="text-gray-300 hover:text-green-400 transition-all duration-300 hover:scale-110 font-semibold">Contact</a>
-                </div>
-                
-                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
-            
-            <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
-                <div class="px-2 pt-2 pb-3 space-y-1">
-                    <a href="#about" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">About</a>
-                    <a href="#services" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Services</a>
-                    <a href="#portfolio" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Portfolio</a>
-                    <a href="#contact" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Contact</a>
+                <div id="portfolio-grid" class="portfolio-grid"></div>
+                <div class="text-center mt-12" id="load-more-container" style="display: none;">
+                    <button id="load-more-btn" class="epic-card px-8 py-4 rounded-full font-bold">Load More</button>
                 </div>
             </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="gradient-bg text-white py-20 mt-16 relative min-h-screen flex items-center">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center">
-                <div class="floating mb-8">
-                    <div class="w-40 h-40 mx-auto bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 rounded-full flex items-center justify-center shadow-2xl glow-box relative">
-                        <div class="absolute inset-2 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-                            <i class="fas fa-robot text-6xl text-white neon-text"></i>
-                        </div>
-                        <div class="absolute -inset-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full opacity-30 blur-lg animate-pulse"></div>
-                    </div>
-                </div>
-                <div class="bg-black/30 backdrop-blur-md rounded-3xl p-8 mx-auto max-w-5xl border border-white/20">
-                    <h1 class="text-5xl md:text-8xl font-bold mb-6">
-                        <span class="text-white drop-shadow-lg">Hi, I'm</span> <br>
-                        <span class="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent animate-pulse">Andrii</span>
-                    </h1>
-                    <p class="text-2xl md:text-4xl mb-8 text-cyan-300 font-semibold drop-shadow-lg">
-                        AI Creator | Artificial Intelligence Creator
-                    </p>
-                    <p class="text-lg md:text-xl mb-10 text-white leading-relaxed drop-shadow-md">
-                        I create incredible AI avatars, generate unique images and videos, voice content in 70+ languages. I bring your ideas to life using cutting-edge AI technologies.
-                    </p>
-                </div>
-                <div class="flex flex-col sm:flex-row gap-6 justify-center">
-                    <a href="#services" class="epic-card px-10 py-4 rounded-full font-bold text-lg text-white hover:scale-110 transform transition-all duration-300 relative overflow-hidden group shadow-lg hover:shadow-cyan-500/50 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-purple-500">
-                        <span class="relative z-10">🚀 My Services</span>
-                    </a>
-                    <a href="#contact" class="epic-card border-2 border-purple-400 px-10 py-4 rounded-full font-bold text-lg text-white hover:scale-110 hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:border-transparent transform transition-all duration-300 shadow-lg hover:shadow-pink-500/50">
-                        💬 Get in Touch
-                    </a>
-                </div>
-            </div>
-        </div>
+        </section>
         
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute top-1/4 left-1/4 w-4 h-4 bg-purple-500 rounded-full opacity-60 animate-ping"></div>
-            <div class="absolute top-1/3 right-1/4 w-2 h-2 bg-pink-500 rounded-full opacity-40 animate-pulse"></div>
-            <div class="absolute bottom-1/4 left-1/3 w-3 h-3 bg-blue-500 rounded-full opacity-50 animate-bounce"></div>
-            <div class="absolute top-1/2 right-1/3 w-2 h-2 bg-yellow-500 rounded-full opacity-60 animate-ping"></div>
-            <div class="absolute bottom-1/3 right-1/4 w-4 h-4 bg-cyan-500 rounded-full opacity-30 animate-pulse"></div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-20 bg-gradient-to-b from-gray-900 to-black relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">About Me</h2>
-                <p class="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                    I specialize in creating high-quality AI content for business and creative projects. I use the best AI tools to achieve your goals. I also do professional video editing and post-production to bring your content to the next level.
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="epic-card text-center p-8 rounded-3xl hover:scale-105 transform transition-all duration-500 group relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
-                            <i class="fas fa-brain text-3xl text-white"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white">🧠 Innovation</h3>
-                        <p class="text-gray-300 text-lg">Using the latest AI technologies</p>
-                    </div>
-                </div>
-                <div class="epic-card text-center p-8 rounded-3xl hover:scale-105 transform transition-all duration-500 group relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-500/20 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
-                            <i class="fas fa-palette text-3xl text-white"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white">🎨 Creativity</h3>
-                        <p class="text-gray-300 text-lg">Bringing any creative ideas to life</p>
-                    </div>
-                </div>
-                <div class="epic-card text-center p-8 rounded-3xl hover:scale-105 transform transition-all duration-500 group relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
-                            <i class="fas fa-rocket text-3xl text-white"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white">⚡ Speed</h3>
-                        <p class="text-gray-300 text-lg">Fast project delivery</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Section -->
-    <section id="services" class="py-20 bg-gradient-to-b from-black to-gray-900 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">My Services</h2>
-                <p class="text-xl md:text-2xl text-gray-300">Professional AI solutions for your business</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- AI Avatars -->
-                <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-all duration-500">
-                            <i class="fas fa-user-circle text-3xl text-white"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white">👤 AI Avatars</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
-                            I create realistic AI avatars for business, advertising, presentations, social media, games, apps and any other needs.
-                        </p>
-                        <ul class="text-gray-400 space-y-3">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>Corporate representatives</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>Social media characters</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Gaming and app avatars</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>Virtual hosts</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Voice Services -->
-                <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-500/20 to-teal-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
-                            <i class="fas fa-microphone text-3xl text-white"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white">🎙️ AI Voice</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
-                            Professional voiceover for texts, avatars and audiobooks in 70+ languages. Video translation and voiceover.
-                        </p>
-                        <ul class="text-gray-400 space-y-3">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-3"></span>70+ world languages</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-3"></span>Audiobook narration</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>Video translation</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>Avatar voices</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Image Generation -->
-                <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-rose-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-20 h-20 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
-                            <i class="fas fa-image text-3xl text-white"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white">🎨 Image Generation</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
-                            I create unique images using Midjourney, FLUX, Stable Diffusion, Krea and other AI services.
-                        </p>
-                        <ul class="text-gray-400 space-y-3">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Realistic photographs</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-rose-400 rounded-full mr-3"></span>Creative illustrations</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-red-400 rounded-full mr-3"></span>Cartoon characters</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-orange-400 rounded-full mr-3"></span>Concept art</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Video Generation -->
-                <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-red-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
-                            <i class="fas fa-video text-3xl text-white"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white">🎬 AI Video</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
-                            I generate videos using Kling AI, Runway, Luma, PikaLabs, Google Veo 3, Minimax. I select the optimal service for each task.
-                        </p>
-                        <ul class="text-gray-400 space-y-3">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-orange-400 rounded-full mr-3"></span>Promotional videos</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-red-400 rounded-full mr-3"></span>Character animation</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-yellow-400 rounded-full mr-3"></span>Presentation videos</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Creative content</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- E-commerce -->
-                <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-blue-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
-                            <i class="fas fa-shopping-cart text-3xl text-white"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white">🛒 E-commerce Creatives</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
-                            I create advertising creatives with real products. Training separate AI models on your products for maximum quality.
-                        </p>
-                        <ul class="text-gray-400 space-y-3">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-indigo-400 rounded-full mr-3"></span>Product photos in various scenes</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>Clothing on real people</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>Advertising banners</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>Catalog images</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Virtual Photoshoot -->
-                <div class="service-card p-8 rounded-3xl relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6 glow-box group-hover:scale-110 transition-transform duration-500">
-                            <i class="fas fa-camera text-3xl text-white"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4 text-white">📸 Virtual Photoshoots</h3>
-                        <p class="text-gray-300 mb-6 text-lg leading-relaxed">
-                            Training AI model on a specific person to create photos in different styles, locations and looks without a real photoshoot.
-                        </p>
-                        <ul class="text-gray-400 space-y-3">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>Portraits in various styles</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>Professional photos</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-red-400 rounded-full mr-3"></span>Creative looks</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-orange-400 rounded-full mr-3"></span>Social media content</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Technologies Section -->
-    <section class="py-20 bg-gradient-to-b from-black to-gray-900 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Technologies I Use</h2>
-                <button class="admin-only epic-card px-6 py-3 rounded-2xl text-white hover:scale-110 transform transition-all duration-300" onclick="openTechModal()">
-                    <i class="fas fa-plus mr-2"></i>Add Technology
-                </button>
-            </div>
-            
-            <div id="tech-grid" class="tech-grid">
-                <!-- Technologies will be loaded here -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="py-20 bg-gradient-to-b from-gray-900 to-black relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">Portfolio</h2>
-                <p class="text-xl md:text-2xl text-gray-300">Examples of my work</p>
-            </div>
-
-            <!-- Portfolio Filter -->
-            <div class="flex flex-wrap justify-center gap-4 mb-8">
-                <button class="portfolio-filter active px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" data-filter="all">All</button>
-                <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="photos">📸 Photos</button>
-                <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="videos">🎬 Videos</button>
-            </div>
-
-            <!-- Portfolio Grid -->
-            <div id="portfolio-grid" class="portfolio-grid">
-                <!-- Portfolio items will be loaded here -->
-            </div>
-            
-            <!-- Load More Button -->
-            <div class="text-center mt-12" id="load-more-container" style="display: none;">
-                <button id="load-more-btn" class="epic-card px-8 py-4 rounded-full font-bold text-lg text-white hover:scale-110 transform transition-all duration-300 relative overflow-hidden group shadow-lg hover:shadow-purple-500/50 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                    <span class="relative z-10">
-                        <i class="fas fa-images mr-3"></i>
-                        <span>Load More Portfolio</span>
-                        <span id="load-more-count" class="ml-2 opacity-75"></span>
-                    </span>
-                </button>
-                <p class="text-gray-400 text-sm mt-3" id="portfolio-status">
-                    Showing <span id="shown-count">0</span> of <span id="total-count">0</span> items
-                </p>
-            </div>
-
-            <!-- Add Portfolio Buttons (Admin Only) -->
-            <div class="admin-only text-center mt-12 space-y-4">
-                <div class="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
-                    <button onclick="openPortfolioModal('avatars')" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
-                        <i class="fas fa-user-circle mr-2"></i>AI Avatars
-                    </button>
-                    <button onclick="openPortfolioModal('image-generation')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm">
-                        <i class="fas fa-image mr-2"></i>Image Generation
-                    </button>
-                    <button onclick="openPortfolioModal('video-creation')" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors text-sm">
-                        <i class="fas fa-video mr-2"></i>Video Creation
-                    </button>
-                    <button onclick="openPortfolioModal('ecommerce')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm">
-                        <i class="fas fa-shopping-cart mr-2"></i>E-commerce
-                    </button>
-                    <button onclick="openPortfolioModal('virtual-shoots')" class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors text-sm">
-                        <i class="fas fa-camera mr-2"></i>Virtual Shoots
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-gradient-to-b from-black to-gray-900 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">Contact Me</h2>
-                <p class="text-xl text-gray-600">Ready to bring your ideas to life</p>
-            </div>
-
-            <div class="max-w-4xl mx-auto">
-                <div id="contact-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Contacts will be loaded here -->
-                </div>
-                
-                <div class="admin-only mt-12 text-center">
-                    <button onclick="openContactModal()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Add Contact
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gradient-to-t from-black to-gray-900 text-white py-12 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center">
-                <h3 class="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">✨ Andrii AI Creator</h3>
-                <p class="text-gray-400 mb-6">Bringing your ideas to life with artificial intelligence</p>
-                <div id="footer-contacts" class="flex justify-center space-x-6">
-                    <!-- Contacts will be loaded here -->
-                </div>
-                <div class="mt-8 pt-8 border-t border-gray-800 text-gray-400">
-                    <p>&copy; 2025 Andrii AI Creator. All rights reserved.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+        <!-- Other sections like About, Services, Contact -->
+    </main>
 
     <!-- Lightbox -->
-    <div id="lightbox" class="lightbox">
-        <div id="lightbox-content" class="lightbox-content">
-            <!-- Media content will be inserted here -->
-        </div>
-        <button id="lightbox-prev" class="lightbox-nav lightbox-prev">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button id="lightbox-next" class="lightbox-nav lightbox-next">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-        <button id="lightbox-close" class="lightbox-close">
-            <i class="fas fa-times"></i>
-        </button>
-        <div id="lightbox-counter" class="lightbox-counter">
-            1 / 1
-        </div>
-    </div>
-
-    <!-- Notification -->
+    <div id="lightbox" class="lightbox"> <div id="lightbox-content" class="lightbox-content"></div> <button id="lightbox-prev" class="lightbox-nav lightbox-prev"><i class="fas fa-chevron-left"></i></button> <button id="lightbox-next" class="lightbox-nav lightbox-next"><i class="fas fa-chevron-right"></i></button> <button id="lightbox-close" class="lightbox-close"><i class="fas fa-times"></i></button> <div id="lightbox-counter" class="lightbox-counter"></div> </div>
     <div id="notification" class="notification"></div>
+    <div class="mouse-trail" id="mouseTrail"></div>
 
     <script type="module">
-        // GOOGLE APPS SCRIPT API CONFIGURATION
-        // ❗ ВАЖЛИВО: ЗАМІНІТЬ YOUR_SCRIPT_ID НА РЕАЛЬНИЙ ID ВАШОГО СКРИПТА
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxPwVfFkakG_fpK121jL6QGgPKgL9Pzag8lpgtukK38_4C1Lkz-6zQZ5Eta8DW4IcJvwQ/exec';
+        // --- CONFIGURATION ---
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxMVxm9StVXrJ2q1eQMNO_pVGud-07clykfCBqvaQwZ0np_NLXKvab0MpOhhDT2P6jDMg/exec';
         const ADMIN_PASSWORD = 'andrii2025';
         
-        // Global Variables
+        // --- STATE MANAGEMENT ---
         let isAdminMode = false;
-        let technologies = [];
         let portfolioItems = [];
-        let contacts = [];
-        
-        // Portfolio Pagination
         const ITEMS_PER_PAGE = 12;
         let currentlyShown = 0;
         let filteredItems = [];
+        let lightboxItems = [];
+        let currentLightboxIndex = 0;
 
-        // Notification System
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
+        // --- UTILITY FUNCTIONS ---
+        const showNotification = (message, type = 'success') => {
+            const el = document.getElementById('notification');
+            el.textContent = message;
+            el.className = `notification ${type} show`;
+            setTimeout(() => el.classList.remove('show'), 3000);
+        };
 
-        // API Functions
-        async function callAPI(action, data = {}, method = 'GET') {
-            try {
-                const formData = new FormData();
-                formData.append('action', action);
-                
-                if (isAdminMode && method === 'POST') {
-                    formData.append('password', ADMIN_PASSWORD);
-                }
-                
-                if (Object.keys(data).length > 0) {
-                    formData.append('data', JSON.stringify(data));
-                }
-                
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const result = await response.json();
-                
-                if (result.status === 200) {
-                    return result.data;
-                } else {
-                    throw new Error(result.data?.error || 'API Error');
-                }
-                
-            } catch (error) {
-                console.error('❌ API Error:', error);
-                throw error;
-            }
-        }
+        const updateApiStatus = (status) => {
+            const el = document.getElementById('api-status');
+            if(!el) return;
+            const icons = { online: 'fa-cloud-upload-alt', loading: 'fa-spinner fa-spin', error: 'fa-exclamation-triangle' };
+            el.innerHTML = `<i class="fas ${icons[status]}"></i> ${status}`;
+            el.className = `api-status ${status}`;
+        };
+        
+        const fileToBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+        });
 
-        async function loadDataFromAPI() {
-            try {
-                const response = await fetch(API_URL + '?action=getAllData');
-                const result = await response.json();
-                
-                if (result.status === 200 && result.data) {
-                    portfolioItems = result.data.portfolioItems || [];
-                    technologies = result.data.technologies || [];
-                    contacts = result.data.contacts || [];
-                    
-                    return result.data;
-                } else {
-                    throw new Error('Invalid API response');
-                }
-                
-            } catch (error) {
-                console.error('❌ Load error:', error);
-                
-                // Use default data if API fails
-                portfolioItems = [];
-                technologies = [
-                    { name: 'Midjourney', emoji: '🎨' },
-                    { name: 'FLUX', emoji: '⚡' },
-                    { name: 'Stable Diffusion', emoji: '🔬' },
-                    { name: 'Runway', emoji: '🎬' },
-                    { name: 'Kling AI', emoji: '🌟' },
-                    { name: 'Luma', emoji: '🎭' },
-                    { name: 'PikaLabs', emoji: '🎪' },
-                    { name: 'Krea', emoji: '🔗' },
-                    { name: 'HeyGen', emoji: '👤' },
-                    { name: 'ElevenLabs', emoji: '🎙️' },
-                    { name: 'Photoshop', emoji: '🖼️' },
-                    { name: 'Premiere Pro', emoji: '🎞️' },
-                    { name: 'After Effects', emoji: '💫' },
-                    { name: 'Lightroom', emoji: '📷' }
-                ];
-                contacts = [
-                    { platform: 'email', label: 'andrii.aicreator@gmail.com', url: 'mailto:andrii.aicreator@gmail.com', icon: 'fas fa-envelope' },
-                    { platform: 'telegram', label: '@Andrii_aicreator', url: 'https://t.me/Andrii_aicreator', icon: 'fab fa-telegram' },
-                    { platform: 'instagram', label: '@dream.ailab', url: 'https://www.instagram.com/dream.ailab', icon: 'fab fa-instagram' },
-                    { platform: 'tiktok', label: '@dream_ailab', url: 'https://www.tiktok.com/@dream_ailab', icon: 'fab fa-tiktok' },
-                    { platform: 'linkedin', label: 'Andrii AI Creator', url: 'https://linkedin.com/in/andrii-ai-creator-professional', icon: 'fab fa-linkedin' }
-                ];
-                
-                return { portfolioItems, technologies, contacts };
-            }
-        }
+        // --- API COMMUNICATION ---
+        async function callAPI(action, payload = {}) {
+            updateApiStatus('loading');
+            const formData = new FormData();
+            formData.append('action', action);
 
-        async function saveDataToAPI() {
-            if (!isAdminMode) return;
-            
-            try {
-                const data = { portfolioItems, technologies, contacts };
-                await callAPI('saveAllData', data, 'POST');
-                showNotification('✅ Data saved successfully!', 'success');
-            } catch (error) {
-                console.error('❌ API save error:', error);
-                showNotification('❌ Error saving data', 'error');
-            }
-        }
-
-        // File Upload Functions
-        async function uploadFileToAPI(file, category) {
-            try {
-                showNotification('📤 Uploading file to Google Drive...', 'success');
-                
-                const base64 = await fileToBase64(file);
-                
-                const formData = new FormData();
-                formData.append('action', 'uploadFile');
+            if (action !== 'getAllData') {
                 formData.append('password', ADMIN_PASSWORD);
-                formData.append('file', base64.split(',')[1]);
-                formData.append('filename', file.name);
-                formData.append('mimeType', file.type);
-                formData.append('category', category);
-                
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-                
+            }
+            if (payload.data) {
+                formData.append('data', JSON.stringify(payload.data));
+            }
+            if (payload.file) {
+                formData.append('file', (await fileToBase64(payload.file)).split(',')[1]);
+                formData.append('filename', payload.file.name);
+                formData.append('mimeType', payload.file.type);
+            }
+
+            try {
+                const response = await fetch(API_URL, { method: 'POST', body: formData });
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 const result = await response.json();
-                
-                if (result.status !== 200) {
-                    throw new Error(result.data?.error || 'Upload failed');
-                }
-                
-                showNotification('✅ File uploaded successfully!', 'success');
-                return result.data.url;
+                if (result.status !== 200) throw new Error(result.data?.error || 'Unknown API Error');
+                updateApiStatus('online');
+                return result.data;
             } catch (error) {
-                console.error('❌ Error uploading file:', error);
-                showNotification('❌ File upload error', 'error');
+                console.error('API Call Failed:', error);
+                showNotification(error.message, 'error');
+                updateApiStatus('error');
                 throw error;
             }
         }
-
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
+        
+        async function saveData() {
+            if (!isAdminMode) return;
+            await callAPI('saveAllData', { data: { portfolioItems } }); // Simplified save
         }
-
-        // Media Type Detection
-        function getMediaType(item) {
-            if (item.mediaType) {
-                return item.mediaType === 'photo' ? 'photos' : 'videos';
-            }
-            
-            const url = item.url || item;
-            if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) return 'photos';
-            if (url.includes('youtube.com') || url.includes('youtu.be') || 
-                url.includes('vimeo.com') || url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) return 'videos';
-            return 'photos';
-        }
-
-        // Create Media Content
+        
+        // --- MEDIA RENDERING ---
         function createMediaContent(item, isLightbox = false) {
-            if (!item.url) return '';
-            
-            const mediaType = getMediaType(item);
-            let mediaContent = '';
-            
-            if (mediaType === 'photos') {
-                // Images
-                let imageUrl = item.url;
-                
-                // Fix Google Drive URLs
-                if (imageUrl.includes('drive.google.com/file/d/') && imageUrl.includes('/view')) {
-                    const fileIdMatch = imageUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
-                    if (fileIdMatch) {
-                        imageUrl = `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
-                    }
-                }
-                
-                if (isLightbox) {
-                    mediaContent = `<img src="${imageUrl}" alt="Portfolio item" style="max-width: 90vw; max-height: 90vh; width: auto; height: auto; object-fit: contain;">`;
+            let { url, category, mediaType } = item;
+            if (!url) return `<div class="p-4 text-red-500">Error: Media URL is missing.</div>`;
+
+            // Auto-detect media type if not specified
+            if (!mediaType) {
+                if (url.includes('youtube.com') || url.includes('youtu.be') || (url.includes('drive.google.com') && url.includes('/preview'))) {
+                    mediaType = 'video';
                 } else {
-                    mediaContent = `<img src="${imageUrl}" alt="Portfolio item" loading="lazy">`;
-                }
-            } else {
-                // Videos
-                if (item.url.includes('youtube.com') || item.url.includes('youtu.be')) {
-                    const videoId = item.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
-                    if (videoId) {
-                        if (isLightbox) {
-                            mediaContent = `<iframe width="800" height="450" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                        } else {
-                            mediaContent = `<iframe width="100%" height="200" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                        }
-                    }
-                } else if (item.url.includes('vimeo.com')) {
-                    const videoId = item.url.match(/vimeo\.com\/(\d+)/)?.[1];
-                    if (videoId) {
-                        if (isLightbox) {
-                            mediaContent = `<iframe width="800" height="450" src="https://player.vimeo.com/video/${videoId}?autoplay=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
-                        } else {
-                            mediaContent = `<iframe width="100%" height="200" src="https://player.vimeo.com/video/${videoId}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
-                        }
-                    }
-                } else if (item.url.match(/\.(mp4|mov|webm|avi|mkv)$/i)) {
-                    if (isLightbox) {
-                        mediaContent = `<video width="800" height="450" controls autoplay>
-                            <source src="${item.url}" type="video/mp4">
-                            <source src="${item.url}" type="video/webm">
-                        </video>`;
-                    } else {
-                        mediaContent = `<video width="100%" height="200" controls>
-                            <source src="${item.url}" type="video/mp4">
-                            <source src="${item.url}" type="video/webm">
-                        </video>`;
-                    }
+                    mediaType = 'photo';
                 }
             }
             
-            return mediaContent;
-        }
+            // Re-format Google Drive image URLs to a reliable format
+            if (mediaType === 'photo' && url.includes('drive.google.com')) {
+                const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/id=([a-zA-Z0-9-_]+)/);
+                if (match?.[1]) {
+                    url = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1024`;
+                }
+            }
 
-        // Render Functions
-        function renderTechnologies() {
-            const grid = document.getElementById('tech-grid');
-            grid.innerHTML = '';
-            
-            technologies.forEach((tech, index) => {
-                const techDiv = document.createElement('div');
-                techDiv.className = 'epic-card text-center p-6 rounded-2xl hover:scale-110 transform transition-all duration-500 group tech-card overflow-hidden';
-                techDiv.style.animationDelay = `${index * 100}ms`;
-                
-                const gradients = [
-                    'from-purple-500 to-pink-500',
-                    'from-blue-500 to-cyan-500', 
-                    'from-green-500 to-teal-500',
-                    'from-orange-500 to-red-500',
-                    'from-indigo-500 to-purple-500',
-                    'from-pink-500 to-rose-500'
-                ];
-                const randomGradient = gradients[index % gradients.length];
-                
-                const bgColors = [
-                    'from-purple-500/20 to-pink-500/20',
-                    'from-blue-500/20 to-cyan-500/20', 
-                    'from-green-500/20 to-teal-500/20',
-                    'from-orange-500/20 to-red-500/20',
-                    'from-indigo-500/20 to-purple-500/20',
-                    'from-pink-500/20 to-rose-500/20'
-                ];
-                const randomBgColor = bgColors[index % bgColors.length];
-                
-                techDiv.innerHTML = `
-                    <div class="absolute inset-0 bg-gradient-to-br ${randomBgColor} opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-16 h-16 bg-gradient-to-br ${randomGradient} rounded-2xl flex items-center justify-center mx-auto mb-4 glow-box group-hover:scale-110 transition-all duration-500">
-                            <div class="text-2xl">${tech.emoji}</div>
-                        </div>
-                        <h4 class="font-bold text-white text-lg group-hover:text-cyan-300 transition-colors duration-300">${tech.name}</h4>
-                    </div>
-                    <button class="admin-only absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 hover:scale-110 transition-all duration-300 flex items-center justify-center z-20" onclick="removeTechnology(${index})" style="display: none;">×</button>
-                `;
-                grid.appendChild(techDiv);
-            });
-            
-            document.querySelectorAll('.tech-card').forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0) scale(1)';
-                }, index * 150);
-            });
-        }
+            const altText = `Portfolio: ${category || 'Item'}`;
+            const errorPlaceholder = `this.onerror=null; this.src='https://placehold.co/600x400/1e1b4b/ffffff?text=Image+Error';`;
 
-        function renderContacts() {
-            const contactGrid = document.getElementById('contact-grid');
-            contactGrid.innerHTML = '';
-            
-            contacts.forEach((contact, index) => {
-                const contactDiv = document.createElement('div');
-                contactDiv.className = 'epic-card p-8 rounded-3xl hover:scale-105 transform transition-all duration-500 relative group';
-                
-                const platformColors = {
-                    email: 'text-blue-600',
-                    telegram: 'text-blue-500',
-                    instagram: 'text-pink-600',
-                    tiktok: 'text-black',
-                    linkedin: 'text-blue-700',
-                    youtube: 'text-red-600',
-                    twitter: 'text-blue-400',
-                    whatsapp: 'text-green-600',
-                    facebook: 'text-blue-800',
-                    discord: 'text-purple-600',
-                    phone: 'text-green-600',
-                    website: 'text-gray-600'
-                };
-                
-                contactDiv.innerHTML = `
-                    <a href="${contact.url}" target="_blank" rel="noopener noreferrer" class="block text-center group h-full">
-                        <div class="w-20 h-20 mx-auto mb-6 ${platformColors[contact.platform] || 'text-gray-600'} group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl flex items-center justify-center glow-box">
-                            <i class="${contact.icon} text-5xl"></i>
-                        </div>
-                        <h3 class="font-bold text-xl mb-3 text-white group-hover:text-cyan-400 transition-colors">
-                            ${contact.platform.charAt(0).toUpperCase() + contact.platform.slice(1)}
-                        </h3>
-                        <p class="text-gray-300 text-lg">${contact.label}</p>
-                    </a>
-                    <button class="admin-only absolute top-3 right-3 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center" onclick="removeContact(${index})" style="display: none;">×</button>
-                `;
-                
-                contactGrid.appendChild(contactDiv);
-            });
-            
-            // Render footer contacts
-            const footerContacts = document.getElementById('footer-contacts');
-            footerContacts.innerHTML = '';
-            
-            contacts.forEach(contact => {
-                const link = document.createElement('a');
-                link.href = contact.url;
-                link.target = '_blank';
-                link.rel = 'noopener noreferrer';
-                link.className = 'text-gray-400 hover:text-white transition-colors';
-                link.innerHTML = `<i class="${contact.icon} text-2xl"></i>`;
-                footerContacts.appendChild(link);
-            });
-        }
+            if (isLightbox) {
+                const lightboxClasses = "max-w-[90vw] max-h-[90vh] w-auto h-auto rounded-lg";
+                if (mediaType === 'video') {
+                    const videoSrc = url.includes('youtube.com') ? `https://www.youtube.com/embed/${url.match(/v=([^&]+)/)[1]}?autoplay=1` : url;
+                    return `<iframe class="w-[80vw] h-[80vh]" src="${videoSrc}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+                }
+                return `<img class="${lightboxClasses}" src="${url}" alt="${altText}" onerror="${errorPlaceholder}">`;
+            }
 
+            // Grid view rendering
+            if (mediaType === 'video') {
+                const videoSrc = url.includes('youtube.com') ? `https://www.youtube.com/embed/${url.match(/v=([^&]+)/)[1]}` : url;
+                return `<iframe class="w-full h-[280px] block" src="${videoSrc}" frameborder="0" allow="fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+            }
+            return `<img class="w-full h-auto block" src="${url}" alt="${altText}" loading="lazy" onerror="${errorPlaceholder}">`;
+        }
+        
         function renderPortfolio(reset = false) {
             const grid = document.getElementById('portfolio-grid');
-            
-            if (!grid) {
-                console.error('❌ Portfolio grid not found');
-                return;
-            }
-            
             if (reset) {
                 grid.innerHTML = '';
                 currentlyShown = 0;
             }
             
-            if (portfolioItems.length === 0) {
-                grid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 0;">
-                        <i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i>
-                        <p class="text-gray-500 text-lg">Portfolio is empty</p>
-                        <p class="text-gray-400">Add your first work through admin panel</p>
-                    </div>
-                `;
+            applyCurrentFilters();
+            if (filteredItems.length === 0 && reset) {
+                grid.innerHTML = `<div class="col-span-3 text-center py-12 text-gray-500">No items match the filter.</div>`;
                 updateLoadMoreButton();
                 return;
             }
-            
-            // Apply current filters
-            applyCurrentFilters();
-            
-            // Show items in batches
+
             const itemsToShow = filteredItems.slice(currentlyShown, currentlyShown + ITEMS_PER_PAGE);
-            
-            itemsToShow.forEach((item, relativeIndex) => {
-                const absoluteIndex = portfolioItems.indexOf(item);
-                const mediaType = getMediaType(item);
-                const mediaContent = createMediaContent(item);
-                
+            const fragment = document.createDocumentFragment();
+            itemsToShow.forEach(item => {
                 const itemDiv = document.createElement('div');
-                itemDiv.className = `portfolio-item ${item.category} ${mediaType}`;
-                itemDiv.dataset.index = absoluteIndex;
-                itemDiv.style.animationDelay = `${relativeIndex * 100}ms`;
-                
+                itemDiv.className = 'portfolio-item cursor-pointer';
                 itemDiv.innerHTML = `
-                    ${mediaContent}
-                    <button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${absoluteIndex})" style="display: none;">×</button>
+                    ${createMediaContent(item, false)}
+                    <button class="delete-btn admin-only absolute top-3 right-3 bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg z-10 hover:bg-red-700 transition-all">×</button>
                 `;
-                
-                itemDiv.addEventListener('click', (e) => {
-                    if (!e.target.classList.contains('delete-btn')) {
-                        openLightbox(absoluteIndex);
+                itemDiv.addEventListener('click', () => openLightbox(item));
+                itemDiv.querySelector('.delete-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if(confirm('Are you sure you want to delete this item?')) {
+                        portfolioItems = portfolioItems.filter(p => p.id !== item.id);
+                        saveData().then(() => renderPortfolio(true));
                     }
                 });
-                
-                grid.appendChild(itemDiv);
+                fragment.appendChild(itemDiv);
             });
-            
+            grid.appendChild(fragment);
             currentlyShown += itemsToShow.length;
             updateLoadMoreButton();
         }
         
+        // --- FILTERING & PAGINATION ---
         function applyCurrentFilters() {
-            const mediaFilter = document.querySelector('.portfolio-filter.active')?.dataset.filter || 'all';
+            const mediaFilter = document.querySelector('.portfolio-filter.active').dataset.filter;
+            const categoryFilter = document.getElementById('category-select').value;
             
             filteredItems = portfolioItems.filter(item => {
-                if (mediaFilter !== 'all') {
-                    const mediaType = getMediaType(item);
-                    if (mediaType !== mediaFilter) return false;
+                let itemMediaType = item.mediaType;
+                if (!itemMediaType) { // Auto-detect if not present
+                     itemMediaType = (item.url.includes('youtube.com') || (item.url.includes('drive.google.com') && item.url.includes('/preview'))) ? 'video' : 'photo';
                 }
-                return true;
+                const mediaMatch = mediaFilter === 'all' || (mediaFilter === 'videos' && itemMediaType === 'video') || (mediaFilter === 'photos' && itemMediaType === 'photo');
+                const categoryMatch = categoryFilter === 'all' || item.category === categoryFilter;
+                return mediaMatch && categoryMatch;
             });
         }
         
         function updateLoadMoreButton() {
-            const loadMoreContainer = document.getElementById('load-more-container');
-            const loadMoreCount = document.getElementById('load-more-count');
-            const shownCount = document.getElementById('shown-count');
-            const totalCount = document.getElementById('total-count');
-            
-            if (!loadMoreContainer) return;
-            
-            const remaining = filteredItems.length - currentlyShown;
-            
-            if (shownCount) shownCount.textContent = currentlyShown;
-            if (totalCount) totalCount.textContent = filteredItems.length;
-            
-            if (remaining > 0) {
-                loadMoreContainer.style.display = 'block';
-                if (loadMoreCount) {
-                    loadMoreCount.textContent = `(+${Math.min(remaining, ITEMS_PER_PAGE)})`;
-                }
-            } else {
-                loadMoreContainer.style.display = 'none';
-            }
+            const container = document.getElementById('load-more-container');
+            container.style.display = currentlyShown < filteredItems.length ? 'block' : 'none';
         }
 
-        // Lightbox functionality
-        let currentLightboxIndex = 0;
-        let lightboxItems = [];
+        // --- LIGHTBOX ---
+        function openLightbox(item) {
+            applyCurrentFilters();
+            lightboxItems = filteredItems;
+            currentLightboxIndex = lightboxItems.findIndex(i => i.id === item.id);
 
-        function openLightbox(index) {
-            const currentFilter = document.querySelector('.portfolio-filter.active').dataset.filter;
-            
-            lightboxItems = portfolioItems.filter(item => {
-                if (currentFilter !== 'all') {
-                    const mediaType = getMediaType(item);
-                    if (mediaType !== currentFilter) return false;
-                }
-                return true;
-            });
-            
-            const originalItem = portfolioItems[index];
-            currentLightboxIndex = lightboxItems.findIndex(item => item === originalItem);
-            
-            if (currentLightboxIndex === -1) {
-                currentLightboxIndex = 0;
-            }
-            
-            updateLightboxContent();
-            updateLightboxNavigation();
             document.getElementById('lightbox').classList.add('active');
-            document.body.style.overflow = 'hidden';
+            updateLightboxContent();
+            updateLightboxNavigation();
         }
 
-        function closeLightbox() {
+        const closeLightbox = () => {
             document.getElementById('lightbox').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
+            document.getElementById('lightbox-content').innerHTML = ''; // Stop videos
+        };
 
-        function updateLightboxContent() {
-            const item = lightboxItems[currentLightboxIndex];
-            const content = document.getElementById('lightbox-content');
-            
-            if (!item) return;
-            
-            content.innerHTML = createMediaContent(item, true);
-        }
+        const updateLightboxContent = () => {
+            document.getElementById('lightbox-content').innerHTML = createMediaContent(lightboxItems[currentLightboxIndex], true);
+        };
         
-        function updateLightboxNavigation() {
-            const counter = document.getElementById('lightbox-counter');
-            const prevBtn = document.getElementById('lightbox-prev');
-            const nextBtn = document.getElementById('lightbox-next');
-            
-            if (counter) {
-                counter.textContent = `${currentLightboxIndex + 1} / ${lightboxItems.length}`;
-            }
-            
-            if (lightboxItems.length <= 1) {
-                if (prevBtn) prevBtn.style.display = 'none';
-                if (nextBtn) nextBtn.style.display = 'none';
-                if (counter) counter.style.display = 'none';
-            } else {
-                if (prevBtn) prevBtn.style.display = 'flex';
-                if (nextBtn) nextBtn.style.display = 'flex';
-                if (counter) counter.style.display = 'block';
-            }
-        }
+        const updateLightboxNavigation = () => {
+            const showNav = lightboxItems.length > 1;
+            document.getElementById('lightbox-prev').style.display = showNav ? 'flex' : 'none';
+            document.getElementById('lightbox-next').style.display = showNav ? 'flex' : 'none';
+            document.getElementById('lightbox-counter').style.display = showNav ? 'block' : 'none';
+            if(showNav) document.getElementById('lightbox-counter').textContent = `${currentLightboxIndex + 1} / ${lightboxItems.length}`;
+        };
 
-        function nextLightboxItem() {
-            if (lightboxItems.length <= 1) return;
-            currentLightboxIndex = (currentLightboxIndex + 1) % lightboxItems.length;
+        const navigateLightbox = (direction) => {
+            currentLightboxIndex = (currentLightboxIndex + direction + lightboxItems.length) % lightboxItems.length;
             updateLightboxContent();
             updateLightboxNavigation();
-        }
+        };
 
-        function prevLightboxItem() {
-            if (lightboxItems.length <= 1) return;
-            currentLightboxIndex = (currentLightboxIndex - 1 + lightboxItems.length) % lightboxItems.length;
-            updateLightboxContent();
-            updateLightboxNavigation();
-        }
+        // --- MODALS & ADMIN ---
+        const setupModal = (id, openFn, closeFn, formId, submitFn) => {
+            const modal = document.getElementById(id);
+            window[openFn] = () => modal.classList.add('active');
+            window[closeFn] = () => modal.classList.remove('active');
+            if(formId) document.getElementById(formId).addEventListener('submit', submitFn);
+            modal.addEventListener('click', (e) => e.target === modal && window[closeFn]());
+        };
 
-        // Admin Functions
-        function toggleAdminMode(enable = null) {
-            isAdminMode = enable !== null ? enable : !isAdminMode;
-            
-            if (isAdminMode) {
-                document.body.classList.add('admin-mode');
-                localStorage.setItem('adminMode', 'true');
-                showNotification('⚙️ Admin mode enabled', 'success');
-            } else {
-                document.body.classList.remove('admin-mode');
-                localStorage.removeItem('adminMode');
-                showNotification('👤 User mode', 'success');
-            }
-        }
-
-        // Modal Functions
-        window.openTechModal = function() {
-            document.getElementById('tech-modal').classList.add('active');
-        }
-
-        window.closeTechModal = function() {
-            document.getElementById('tech-modal').classList.remove('active');
-            document.getElementById('tech-form').reset();
-        }
-
-        window.openPortfolioModal = function(category = '') {
-            if (category) {
-                document.getElementById('portfolio-category').value = category;
-            }
-            document.getElementById('portfolio-modal').classList.add('active');
-        }
-
-        window.closePortfolioModal = function() {
-            document.getElementById('portfolio-modal').classList.remove('active');
-            document.getElementById('portfolio-form').reset();
-        }
-
-        window.openPasswordModal = function() {
-            document.getElementById('password-modal').classList.add('active');
-        }
-
-        window.closePasswordModal = function() {
-            document.getElementById('password-modal').classList.remove('active');
-            document.getElementById('password-form').reset();
-        }
-
-        window.openContactModal = function() {
-            document.getElementById('contact-modal').classList.add('active');
-        }
-
-        window.closeContactModal = function() {
-            document.getElementById('contact-modal').classList.remove('active');
-            document.getElementById('contact-form-modal').reset();
-        }
-
-        // CRUD Functions
-        window.removeTechnology = function(index) {
-            technologies.splice(index, 1);
-            saveDataToAPI();
-            renderTechnologies();
-            showNotification('Technology removed', 'success');
-        }
-
-        window.removePortfolioItem = function(index) {
-            portfolioItems.splice(index, 1);
-            saveDataToAPI();
-            renderPortfolio(true);
-            showNotification('Portfolio item removed', 'success');
-        }
-
-        window.removeContact = function(index) {
-            if (confirm('Are you sure you want to remove this contact?')) {
-                contacts.splice(index, 1);
-                saveDataToAPI();
-                renderContacts();
-                showNotification('Contact removed successfully', 'success');
-            }
-        }
-
-        function getContactIcon(platform) {
-            const icons = {
-                email: 'fas fa-envelope',
-                telegram: 'fab fa-telegram',
-                instagram: 'fab fa-instagram',
-                tiktok: 'fab fa-tiktok',
-                linkedin: 'fab fa-linkedin',
-                youtube: 'fab fa-youtube',
-                twitter: 'fab fa-twitter',
-                whatsapp: 'fab fa-whatsapp',
-                facebook: 'fab fa-facebook',
-                discord: 'fab fa-discord',
-                phone: 'fas fa-phone',
-                website: 'fas fa-globe'
-            };
-            return icons[platform] || 'fas fa-link';
-        }
-
-        // Test function for admin
-        window.testDataLoad = async function() {
-            try {
-                showNotification('🔄 Testing data load...', 'success');
-                
-                const data = await loadDataFromAPI();
-                
-                renderTechnologies();
+        // --- INITIALIZATION ---
+        async function initializeApp() {
+            // Event Listeners
+            document.querySelectorAll('.portfolio-filter').forEach(btn => btn.addEventListener('click', function() {
+                document.querySelector('.portfolio-filter.active')?.classList.remove('active', 'bg-gradient-to-r', 'from-purple-500', 'to-pink-500');
+                this.classList.add('active', 'bg-gradient-to-r', 'from-purple-500', 'to-pink-500');
                 renderPortfolio(true);
-                renderContacts();
-                
-                const message = `✅ Test complete! Portfolio: ${portfolioItems.length}, Tech: ${technologies.length}, Contacts: ${contacts.length}`;
-                showNotification(message, 'success');
-                
-            } catch (error) {
-                console.error('❌ Test failed:', error);
-                showNotification('❌ Test failed: ' + error.message, 'error');
-            }
-        }
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            // Admin toggle
-            const adminToggle = document.getElementById('admin-toggle');
-            if (adminToggle) {
-                adminToggle.addEventListener('click', function() {
-                    if (!isAdminMode) {
-                        openPasswordModal();
-                    } else {
-                        toggleAdminMode(false);
-                    }
-                });
-            }
-
-            // Password form
-            const passwordForm = document.getElementById('password-form');
-            if (passwordForm) {
-                passwordForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const password = document.getElementById('admin-password').value;
-                    
-                    if (password === ADMIN_PASSWORD) {
-                        toggleAdminMode(true);
-                        closePasswordModal();
-                    } else {
-                        showNotification('Incorrect password', 'error');
-                    }
-                });
-            }
-
-            // Tech form
-            const techForm = document.getElementById('tech-form');
-            if (techForm) {
-                techForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const name = document.getElementById('tech-name').value;
-                    const emoji = document.getElementById('tech-emoji').value;
-                    
-                    technologies.push({ name, emoji });
-                    saveDataToAPI();
-                    renderTechnologies();
-                    closeTechModal();
-                    showNotification('Technology added successfully', 'success');
-                });
-            }
-
-            // Portfolio form
-            const portfolioForm = document.getElementById('portfolio-form');
-            if (portfolioForm) {
-                portfolioForm.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    
-                    try {
-                        const category = document.getElementById('portfolio-category').value;
-                        const mediaType = document.getElementById('portfolio-media-type').value;
-                        
-                        let finalUrl = '';
-                        
-                        if (mediaType === 'photo') {
-                            const fileInput = document.getElementById('portfolio-file');
-                            if (fileInput.files && fileInput.files[0]) {
-                                const file = fileInput.files[0];
-                                
-                                if (file.size > 10 * 1024 * 1024) {
-                                    showNotification('❌ File too large. Max 10MB.', 'error');
-                                    return;
-                                }
-                                
-                                finalUrl = await uploadFileToAPI(file, category);
-                            } else {
-                                showNotification('❌ Please select a photo', 'error');
-                                return;
-                            }
-                        } else {
-                            const urlInput = document.getElementById('portfolio-url').value;
-                            if (!urlInput) {
-                                showNotification('❌ Please enter video URL', 'error');
-                                return;
-                            }
-                            finalUrl = urlInput;
-                        }
-                        
-                        // Add new item to the beginning (newest first)
-                        portfolioItems.unshift({ 
-                            category, 
-                            mediaType, 
-                            url: finalUrl,
-                            uploadedAt: new Date().toISOString()
-                        });
-                        
-                        await saveDataToAPI();
-                        renderPortfolio(true);
-                        closePortfolioModal();
-                        showNotification('✅ Portfolio item added successfully!', 'success');
-                        
-                    } catch (error) {
-                        console.error('Error adding portfolio item:', error);
-                        showNotification('❌ Error adding portfolio item', 'error');
-                    }
-                });
-            }
-
-            // Contact form
-            const contactFormModal = document.getElementById('contact-form-modal');
-            if (contactFormModal) {
-                contactFormModal.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const platform = document.getElementById('contact-platform').value;
-                    const label = document.getElementById('contact-label').value;
-                    const url = document.getElementById('contact-url').value;
-                    const icon = getContactIcon(platform);
-                    
-                    contacts.push({ platform, label, url, icon });
-                    saveDataToAPI();
-                    renderContacts();
-                    closeContactModal();
-                    showNotification('Contact added successfully', 'success');
-                });
-            }
-
-            // Show/hide form sections based on media type
-            const mediaTypeSelect = document.getElementById('portfolio-media-type');
-            const fileUploadSection = document.getElementById('file-upload-section');
-            const urlInputSection = document.getElementById('url-input-section');
-            
-            if (mediaTypeSelect && fileUploadSection && urlInputSection) {
-                mediaTypeSelect.addEventListener('change', function() {
-                    if (this.value === 'photo') {
-                        fileUploadSection.style.display = 'block';
-                        urlInputSection.style.display = 'none';
-                    } else {
-                        fileUploadSection.style.display = 'none';
-                        urlInputSection.style.display = 'block';
-                    }
-                });
-            }
-
-            // Portfolio Filter
-            document.querySelectorAll('.portfolio-filter').forEach(button => {
-                button.addEventListener('click', function() {
-                    document.querySelectorAll('.portfolio-filter').forEach(btn => {
-                        btn.classList.remove('active', 'bg-gradient-to-r', 'from-purple-500', 'to-pink-500', 'text-white');
-                        btn.classList.add('bg-gray-800', 'text-gray-300', 'border-gray-600');
-                    });
-                    this.classList.add('active', 'bg-gradient-to-r', 'from-purple-500', 'to-pink-500', 'text-white');
-                    this.classList.remove('bg-gray-800', 'text-gray-300', 'border-gray-600');
-                    
-                    currentlyShown = 0;
-                    renderPortfolio(true);
-                });
-            });
-
-            // Admin panel buttons
-            const addTechBtn = document.getElementById('add-technology-btn');
-            if (addTechBtn) {
-                addTechBtn.addEventListener('click', openTechModal);
-            }
-
-            const clearPortfolioBtn = document.getElementById('clear-portfolio-btn');
-            if (clearPortfolioBtn) {
-                clearPortfolioBtn.addEventListener('click', function() {
-                    if (confirm('Are you sure you want to clear all portfolio items?')) {
-                        portfolioItems = [];
-                        saveDataToAPI();
-                        renderPortfolio(true);
-                        showNotification('Portfolio cleared', 'success');
-                    }
-                });
-            }
-
-            // Load More Button
-            const loadMoreButton = document.getElementById('load-more-btn');
-            if (loadMoreButton) {
-                loadMoreButton.addEventListener('click', function() {
-                    this.style.transform = 'scale(0.95)';
-                    this.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Loading...';
-                    
-                    setTimeout(() => {
-                        renderPortfolio(false);
-                        this.style.transform = 'scale(1)';
-                        this.querySelector('span').innerHTML = '<i class="fas fa-images mr-3"></i><span>Load More Portfolio</span><span id="load-more-count" class="ml-2 opacity-75"></span>';
-                        updateLoadMoreButton();
-                    }, 500);
-                });
-            }
-
-            // Close modals when clicking outside
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        this.classList.remove('active');
-                    }
-                });
-            });
-
-            // Smooth scrolling for navigation links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-
-            // Mobile Menu Toggle
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', function() {
-                    const mobileMenu = document.getElementById('mobile-menu');
-                    if (mobileMenu) {
-                        const isHidden = mobileMenu.classList.contains('hidden');
-                        
-                        if (isHidden) {
-                            mobileMenu.classList.remove('hidden');
-                            const icon = this.querySelector('i');
-                            if (icon) {
-                                icon.classList.remove('fa-bars');
-                                icon.classList.add('fa-times');
-                            }
-                        } else {
-                            mobileMenu.classList.add('hidden');
-                            const icon = this.querySelector('i');
-                            if (icon) {
-                                icon.classList.add('fa-bars');
-                                icon.classList.remove('fa-times');
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Close mobile menu when clicking on nav links
-            document.querySelectorAll('.mobile-nav-link').forEach(link => {
-                link.addEventListener('click', function() {
-                    const mobileMenu = document.getElementById('mobile-menu');
-                    const menuButton = document.getElementById('mobile-menu-button');
-                    
-                    if (mobileMenu) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                    if (menuButton) {
-                        const icon = menuButton.querySelector('i');
-                        if (icon) {
-                            icon.classList.add('fa-bars');
-                            icon.classList.remove('fa-times');
-                        }
-                    }
-                });
-            });
-
-            // Lightbox event listeners
-            const lightboxClose = document.getElementById('lightbox-close');
-            const lightboxPrev = document.getElementById('lightbox-prev');
-            const lightboxNext = document.getElementById('lightbox-next');
-            const lightbox = document.getElementById('lightbox');
-
-            if (lightboxClose) {
-                lightboxClose.addEventListener('click', closeLightbox);
-            }
-
-            if (lightboxPrev) {
-                lightboxPrev.addEventListener('click', prevLightboxItem);
-            }
-
-            if (lightboxNext) {
-                lightboxNext.addEventListener('click', nextLightboxItem);
-            }
-
-            if (lightbox) {
-                lightbox.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        closeLightbox();
-                    }
-                });
-            }
-
-            // Keyboard navigation for lightbox
-            document.addEventListener('keydown', function(e) {
-                if (lightbox && lightbox.classList.contains('active')) {
-                    switch(e.key) {
-                        case 'Escape':
-                            closeLightbox();
-                            break;
-                        case 'ArrowLeft':
-                            prevLightboxItem();
-                            break;
-                        case 'ArrowRight':
-                            nextLightboxItem();
-                            break;
-                    }
+            }));
+            document.getElementById('category-select').addEventListener('change', () => renderPortfolio(true));
+            document.getElementById('load-more-btn').addEventListener('click', () => renderPortfolio(false));
+            document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+            document.getElementById('lightbox-prev').addEventListener('click', () => navigateLightbox(-1));
+            document.getElementById('lightbox-next').addEventListener('click', () => navigateLightbox(1));
+            document.addEventListener('keydown', e => {
+                if (document.getElementById('lightbox').classList.contains('active')) {
+                    if (e.key === 'Escape') closeLightbox();
+                    if (e.key === 'ArrowLeft') navigateLightbox(-1);
+                    if (e.key === 'ArrowRight') navigateLightbox(1);
                 }
             });
 
-            // Initialize application
-            console.log('🚀 Starting application...');
-            
-            loadDataFromAPI().then((data) => {
-                console.log('✅ Data loaded:', data);
-                
-                renderTechnologies();
-                renderPortfolio(true);
-                renderContacts();
-                
-            }).catch((error) => {
-                console.error('⚠️ Using offline mode:', error);
-                renderTechnologies();
-                renderPortfolio(true);
-                renderContacts();
+            // Modals
+            setupModal('password-modal', 'openPasswordModal', 'closePasswordModal', 'password-form', e => {
+                e.preventDefault();
+                if (document.getElementById('admin-password').value === ADMIN_PASSWORD) {
+                    isAdminMode = true;
+                    document.body.classList.add('admin-mode');
+                    showNotification('Admin mode ON', 'success');
+                    closePasswordModal();
+                } else showNotification('Incorrect password', 'error');
             });
+            setupModal('portfolio-modal', 'openPortfolioModal', 'closePortfolioModal', 'portfolio-form', async (e) => {
+                e.preventDefault();
+                const file = document.getElementById('portfolio-file').files[0];
+                let url = document.getElementById('portfolio-url').value;
+                if (!file && !url) return showNotification('File or URL required', 'error');
+                
+                showNotification('Uploading...', 'success');
+                if (file) {
+                    url = (await callAPI('uploadFile', { file })).url;
+                }
+                
+                const newItem = {
+                    id: `p_${Date.now()}`,
+                    category: document.getElementById('portfolio-category').value,
+                    mediaType: document.getElementById('portfolio-media-type').value,
+                    url: url,
+                    uploadedAt: new Date().toISOString()
+                };
+                portfolioItems.unshift(newItem);
+                await saveData();
+                renderPortfolio(true);
+                closePortfolioModal();
+            });
+            // Simplified admin toggle
+            document.getElementById('admin-toggle').addEventListener('click', () => isAdminMode ? (isAdminMode=false, document.body.classList.remove('admin-mode'), showNotification('Admin mode OFF')) : openPasswordModal());
 
-            // Auto-check for admin mode on startup
-            if (localStorage.getItem('adminMode') === 'true') {
-                document.body.classList.add('admin-mode');
-                isAdminMode = true;
+            // Load Data & Render
+            try {
+                const data = await callAPI('getAllData');
+                portfolioItems = data.portfolioItems || [];
+                // Load other data like technologies, contacts if needed
+            } catch (e) {
+                showNotification("Could not load portfolio from server.", "error");
             }
-        });
+            renderPortfolio(true);
+        }
 
+        initializeApp();
     </script>
 </body>
 </html>
