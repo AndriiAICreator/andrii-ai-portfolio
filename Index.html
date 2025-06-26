@@ -81,33 +81,27 @@
             100% { transform: translateX(-100px) translateY(-100px); }
         }
         
-        #spotlight-overlay {
-    /* Робимо шар невидимим для кліків миші */
-    pointer-events: none;
-
-    /* Розміщуємо його поверх усього контенту */
+        .sparkle {
     position: fixed;
-    z-index: 9998;
-    inset: 0; /* Це скорочення для top:0; right:0; bottom:0; left:0; */
+    top: 0;
+    left: 0;
+    pointer-events: none; /* Ігнорування кліків */
+    border-radius: 50%;
+    z-index: 9999;
 
-    /* Колір та прозорість "темряви" */
-    background: radial-gradient(
-        circle at center,
-        rgba(15, 15, 35, 0.8),
-        rgba(0, 0, 10, 0.98)
-    );
+    /* Анімація зникнення */
+    animation: sparkle-fade-out 1s forwards;
+}
 
-    /* ОСНОВНА МАГІЯ:
-       Ми використовуємо маску, щоб вирізати "отвір світла".
-       Позиція маски буде керуватися через JavaScript. */
-    mask-image: radial-gradient(
-        circle 150px at var(--x, -200px) var(--y, -200px),
-        black 0%,
-        transparent 100%
-    );
-
-    /* Робимо анімацію плавною */
-    transition: mask-size 0.2s ease-out;
+@keyframes sparkle-fade-out {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
 }
 
 /* Збільшуємо розмір світла при наведенні на посилання/кнопки */
@@ -1141,12 +1135,49 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
 
 
     <script type="module">
-        const spotlight = document.getElementById('spotlight-overlay');
+       // ===== Ефект "Сяючий слід" (Sparkle Trail) =====
 
-window.addEventListener('mousemove', (e) => {
-    // Оновлюємо CSS змінні, які керують позицією "прожектора"
-    spotlight.style.setProperty('--x', e.clientX + 'px');
-    spotlight.style.setProperty('--y', e.clientY + 'px');
+// Набір кольорів для "іскор", що пасують до вашого сайту
+const COLORS = ['#667eea', '#764ba2', '#f093fb', '#8b5cf6', '#ec4899', '#3b82f6'];
+let isThrottled = false; // Прапорець для обмеження частоти виклику
+
+document.addEventListener('mousemove', (e) => {
+    // Обмежуємо частоту створення іскор, щоб не навантажувати браузер
+    if (isThrottled) return;
+    isThrottled = true;
+
+    setTimeout(() => {
+        isThrottled = false;
+    }, 25); // Створювати іскру не частіше, ніж раз на 25 мс
+
+    // Створюємо новий елемент для іскри
+    const sparkle = document.createElement('span');
+    sparkle.classList.add('sparkle');
+
+    // Випадковий розмір
+    const size = Math.random() * 8 + 4; // від 4 до 12px
+    sparkle.style.width = `${size}px`;
+    sparkle.style.height = `${size}px`;
+
+    // Випадковий колір з нашого набору
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    sparkle.style.background = color;
+    // Додаємо тінь для ефекту світіння
+    sparkle.style.boxShadow = `0 0 8px ${color}, 0 0 10px #ffffff`;
+
+    // Позиція з невеликим випадковим зміщенням для "живого" ефекту
+    const x = e.clientX + (Math.random() - 0.5) * 20;
+    const y = e.clientY + (Math.random() - 0.5) * 20;
+    sparkle.style.left = `${x}px`;
+    sparkle.style.top = `${y}px`;
+
+    // Додаємо іскру на сторінку
+    document.body.appendChild(sparkle);
+
+    // Видаляємо елемент після завершення анімації, щоб не засмічувати DOM
+    sparkle.addEventListener('animationend', () => {
+        sparkle.remove();
+    });
 });
         
         // GOOGLE APPS SCRIPT API CONFIGURATION
