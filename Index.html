@@ -50,17 +50,19 @@
         
         .epic-card {
             background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(10px); /* Зменшено з 20px до 10px */
             border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
-            contain: layout style;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3); /* Зменшено тінь */
+            contain: layout style paint; /* Додано paint для кращої оптимізації */
+            will-change: transform; /* Оптимізація для анімацій */
         }
         
         .service-card {
             background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(12px); /* Зменшено з 20px до 12px */
             border: 1px solid rgba(255,255,255,0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* Оптимізовано */
+            will-change: transform; /* Оптимізація для анімацій */
         }
         .service-card:hover { 
             transform: translateY(-20px) scale(1.05);
@@ -137,7 +139,9 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         .tech-card {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: opacity 0.4s ease, transform 0.4s ease; /* Оптимізовано */
+            will-change: transform, opacity; /* Оптимізація для анімацій */
+            contain: layout style; /* Додано для кращої продуктивності */
         }
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn {
@@ -173,12 +177,14 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         .portfolio-item {
             width: 100%;
             background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(8px); /* Значно зменшено з 20px до 8px */
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 24px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* Оптимізовано */
             position: relative;
+            will-change: transform; /* Оптимізація для анімацій */
+            contain: layout style paint; /* Додано для кращої продуктивності */
         }
         
         .portfolio-item:hover {
@@ -268,23 +274,14 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         
         .portfolio-item {
             opacity: 0;
-            transform: translateY(30px) scale(0.95);
-            animation: portfolioFadeIn 0.6s ease forwards;
+            transform: translateY(20px) scale(0.98); /* Зменшено з 30px до 20px та scale з 0.95 до 0.98 */
+            transition: opacity 0.4s ease, transform 0.4s ease; /* Замінено animation на transition для кращої продуктивності */
         }
         
-        @keyframes portfolioFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+        .portfolio-item.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
-        
-        .portfolio-item:nth-child(1) { animation-delay: 0.1s; }
-        .portfolio-item:nth-child(2) { animation-delay: 0.2s; }
-        .portfolio-item:nth-child(3) { animation-delay: 0.3s; }
-        .portfolio-item:nth-child(4) { animation-delay: 0.4s; }
-        .portfolio-item:nth-child(5) { animation-delay: 0.5s; }
-        .portfolio-item:nth-child(6) { animation-delay: 0.6s; }
 
         /* Lightbox Styles */
         .lightbox { 
@@ -1443,19 +1440,41 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         function renderTechnologies() {
             const grid = document.getElementById('tech-grid');
             grid.innerHTML = '';
+            
+            // Створюємо DocumentFragment для кращої продуктивності
+            const fragment = document.createDocumentFragment();
+            
             technologies.forEach((tech, index) => {
                 const techDiv = document.createElement('div');
                 techDiv.className = 'epic-card text-center p-6 rounded-2xl hover:scale-110 transform transition-all duration-500 relative group tech-card overflow-hidden';
-                techDiv.style.animationDelay = `${index * 100}ms`;
+                techDiv.style.animationDelay = `${index * 50}ms`; // Зменшено з 100ms до 50ms
                 const gradients = ['from-purple-500 to-pink-500', 'from-blue-500 to-cyan-500', 'from-green-500 to-teal-500', 'from-orange-500 to-red-500', 'from-indigo-500 to-purple-500', 'from-pink-500 to-rose-500'];
                 const randomGradient = gradients[index % gradients.length];
-                const bgColors = ['from-purple-500/20 to-pink-500/20', 'from-blue-500/20 to-cyan-500/20', 'from-green-500/20 to-teal-500/20', 'from-orange-500/20 to-red-500/20', 'from-indigo-500/20 to-purple-500/20', 'from-pink-500/20 to-rose-500/20'];
+                const bgColors = ['from-purple-500/15 to-pink-500/15', 'from-blue-500/15 to-cyan-500/15', 'from-green-500/15 to-teal-500/15', 'from-orange-500/15 to-red-500/15', 'from-indigo-500/15 to-purple-500/15', 'from-pink-500/15 to-rose-500/15']; // Зменшено непрозорість з /20 до /15
                 const randomBgColor = bgColors[index % bgColors.length];
-                techDiv.innerHTML = `<div class="absolute inset-0 bg-gradient-to-br ${randomBgColor} opacity-0 group-hover:opacity-100 transition-all duration-500"></div> <div class="relative z-10"> <div class="w-16 h-16 bg-gradient-to-br ${randomGradient} rounded-2xl flex items-center justify-center mx-auto mb-4 glow-box group-hover:scale-110 transition-all duration-500"> <div class="text-2xl">${tech.emoji}</div> </div> <h4 class="font-bold text-white text-lg group-hover:text-cyan-300 transition-colors duration-300">${tech.name}</h4> </div> <button class="admin-only absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 hover:scale-110 transition-all duration-300 flex items-center justify-center z-20" onclick="removeTechnology(${index})" style="display: none;">×</button>`;
-                grid.appendChild(techDiv);
+                techDiv.innerHTML = `<div class="absolute inset-0 bg-gradient-to-br ${randomBgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div> <div class="relative z-10"> <div class="w-16 h-16 bg-gradient-to-br ${randomGradient} rounded-2xl flex items-center justify-center mx-auto mb-4 glow-box group-hover:scale-110 transition-transform duration-300"> <div class="text-2xl">${tech.emoji}</div> </div> <h4 class="font-bold text-white text-lg group-hover:text-cyan-300 transition-colors duration-200">${tech.name}</h4> </div> <button class="admin-only absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 hover:scale-110 transition-all duration-200 flex items-center justify-center z-20" onclick="removeTechnology(${index})" style="display: none;">×</button>`;
+                fragment.appendChild(techDiv);
             });
-            document.querySelectorAll('.tech-card').forEach((card, index) => {
-                setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0) scale(1)'; }, index * 150);
+            
+            // Додаємо всі елементи одразу
+            grid.appendChild(fragment);
+            
+            // Оптимізована анімація появи з використанням Intersection Observer для кращої продуктивності
+            const observerOptions = { threshold: 0.1, rootMargin: '50px' };
+            const techObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0) scale(1)';
+                        }, index * 60); // Зменшено до 60ms
+                        techObserver.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.tech-card').forEach(card => {
+                techObserver.observe(card);
             });
         }
 
@@ -1568,7 +1587,8 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 }
                 if (item.mediaType === 'photo') {
                     const baseUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=`;
-                    return `<img loading="lazy" src="${baseUrl}${isLightbox ? 'w1920' : 'w800'}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
+                    // Оптимізовано розміри зображень: зменшено якість для галереї, але збережено для lightbox
+                    return `<img loading="lazy" src="${baseUrl}${isLightbox ? 'w1200' : 'w600'}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
                 }
             }
             if (url.includes('dropbox.com')) {
@@ -1609,32 +1629,38 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             }
             
             const itemsToShow = filteredItems.slice(currentlyShown, currentlyShown + ITEMS_PER_PAGE);
+            
+            // Створюємо DocumentFragment для кращої продуктивності
+            const fragment = document.createDocumentFragment();
+            
             itemsToShow.forEach((item, relativeIndex) => {
                 const absoluteIndex = portfolioItems.indexOf(item);
                 const mediaContent = createMediaContent(item);
                 const itemDiv = document.createElement('div');
                 itemDiv.className = `portfolio-item cursor-pointer relative ${item.category} ${getMediaType(item)}`;
                 itemDiv.dataset.index = absoluteIndex;
-                itemDiv.style.animationDelay = `${relativeIndex * 100}ms`;
-                itemDiv.style.opacity = '0';
+                itemDiv.style.animationDelay = `${relativeIndex * 60}ms`; // Зменшено з 100ms до 60ms
+                // Видалено itemDiv.style.opacity = '0'; оскільки тепер використовуємо класи
                 itemDiv.innerHTML = `${mediaContent}<button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${absoluteIndex})" style="display: none;">×</button>`;
                 itemDiv.addEventListener('click', (e) => {
                     if (!e.target.classList.contains('delete-btn')) { openLightbox(absoluteIndex); }
                 });
-                grid.appendChild(itemDiv);
+                fragment.appendChild(itemDiv);
             });
             
+            // Додаємо всі елементи одразу
+            grid.appendChild(fragment);
             currentlyShown += itemsToShow.length;
             
-            // Плавна анімація появи нових елементів
-            setTimeout(() => {
-                const newItems = grid.querySelectorAll('.portfolio-item[style*="opacity: 0"]');
+            // Оптимізована анімація появи - використовуємо класи замість стилів
+            requestAnimationFrame(() => {
+                const newItems = grid.querySelectorAll('.portfolio-item:not(.visible)');
                 newItems.forEach((item, index) => {
                     setTimeout(() => {
-                        item.style.opacity = '1';
-                    }, index * 100);
+                        item.classList.add('visible');
+                    }, index * 60);
                 });
-            }, 100);
+            });
             
             updateLoadMoreButton();
         }
