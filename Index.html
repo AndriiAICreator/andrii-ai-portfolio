@@ -1026,8 +1026,12 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                     </span>
                 </button>
                 <p class="text-gray-400 text-sm mt-3" id="portfolio-status">
-                    Показано <span id="shown-count">0</span> з <span id="total-count">0</span> робіт
-                </p>
+    <span data-translate="status-showing">Показано</span>
+    <span id="shown-count" class="font-medium text-gray-200">0</span>
+    <span data-translate="status-of">з</span>
+    <span id="total-count" class="font-medium text-gray-200">0</span>
+    <span data-translate="status-works">робіт</span>
+</p>
             </div>
 
             <!-- Add Portfolio Buttons (Admin Only) -->
@@ -1173,6 +1177,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         let currentlyShown = 0;
         let filteredItems = [];
 
+       // ЗАМІНИТИ ВЕСЬ ОБ'ЄКТ НА ЦЕЙ
         const translations = {
            uk: {
                 'nav-about': 'Про мене', 'nav-services': 'Послуги', 'nav-portfolio': 'Портфоліо', 'nav-contact': 'Контакти',
@@ -1204,7 +1209,10 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 'load-more-portfolio': '📸 Завантажити ще',
                 'filter-all': 'Всі', 'filter-photos': '📸 Фото', 'filter-videos': '🎬 Відео',
                 'category-all': '🌐 Усі категорії', 'category-avatars': '👤 AI Аватари', 'category-image-gen': '🎨 Генерація зображень',
-                'category-video-create': '🎬 Створення відео', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Віртуальні фотосесії'
+                'category-video-create': '🎬 Створення відео', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Віртуальні фотосесії',
+                'status-showing': 'Показано',
+                'status-of': 'з',
+                'status-works': 'робіт'
             },
             en: {
                 'nav-about': 'About', 'nav-services': 'Services', 'nav-portfolio': 'Portfolio', 'nav-contact': 'Contact',
@@ -1236,7 +1244,10 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 'footer-rights': 'All rights reserved',
                 'filter-all': 'All', 'filter-photos': '📸 Photos', 'filter-videos': '🎬 Videos',
                 'category-all': '🌐 All Categories', 'category-avatars': '👤 AI Avatars', 'category-image-gen': '🎨 Image Generation',
-                'category-video-create': '🎬 Video Creation', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Virtual Shoots'
+                'category-video-create': '🎬 Video Creation', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Virtual Shoots',
+                'status-showing': 'Showing',
+                'status-of': 'of',
+                'status-works': 'works'
             }
         };
 
