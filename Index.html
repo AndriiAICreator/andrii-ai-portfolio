@@ -2408,37 +2408,46 @@ document.addEventListener('mousemove', (e) => {
         console.log('🚀 Starting Andrii AI Portfolio...');
         
         // Load data and render
+        // ЗАМІНИТИ ЦЕЙ БЛОК КОДУ В КІНЦІ СКРИПТУ
         loadDataFromAPI().then((data) => {
             console.log('✅ Data loaded successfully');
             renderTechnologies();
-            renderPortfolio(true); // Full render from start
+            renderPortfolio(true);
             renderContacts();
-            
-            // Initialize Load More Button after DOM is ready
-            setTimeout(() => {
-                const loadMoreButton = document.getElementById('load-more-btn');
-                if (loadMoreButton) {
-                    loadMoreButton.addEventListener('click', function() {
-                        this.style.transform = 'scale(0.95)';
-                        this.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Завантажую...';
-                        
-                        setTimeout(() => {
-                            renderPortfolio(false); // Add more items without reset
-                            this.style.transform = 'scale(1)';
-                            this.querySelector('span').innerHTML = '<i class="fas fa-images mr-3"></i>Завантажити ще портфоліо<span id="load-more-count" class="ml-2 opacity-75"></span>';
-                            updateLoadMoreButton(); // Update button
-                        }, 500);
-                    });
-                }
-            }, 100);
+
+            // *** ВИПРАВЛЕНА ЛОГІКА ІНІЦІАЛІЗАЦІЇ КНОПКИ ***
+            const loadMoreButton = document.getElementById('load-more-btn');
+            if (loadMoreButton) {
+                loadMoreButton.addEventListener('click', function() {
+                    this.disabled = true; // Блокуємо кнопку, щоб уникнути подвійних кліків
+                    const buttonContentSpan = this.querySelector('span.relative.z-10');
+                    if(buttonContentSpan) {
+                         buttonContentSpan.innerHTML = `<i class="fas fa-spinner fa-spin mr-3"></i>${currentLang === 'uk' ? 'Завантажую...' : 'Loading...'}`;
+                    }
+
+                    setTimeout(() => {
+                        renderPortfolio(false); // Додаємо нові елементи
+                        this.disabled = false; // Розблоковуємо кнопку
+
+                        if(buttonContentSpan) {
+                            const textKey = 'load-more-portfolio';
+                            // Беремо текст з об'єкта перекладів
+                            const buttonText = translations[currentLang][textKey];
+                            buttonContentSpan.innerHTML = `<i class="fas fa-images mr-3"></i><span data-translate="${textKey}">${buttonText}</span><span id="load-more-count" class="ml-2 opacity-75"></span>`;
+                        }
+                        updateLoadMoreButton(); // Оновлюємо лічильник
+                    }, 500);
+                });
+            }
             
             console.log('🎉 Portfolio loaded!');
         }).catch((error) => {
             console.error('⚠️ Using offline mode:', error);
             renderTechnologies();
-            renderPortfolio(true); // Full render from start
+            renderPortfolio(true);
             renderContacts();
-            
+            console.log('💻 Portfolio loaded in offline mode');
+        });
             // Initialize Load More Button for offline mode too
             setTimeout(() => {
                 const loadMoreButtonOffline = document.getElementById('load-more-btn');
