@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <!-- Backup Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
@@ -1602,12 +1603,11 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         }
 
         
-        // ЗАМІНИТИ ТІЛЬКИ ЦЮ ОДНУ ФУНКЦІЮ
+        // ЗАМІНИТИ ЦЮ ФУНКЦІЮ
         function renderPortfolio(reset = false) {
             const grid = document.getElementById('portfolio-grid');
             
             if (reset) {
-                // Якщо Masonry вже ініціалізовано, знищуємо його перед очищенням
                 if (msnry) {
                     msnry.destroy();
                     msnry = null;
@@ -1626,75 +1626,75 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             filteredItems.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
             const itemsToShow = filteredItems.slice(currentlyShown, currentlyShown + ITEMS_PER_PAGE);
             
-            const newElements = []; // Створюємо масив для нових елементів
+            const newElements = [];
 
             itemsToShow.forEach((item, relativeIndex) => {
                 const absoluteIndex = portfolioItems.indexOf(item);
                 const mediaContent = createMediaContent(item);
                 const itemDiv = document.createElement('div');
-                
-                // Додаємо класи для Masonry: p-2 створює відступ, а w-* задає ширину колонки
                 itemDiv.className = `portfolio-item w-full sm:w-1/2 lg:w-1/3 p-2`;
                 itemDiv.dataset.index = absoluteIndex;
                 itemDiv.style.animationDelay = `${relativeIndex * 100}ms`;
                 
-                // Цей HTML повністю відповідає вашому оригінальному стилю, але обгорнутий для клікабельності
                 itemDiv.innerHTML = `
                     <div class="cursor-pointer relative rounded-2xl overflow-hidden epic-card border-transparent hover:border-purple-400">
                         ${mediaContent}
-                        <button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(event, ${absoluteIndex})" style="display: none;">×</button>
+                        <button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="window.removePortfolioItem(event, ${absoluteIndex})" style="display: none;">×</button>
                     </div>
                 `;
                 
                 itemDiv.addEventListener('click', (e) => {
-                    // Перевіряємо, чи клік був не по кнопці видалення або її іконці
-                    if (e.target.closest('.delete-btn')) {
-                        return;
-                    }
+                    if (e.target.closest('.delete-btn')) return;
                     openLightbox(absoluteIndex);
                 });
 
-                newElements.push(itemDiv); // Додаємо створений елемент до масиву
+                newElements.push(itemDiv);
             });
 
-            // Додаємо всі нові елементи до сітки
+            // Спершу додаємо елементи на сторінку
             newElements.forEach(el => grid.appendChild(el));
 
-            // Ініціалізуємо Masonry, якщо це перший запуск, або додаємо нові елементи до існуючої розмітки
-            if (msnry) {
-                msnry.appended(newElements);
-            } else {
-                msnry = new Masonry(grid, {
-                    itemSelector: '.portfolio-item',
-                    percentPosition: true,
-                });
-            }
+            // Тепер використовуємо imagesLoaded
+            imagesLoaded(grid, function() {
+                if (msnry) {
+                    // Якщо Masonry вже працює, просто додаємо нові елементи
+                    msnry.appended(newElements);
+                } else {
+                    // Інакше, ініціалізуємо Masonry вперше
+                    msnry = new Masonry(grid, {
+                        itemSelector: '.portfolio-item',
+                        percentPosition: true,
+                    });
+                }
+            });
 
             currentlyShown += itemsToShow.length;
             updateLoadMoreButton();
         }
 
-        // І невелике, але ВАЖЛИВЕ оновлення для функції видалення, щоб вона не відкривала фото
+        // ЗАМІНИТИ ЦЮ ФУНКЦІЮ
         window.removePortfolioItem = function(event, index) {
-            event.stopPropagation(); // Цей рядок зупиняє клік, щоб він не дійшов до фото і не відкрив лайтбокс
-            if (confirm('Are you sure you want to remove this portfolio item?')) {
-                const itemToRemove = portfolioItems[index];
+            event.stopPropagation(); // Зупиняємо клік, щоб не відкрився лайтбокс
+            
+            if (confirm('Ви впевнені, що хочете видалити цей елемент?')) {
+                // Видаляємо елемент з основного масиву даних
                 portfolioItems.splice(index, 1);
-                
-                saveData();
+                saveData(); // Зберігаємо зміни на сервері
 
                 const grid = document.getElementById('portfolio-grid');
                 const elementToRemove = grid.querySelector(`[data-index='${index}']`);
 
-                // Плавне видалення з Masonry
+                // Плавне видалення елемента з Masonry
                 if (elementToRemove && msnry) {
                     msnry.remove(elementToRemove);
-                    msnry.layout(); // Перераховуємо сітку після видалення
+                    msnry.layout(); // Оновлюємо розмітку
                 } else {
-                    renderPortfolio(true); // Якщо щось пішло не так - повний ререндер
+                    // Якщо щось пішло не так, робимо повний ререндер
+                    renderPortfolio(true); 
                 }
                 
-                showNotification('Portfolio item removed', 'success');
+                showNotification('Елемент портфоліо видалено', 'success');
+                updateLoadMoreButton(); // Оновлюємо лічильник
             }
         }
         
