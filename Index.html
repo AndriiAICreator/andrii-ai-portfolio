@@ -280,7 +280,11 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             animation: portfolioFadeIn 0.6s ease forwards;
         }
         
-        @keyframes portfolioFadeIn {
+       @keyframes portfolioFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -999,17 +1003,17 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
 </div>
             
             <!-- Category Filter (only shows when "All" is selected) -->
-          <div id="category-filter" class="flex flex-wrap justify-center gap-2 mb-12">
-    <label class="text-sm font-medium text-gray-300 mr-4">Category:</label>
-    <select id="category-select" class="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-sm text-white focus:border-purple-400 focus:outline-none">
-        <option value="all" data-translate="category-all">All Categories</option>
-        <option value="avatars" data-translate="category-avatars">AI Avatars</option>
-        <option value="image-generation" data-translate="category-image-gen">Image Generation</option>
-        <option value="video-creation" data-translate="category-video-create">Video Creation</option>
-        <option value="ecommerce" data-translate="category-ecommerce">E-commerce</option>
-        <option value="virtual-shoots" data-translate="category-virtual-shoots">Virtual Shoots</option>
-    </select>
-</div>
+         <div id="category-filter" class="flex flex-wrap justify-center items-center gap-2 mb-12">
+              <label class="text-sm font-medium text-gray-300 mr-2">Категорія:</label>
+              <select id="category-select" class="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-sm text-white focus:border-purple-400 focus:outline-none">
+                  <option value="all" data-translate="category-all">🌐 Усі категорії</option>
+                  <option value="avatars" data-translate="category-avatars">👤 AI Аватари</option>
+                  <option value="image-generation" data-translate="category-image-gen">🎨 Генерація зображень</option>
+                  <option value="video-creation" data-translate="category-video-create">🎬 Створення відео</option>
+                  <option value="ecommerce" data-translate="category-ecommerce">🛒 E-commerce</option>
+                  <option value="virtual-shoots" data-translate="category-virtual-shoots">📸 Віртуальні фотосесії</option>
+              </select>
+          </div>
 
             <!-- Portfolio Grid -->
             <div id="portfolio-grid" class="portfolio-grid">
@@ -1271,6 +1275,12 @@ document.addEventListener('mousemove', (e) => {
                 'footer-text': 'Втілюю ваші ідеї за допомогою штучного інтелекту',
                 'footer-rights': 'Всі права захищені',
                 'load-more-portfolio': '📸 Завантажити ще',
+                'category-all': '🌐 Усі категорії',
+                'category-avatars': '👤 AI Аватари',
+                'category-image-gen': '🎨 Генерація зображень',
+                'category-video-create': '🎬 Створення відео',
+                'category-ecommerce': '🛒 E-commerce',
+                'category-virtual-shoots': '📸 Віртуальні фотосесії'
                 // Фільтри та інше
                 'filter-all': 'Всі',
                 'filter-photos': '📸 Фото',
@@ -1845,9 +1855,8 @@ document.addEventListener('mousemove', (e) => {
         }
         
         // SIMPLIFIED Media Content Creation - back to basics!
-        // ОНОВЛЕНА ТА ВИПРАВЛЕНА ФУНКЦІЯ
-     // ФІНАЛЬНА ВИПРАВЛЕНА ВЕРСІЯ ФУНКЦІЇ
-        // СПРОЩЕНА ТА ВИПРАВЛЕНА ВЕРСІЯ ФУНКЦІЇ
+     
+        // ОНОВЛЕНА ФУНКЦІЯ З LAZY LOADING
         function createMediaContent(item, isLightbox = false) {
             const url = item.url || '';
 
@@ -1857,7 +1866,8 @@ document.addEventListener('mousemove', (e) => {
             if (youtubeMatch && youtubeMatch[1]) {
                 const videoId = youtubeMatch[1];
                 const embedSrc = `https://www.youtube.com/embed/${videoId}?controls=1&rel=0${isLightbox ? '&autoplay=1' : ''}`;
-                return `<iframe width="100%" height="${isLightbox ? '95%' : '280'}" src="${embedSrc}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"></iframe>`;
+                // *** ДОДАНО loading="lazy" ***
+                return `<iframe width="100%" height="${isLightbox ? '95%' : '280'}" src="${embedSrc}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};" loading="lazy"></iframe>`;
             }
 
             // --- 2. Обробка Google Drive (відео та фото) ---
@@ -1865,39 +1875,40 @@ document.addEventListener('mousemove', (e) => {
             const driveMatch = url.match(driveRegex);
             if (driveMatch && driveMatch[1]) {
                 const fileId = driveMatch[1];
-                // Для відео використовуємо /preview, як і раніше
                 if (item.mediaType === 'video') {
                     const embedSrc = `https://drive.google.com/file/d/${fileId}/preview`;
-                    return `<iframe width="100%" height="${isLightbox ? '95%' : '280'}" src="${embedSrc}" frameborder="0" allowfullscreen style="border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"></iframe>`;
+                     // *** ДОДАНО loading="lazy" ***
+                    return `<iframe width="100%" height="${isLightbox ? '95%' : '280'}" src="${embedSrc}" frameborder="0" allowfullscreen style="border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};" loading="lazy"></iframe>`;
                 }
-                // Для фото використовуємо thumbnail
                 if (item.mediaType === 'photo') {
                     const baseUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=`;
-                    return `<img src="${baseUrl}${isLightbox ? 'w1920' : 'w800'}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
+                    // *** ДОДАНО loading="lazy" ***
+                    return `<img src="${baseUrl}${isLightbox ? 'w1920' : 'w800'}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" loading="lazy">`;
                 }
             }
             
             // --- 3. Обробка інших типів відео (Dropbox, прямі посилання) ---
             if (url.includes('dropbox.com')) {
                 let directUrl = url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '');
-                return `<video width="100%" height="${isLightbox ? '95%' : '280'}" controls style="background:black; border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"><source src="${directUrl}" type="video/mp4"></video>`;
+                return `<video width="100%" height="${isLightbox ? '95%' : '280'}" controls style="background:black; border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};" preload="metadata"><source src="${directUrl}" type="video/mp4"></video>`;
             }
             if (url.match(/\.(mp4|mov|webm)$/i)) {
-                return `<video width="100%" height="${isLightbox ? '95%' : '280'}" controls style="background:black; border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};"><source src="${url}"></video>`;
+                return `<video width="100%" height="${isLightbox ? '95%' : '280'}" controls style="background:black; border-radius: ${isLightbox ? '8px' : '20px 20px 0 0'};" preload="metadata"><source src="${url}"></video>`;
             }
 
             // --- 4. Обробка звичайних зображень ---
             if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
-                 return `<img src="${url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;">`;
+                 // *** ДОДАНО loading="lazy" ***
+                 return `<img src="${url}" alt="Portfolio item" style="width: 100%; height: auto; object-fit: cover;" loading="lazy">`;
             }
 
-            // --- Запасний варіант, якщо нічого не спрацювало ---
+            // --- Запасний варіант ---
             return `<div class="h-48 bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white p-4">
                         <div class="text-center">
                             <i class="fas fa-exclamation-triangle text-4xl mb-2 text-yellow-400"></i>
-                            <p class="mb-2 text-sm">Не вдалося відобразити медіа. Перевірте посилання або права доступу.</p>
+                            <p class="mb-2 text-sm">Не вдалося відобразити медіа.</p>
                             <a href="${url}" target="_blank" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-600 transition-colors">
-                                Відкрити в новій вкладці
+                                Відкрити
                             </a>
                         </div>
                     </div>`;
@@ -2459,22 +2470,22 @@ document.addEventListener('mousemove', (e) => {
             renderContacts();
             
             // Initialize Load More Button after DOM is ready
-            setTimeout(() => {
-                const loadMoreButton = document.getElementById('load-more-btn');
-                if (loadMoreButton) {
-                    loadMoreButton.addEventListener('click', function() {
-                        this.style.transform = 'scale(0.95)';
-                        this.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Завантажую...';
-                        
-                        setTimeout(() => {
-                            renderPortfolio(false); // Add more items without reset
-                            this.style.transform = 'scale(1)';
-                            this.querySelector('span').innerHTML = '<i class="fas fa-images mr-3"></i>Завантажити ще портфоліо<span id="load-more-count" class="ml-2 opacity-75"></span>';
-                            updateLoadMoreButton(); // Update button
-                        }, 500);
-                    });
-                }
-            }, 100);
+             setTimeout(() => {
+            const loadMoreButton = document.getElementById('load-more-btn');
+            if (loadMoreButton) {
+                loadMoreButton.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    this.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Завантажую...';
+                    
+                    setTimeout(() => {
+                        renderPortfolio(false); // Add more items without reset
+                        this.style.transform = 'scale(1)';
+                        this.querySelector('span').innerHTML = '<i class="fas fa-images mr-3"></i>Завантажити ще портфоліо<span id="load-more-count" class="ml-2 opacity-75"></span>';
+                        updateLoadMoreButton(); // Update button
+                    }, 500);
+                });
+            }
+        }, 100);
             
             console.log('🎉 Portfolio loaded!');
         }).catch((error) => {
