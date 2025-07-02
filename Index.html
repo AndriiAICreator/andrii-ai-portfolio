@@ -1015,20 +1015,9 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             <div id="portfolio-grid" class="portfolio-grid">
                 <!-- Portfolio items will be loaded here -->
             </div>
+            <div id="scroll-trigger"></div>
             
-            <!-- Load More Button -->
-            <div class="text-center mt-12" id="load-more-container" style="display: none;">
-                <button id="load-more-btn" class="epic-card px-8 py-4 rounded-full font-bold text-lg text-white hover:scale-110 transform transition-all duration-300 relative overflow-hidden group shadow-lg hover:shadow-purple-500/50 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                    <span class="relative z-10">
-                        <i class="fas fa-images mr-3"></i>
-                        <span data-translate="load-more-portfolio">📸 Завантажити ще портфоліо</span>
-                        <span id="load-more-count" class="ml-2 opacity-75"></span>
-                    </span>
-                </button>
-                <p class="text-gray-400 text-sm mt-3" id="portfolio-status">
-                    Показано <span id="shown-count">0</span> з <span id="total-count">0</span> робіт
-                </p>
-            </div>
+          
 
             <!-- Add Portfolio Buttons (Admin Only) -->
             <div class="admin-only text-center mt-12 space-y-4">
@@ -1591,17 +1580,25 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             return `<div class="h-48 bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white p-4"><div class="text-center"><i class="fas fa-exclamation-triangle text-4xl mb-2 text-yellow-400"></i><p class="mb-2 text-sm">Не вдалося відобразити медіа. Перевірте посилання або права доступу.</p><a href="${url}" target="_blank" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-600 transition-colors">Відкрити в новій вкладці</a></div></div>`;
         }
 
+       // ЗАМІНИТИ НА ЦЮ ВЕРСІЮ
         function renderPortfolio(reset = false) {
             const grid = document.getElementById('portfolio-grid');
-            if (reset) { grid.innerHTML = ''; currentlyShown = 0; }
+            if (reset) {
+                grid.innerHTML = '';
+                currentlyShown = 0;
+            }
             if (portfolioItems.length === 0) {
                 grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 3rem 0;"><i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i><p class="text-gray-500 text-lg">No portfolio items yet</p><p class="text-gray-400">Add your first work to get started</p></div>`;
-                updateLoadMoreButton();
                 return;
             }
             applyCurrentFilters();
             filteredItems.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
             const itemsToShow = filteredItems.slice(currentlyShown, currentlyShown + ITEMS_PER_PAGE);
+
+            if (itemsToShow.length === 0 && currentlyShown === 0) {
+                 grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 3rem 0;"><p class="text-gray-400">Нічого не знайдено за вашим фільтром.</p></div>`;
+            }
+            
             itemsToShow.forEach((item, relativeIndex) => {
                 const absoluteIndex = portfolioItems.indexOf(item);
                 const mediaContent = createMediaContent(item);
@@ -1609,14 +1606,43 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 itemDiv.className = `portfolio-item cursor-pointer relative ${item.category} ${getMediaType(item)}`;
                 itemDiv.dataset.index = absoluteIndex;
                 itemDiv.style.animationDelay = `${relativeIndex * 100}ms`;
-                itemDiv.innerHTML = `${mediaContent}<button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${absoluteIndex})" style="display: none;">×</button>`;
+                itemDiv.innerHTML = `${mediaContent}<button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(event, ${absoluteIndex})" style="display: none;">×</button>`;
                 itemDiv.addEventListener('click', (e) => {
-                    if (!e.target.classList.contains('delete-btn')) { openLightbox(absoluteIndex); }
+                    if (e.target.closest('.delete-btn')) return;
+                    openLightbox(absoluteIndex);
                 });
                 grid.appendChild(itemDiv);
             });
+            
             currentlyShown += itemsToShow.length;
-            updateLoadMoreButton();
+            
+            // Логіка для тригера: ховаємо його, якщо все завантажено
+            const trigger = document.getElementById('scroll-trigger');
+            if (trigger) {
+                if (currentlyShown >= filteredItems.length) {
+                    trigger.style.display = 'none';
+                } else {
+                    trigger.style.display = 'block';
+                }
+            }
+        }
+
+// ДОДАЙТЕ ЦЮ НОВУ ФУНКЦІЮ
+        function setupInfiniteScroll() {
+            const trigger = document.getElementById('scroll-trigger');
+            if (!trigger) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                // Якщо тригер видимий і є ще що завантажувати
+                if (entries[0].isIntersecting && currentlyShown < filteredItems.length) {
+                    console.log('📜 Скрол! Завантажую нові роботи...');
+                    renderPortfolio(false);
+                }
+            }, { 
+                rootMargin: '0px 0px 600px 0px' // Завантажувати за 600px до появи тригера
+            });
+
+            observer.observe(trigger);
         }
         
         function applyCurrentFilters() {
@@ -1628,26 +1654,19 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 return true;
             });
         }
-        
-        function updateLoadMoreButton() {
-            const loadMoreContainer = document.getElementById('load-more-container');
-            const loadMoreCount = document.getElementById('load-more-count');
-            const shownCount = document.getElementById('shown-count');
-            const totalCount = document.getElementById('total-count');
-            if (!loadMoreContainer) return;
-            const remaining = filteredItems.length - currentlyShown;
-            if (shownCount) shownCount.textContent = currentlyShown;
-            if (totalCount) totalCount.textContent = filteredItems.length;
-            if (remaining > 0) {
-                loadMoreContainer.style.display = 'block';
-                if (loadMoreCount) { loadMoreCount.textContent = `(+${Math.min(remaining, ITEMS_PER_PAGE)})`; }
-            } else {
-                loadMoreContainer.style.display = 'none';
-            }
-        }
+   
 
         window.removeTechnology = function(index) { technologies.splice(index, 1); saveData(); renderTechnologies(); showNotification('Technology removed', 'success'); }
-        window.removePortfolioItem = function(index) { portfolioItems.splice(index, 1); saveData(); renderPortfolio(); showNotification('Portfolio item removed', 'success'); }
+        // ЗНАЙДІТЬ ТА ОНОВІТЬ ЦЮ ФУНКЦІЮ
+        window.removePortfolioItem = function(event, index) {
+            event.stopPropagation(); // Не дає кліку "провалитись" далі і відкрити фото
+            if(confirm('Ви впевнені?')) {
+                portfolioItems.splice(index, 1);
+                saveData();
+                renderPortfolio(true); // Повний ререндер після видалення
+                showNotification('Portfolio item removed', 'success');
+            }
+        }
 
         const adminToggle = document.getElementById('admin-toggle');
         if (adminToggle) { adminToggle.addEventListener('click', function() { if (!isAdminMode) { openPasswordModal(); } else { toggleAdminMode(false); } }); }
@@ -1736,29 +1755,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             return examples[platform] || 'Label';
         }
 
-        function initializeLoadMoreButton() {
-            const loadMoreButton = document.getElementById('load-more-btn');
-            if (loadMoreButton) {
-                loadMoreButton.addEventListener('click', function() {
-                    this.disabled = true;
-                    const buttonContentSpan = this.querySelector('span.relative.z-10');
-                    if (buttonContentSpan) {
-                         const loadingText = currentLang === 'uk' ? 'Завантажую...' : 'Loading...';
-                         buttonContentSpan.innerHTML = `<i class="fas fa-spinner fa-spin mr-3"></i>${loadingText}`;
-                    }
-                    setTimeout(() => {
-                        renderPortfolio(false);
-                        this.disabled = false;
-                        if(buttonContentSpan) {
-                            const textKey = 'load-more-portfolio';
-                            const buttonText = (translations[currentLang] && translations[currentLang][textKey]) || 'Load More';
-                            buttonContentSpan.innerHTML = `<i class="fas fa-images mr-3"></i><span data-translate="${textKey}">${buttonText}</span><span id="load-more-count" class="ml-2 opacity-75"></span>`;
-                        }
-                        updateLoadMoreButton();
-                    }, 500);
-                });
-            }
-        }
+        
 
         document.querySelectorAll('.modal').forEach(modal => { modal.addEventListener('click', function(e) { if (e.target === this) { this.classList.remove('active'); } }); });
 
@@ -1852,19 +1849,21 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
 
         console.log('🚀 Starting Andrii AI Portfolio...');
         updateLanguage(currentLang);
+      // ЗАМІНИТИ ФІНАЛЬНИЙ БЛОК НА ЦЕЙ
+        console.log('🚀 Starting Andrii AI Portfolio...');
+        updateLanguage(currentLang);
         loadDataFromAPI().then((data) => {
             console.log('✅ Data loaded successfully');
             renderTechnologies();
             renderPortfolio(true);
             renderContacts();
-            setTimeout(() => initializeLoadMoreButton(), 100);
-            console.log('🎉 Portfolio loaded!');
+            setupInfiniteScroll(); // <--- ЗАПУСКАЄМО НЕСКІНЧЕННУ ПРОКРУТКУ
+            console.log('🎉 Portfolio loaded with Infinite Scroll!');
         }).catch((error) => {
             console.error('⚠️ Using offline mode:', error);
             renderTechnologies();
             renderPortfolio(true);
             renderContacts();
-            setTimeout(() => initializeLoadMoreButton(), 100);
             console.log('💻 Portfolio loaded in offline mode');
         });
     </script>
