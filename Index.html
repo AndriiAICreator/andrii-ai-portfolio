@@ -162,19 +162,16 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         .notification.success { background: #10b981; }
         .notification.error { background: #ef4444; }
         
-        /* Portfolio Grid */
+        /* Portfolio Grid - Stable Masonry Layout */
         .portfolio-grid {
-            columns: 3;
-            column-gap: 2rem;
-            break-inside: auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            align-items: start;
         }
         
         .portfolio-item {
-            display: inline-block;
             width: 100%;
-            margin-bottom: 2rem;
-            break-inside: avoid;
-            page-break-inside: avoid;
             background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.2);
@@ -238,22 +235,18 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             opacity: 1;
         }
         
-        /* Responsive Masonry */
+        /* Responsive Grid */
         @media (max-width: 1200px) {
             .portfolio-grid {
-                columns: 2;
-                column-gap: 1.5rem;
-            }
-            
-            .portfolio-item {
-                margin-bottom: 1.5rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
             }
         }
         
         @media (max-width: 768px) {
             .portfolio-grid {
-                columns: 1;
-                column-gap: 0;
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
            .tech-card h4 {
         font-size: 0.875rem; /* Зменшуємо шрифт (відповідає text-sm в Tailwind) */
@@ -265,7 +258,6 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         justify-content: center; /* Центруємо текст горизонтально */
     }
             .portfolio-item {
-                margin-bottom: 2rem;
                 max-width: 100%;
             }
             
@@ -1026,12 +1018,8 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                     </span>
                 </button>
                 <p class="text-gray-400 text-sm mt-3" id="portfolio-status">
-    <span data-translate="status-showing">Показано</span>
-    <span id="shown-count" class="font-medium text-gray-200">0</span>
-    <span data-translate="status-of">з</span>
-    <span id="total-count" class="font-medium text-gray-200">0</span>
-    <span data-translate="status-works">робіт</span>
-</p>
+                    Показано <span id="shown-count">0</span> з <span id="total-count">0</span> робіт
+                </p>
             </div>
 
             <!-- Add Portfolio Buttons (Admin Only) -->
@@ -1176,8 +1164,8 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         const ITEMS_PER_PAGE = 12;
         let currentlyShown = 0;
         let filteredItems = [];
+        let sortedOnce = false; // Флаг для контролю сортування
 
-       // ЗАМІНИТИ ВЕСЬ ОБ'ЄКТ НА ЦЕЙ
         const translations = {
            uk: {
                 'nav-about': 'Про мене', 'nav-services': 'Послуги', 'nav-portfolio': 'Портфоліо', 'nav-contact': 'Контакти',
@@ -1209,10 +1197,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 'load-more-portfolio': '📸 Завантажити ще',
                 'filter-all': 'Всі', 'filter-photos': '📸 Фото', 'filter-videos': '🎬 Відео',
                 'category-all': '🌐 Усі категорії', 'category-avatars': '👤 AI Аватари', 'category-image-gen': '🎨 Генерація зображень',
-                'category-video-create': '🎬 Створення відео', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Віртуальні фотосесії',
-                'status-showing': 'Показано',
-                'status-of': 'з',
-                'status-works': 'робіт'
+                'category-video-create': '🎬 Створення відео', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Віртуальні фотосесії'
             },
             en: {
                 'nav-about': 'About', 'nav-services': 'Services', 'nav-portfolio': 'Portfolio', 'nav-contact': 'Contact',
@@ -1244,10 +1229,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 'footer-rights': 'All rights reserved',
                 'filter-all': 'All', 'filter-photos': '📸 Photos', 'filter-videos': '🎬 Videos',
                 'category-all': '🌐 All Categories', 'category-avatars': '👤 AI Avatars', 'category-image-gen': '🎨 Image Generation',
-                'category-video-create': '🎬 Video Creation', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Virtual Shoots',
-                'status-showing': 'Showing',
-                'status-of': 'of',
-                'status-works': 'works'
+                'category-video-create': '🎬 Video Creation', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Virtual Shoots'
             }
         };
 
@@ -1604,14 +1586,28 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
 
         function renderPortfolio(reset = false) {
             const grid = document.getElementById('portfolio-grid');
-            if (reset) { grid.innerHTML = ''; currentlyShown = 0; }
+            
+            if (reset) { 
+                grid.innerHTML = ''; 
+                currentlyShown = 0; 
+                sortedOnce = false;
+            }
+            
             if (portfolioItems.length === 0) {
                 grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 3rem 0;"><i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i><p class="text-gray-500 text-lg">No portfolio items yet</p><p class="text-gray-400">Add your first work to get started</p></div>`;
                 updateLoadMoreButton();
                 return;
             }
+            
+            // Застосовуємо фільтри
             applyCurrentFilters();
-            filteredItems.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+            
+            // Сортуємо тільки при необхідності
+            if (!sortedOnce || reset) {
+                filteredItems.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+                sortedOnce = true;
+            }
+            
             const itemsToShow = filteredItems.slice(currentlyShown, currentlyShown + ITEMS_PER_PAGE);
             itemsToShow.forEach((item, relativeIndex) => {
                 const absoluteIndex = portfolioItems.indexOf(item);
@@ -1620,13 +1616,26 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 itemDiv.className = `portfolio-item cursor-pointer relative ${item.category} ${getMediaType(item)}`;
                 itemDiv.dataset.index = absoluteIndex;
                 itemDiv.style.animationDelay = `${relativeIndex * 100}ms`;
+                itemDiv.style.opacity = '0';
                 itemDiv.innerHTML = `${mediaContent}<button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${absoluteIndex})" style="display: none;">×</button>`;
                 itemDiv.addEventListener('click', (e) => {
                     if (!e.target.classList.contains('delete-btn')) { openLightbox(absoluteIndex); }
                 });
                 grid.appendChild(itemDiv);
             });
+            
             currentlyShown += itemsToShow.length;
+            
+            // Плавна анімація появи нових елементів
+            setTimeout(() => {
+                const newItems = grid.querySelectorAll('.portfolio-item[style*="opacity: 0"]');
+                newItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                    }, index * 100);
+                });
+            }, 100);
+            
             updateLoadMoreButton();
         }
         
@@ -1684,9 +1693,11 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                         if (file.size > 50 * 1024 * 1024) { showNotification('❌ Файл занадто великий. Максимум 50MB.', 'error'); return; }
                         finalUrl = await uploadFileToAPI(file, category);
                     } else if (!urlInput) { showNotification('❌ Введіть URL або виберіть файл', 'error'); return; }
-                    portfolioItems.push({ category, mediaType, url: finalUrl, uploadedAt: new Date().toISOString(), isUploaded: !!fileInput.files[0] });
+                    // Додаємо новий елемент НА ПОЧАТОК масиву
+                    portfolioItems.unshift({ category, mediaType, url: finalUrl, uploadedAt: new Date().toISOString(), isUploaded: !!fileInput.files[0] });
                     await saveData();
-                    renderPortfolio();
+                    sortedOnce = false; // Скидаємо флаг, щоб пересортувати з новим елементом
+                    renderPortfolio(true); // Повне перезавантаження для показу нового елемента
                     closePortfolioModal();
                     showNotification('✅ Портфоліо додано успішно!', 'success');
                 } catch (error) {
@@ -1699,7 +1710,11 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         const contactFormModal = document.getElementById('contact-form-modal');
         if (contactFormModal) { contactFormModal.addEventListener('submit', function(e) { e.preventDefault(); const platform = document.getElementById('contact-platform').value; const label = document.getElementById('contact-label').value; const url = document.getElementById('contact-url').value; const icon = getContactIcon(platform); contacts.push({ platform, label, url, icon }); saveData(); renderContacts(); closeContactModal(); showNotification('Contact added successfully', 'success'); }); }
 
-        function filterPortfolio() { currentlyShown = 0; renderPortfolio(true); }
+        function filterPortfolio() { 
+            currentlyShown = 0; 
+            sortedOnce = false; // Скидаємо флаг при зміні фільтрів
+            renderPortfolio(true); 
+        }
 
         document.querySelectorAll('.portfolio-filter').forEach(button => {
             button.addEventListener('click', function() {
