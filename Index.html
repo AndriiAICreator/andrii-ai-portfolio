@@ -2193,7 +2193,36 @@ document.addEventListener('mousemove', (e) => {
             };
             return examples[platform] || 'Label';
         }
+// ВСТАВТЕ ЦЮ НОВУ ФУНКЦІЮ
+        function initializeLoadMoreButton() {
+            const loadMoreButton = document.getElementById('load-more-btn');
+            if (loadMoreButton) {
+                loadMoreButton.addEventListener('click', function() {
+                    this.disabled = true; // Блокуємо кнопку
+                    const buttonContentSpan = this.querySelector('span.relative.z-10');
+                    if (buttonContentSpan) {
+                         const loadingText = currentLang === 'uk' ? 'Завантажую...' : 'Loading...';
+                         buttonContentSpan.innerHTML = `<i class="fas fa-spinner fa-spin mr-3"></i>${loadingText}`;
+                    }
 
+                    // Імітуємо затримку
+                    setTimeout(() => {
+                        renderPortfolio(false); // Додаємо нові елементи
+                        this.disabled = false; // Розблоковуємо
+
+                        if(buttonContentSpan) {
+                            const textKey = 'load-more-portfolio';
+                            // Безпечно отримуємо переклад для поточної мови
+                            const buttonText = (translations[currentLang] && translations[currentLang][textKey]) || 'Load More';
+                            buttonContentSpan.innerHTML = `<i class="fas fa-images mr-3"></i><span data-translate="${textKey}">${buttonText}</span><span id="load-more-count" class="ml-2 opacity-75"></span>`;
+                        }
+                        updateLoadMoreButton(); // Оновлюємо лічильник
+                    }, 500);
+                });
+            }
+        }
+
+        
         // Close modals when clicking outside
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', function(e) {
@@ -2409,39 +2438,29 @@ document.addEventListener('mousemove', (e) => {
         
         // Load data and render
         // ЗАМІНИТИ ЦЕЙ БЛОК КОДУ В КІНЦІ СКРИПТУ
+       // ЗАМІНИТИ ЦЕЙ ФІНАЛЬНИЙ БЛОК
         loadDataFromAPI().then((data) => {
             console.log('✅ Data loaded successfully');
             renderTechnologies();
-            renderPortfolio(true);
+            renderPortfolio(true); // Full render from start
             renderContacts();
-
-            // *** ВИПРАВЛЕНА ЛОГІКА ІНІЦІАЛІЗАЦІЇ КНОПКИ ***
-            const loadMoreButton = document.getElementById('load-more-btn');
-            if (loadMoreButton) {
-                loadMoreButton.addEventListener('click', function() {
-                    this.disabled = true; // Блокуємо кнопку, щоб уникнути подвійних кліків
-                    const buttonContentSpan = this.querySelector('span.relative.z-10');
-                    if(buttonContentSpan) {
-                         buttonContentSpan.innerHTML = `<i class="fas fa-spinner fa-spin mr-3"></i>${currentLang === 'uk' ? 'Завантажую...' : 'Loading...'}`;
-                    }
-
-                    setTimeout(() => {
-                        renderPortfolio(false); // Додаємо нові елементи
-                        this.disabled = false; // Розблоковуємо кнопку
-
-                        if(buttonContentSpan) {
-                            const textKey = 'load-more-portfolio';
-                            // Беремо текст з об'єкта перекладів
-                            const buttonText = translations[currentLang][textKey];
-                            buttonContentSpan.innerHTML = `<i class="fas fa-images mr-3"></i><span data-translate="${textKey}">${buttonText}</span><span id="load-more-count" class="ml-2 opacity-75"></span>`;
-                        }
-                        updateLoadMoreButton(); // Оновлюємо лічильник
-                    }, 500);
-                });
-            }
+            
+            // Викликаємо нашу нову функцію після того, як все відмальовано
+            setTimeout(() => initializeLoadMoreButton(), 100);
             
             console.log('🎉 Portfolio loaded!');
         }).catch((error) => {
+            console.error('⚠️ Using offline mode:', error);
+            renderTechnologies();
+            renderPortfolio(true); // Full render from start
+            renderContacts();
+            
+            // Викликаємо функцію також у випадку помилки (офлайн-режим)
+            setTimeout(() => initializeLoadMoreButton(), 100);
+            
+            console.log('💻 Portfolio loaded in offline mode');
+        });
+            .catch((error) => {
             console.error('⚠️ Using offline mode:', error);
             renderTechnologies();
             renderPortfolio(true);
