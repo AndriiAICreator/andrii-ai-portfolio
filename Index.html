@@ -240,8 +240,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         /* Responsive Masonry */
         @media (max-width: 1200px) {
             .portfolio-grid {
-                columns: 2;
-                column-gap: 1.5rem;
+                
             }
             
             .portfolio-item {
@@ -251,8 +250,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         
         @media (max-width: 768px) {
             .portfolio-grid {
-                columns: 1;
-                column-gap: 0;
+               
             }
            .tech-card h4 {
         font-size: 0.875rem; /* Зменшуємо шрифт (відповідає text-sm в Tailwind) */
@@ -1024,9 +1022,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                         <span id="load-more-count" class="ml-2 opacity-75"></span>
                     </span>
                 </button>
-                <p class="text-gray-400 text-sm mt-3" id="portfolio-status">
-    Показано <span id="shown-count">0</span> з <span id="total-count">0</span> робіт
-</p>
+               
 
 <p class="text-gray-400 text-sm mt-3" id="portfolio-status">
     <span data-translate="status-showing">Показано</span>
@@ -1180,6 +1176,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         let currentlyShown = 0;
         let filteredItems = [];
         let msnry;
+       // ЗАМІНИТИ ВЕСЬ ОБ'ЄКТ НА ЦЕЙ
         const translations = {
            uk: {
                 'nav-about': 'Про мене', 'nav-services': 'Послуги', 'nav-portfolio': 'Портфоліо', 'nav-contact': 'Контакти',
@@ -1211,7 +1208,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 'load-more-portfolio': '📸 Завантажити ще',
                 'filter-all': 'Всі', 'filter-photos': '📸 Фото', 'filter-videos': '🎬 Відео',
                 'category-all': '🌐 Усі категорії', 'category-avatars': '👤 AI Аватари', 'category-image-gen': '🎨 Генерація зображень',
-                'category-video-create': '🎬 Створення відео', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Віртуальні фотосесії'
+                'category-video-create': '🎬 Створення відео', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Віртуальні фотосесії', // <-- КОМА ДОДАНА
                 'status-showing': 'Показано',
                 'status-of': 'з',
                 'status-works': 'робіт'
@@ -1246,7 +1243,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 'footer-rights': 'All rights reserved',
                 'filter-all': 'All', 'filter-photos': '📸 Photos', 'filter-videos': '🎬 Videos',
                 'category-all': '🌐 All Categories', 'category-avatars': '👤 AI Avatars', 'category-image-gen': '🎨 Image Generation',
-                'category-video-create': '🎬 Video Creation', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Virtual Shoots'
+                'category-video-create': '🎬 Video Creation', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Virtual Shoots', // <-- КОМА ДОДАНА
                 'status-showing': 'Showing',
                 'status-of': 'of',
                 'status-works': 'works'
