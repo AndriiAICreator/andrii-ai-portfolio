@@ -1665,6 +1665,9 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             // Створюємо DocumentFragment для кращої продуктивності
             const fragment = document.createDocumentFragment();
             
+            // Створюємо Set для відслідковування доданих елементів
+            const addedIndexes = new Set();
+            
             itemsToShow.forEach((item, relativeIndex) => {
                 // Знаходимо правильний індекс в оригінальному масиві
                 const absoluteIndex = portfolioItems.findIndex(originalItem => 
@@ -1672,6 +1675,13 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                     originalItem.category === item.category && 
                     originalItem.uploadedAt === item.uploadedAt
                 );
+                
+                // Перевіряємо чи не додавали вже цей індекс
+                if (addedIndexes.has(absoluteIndex)) {
+                    console.log(`🚫 Skipping duplicate index ${absoluteIndex} for item:`, item.url.substring(0, 30));
+                    return;
+                }
+                addedIndexes.add(absoluteIndex);
                 
                 const mediaContent = createMediaContent(item);
                 const itemDiv = document.createElement('div');
@@ -1681,6 +1691,8 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 
                 // Додаємо унікальний ідентифікатор для кращого відслідковування
                 itemDiv.dataset.itemId = `${item.category}_${item.url.substring(0, 20)}`;
+                
+                console.log(`➕ Adding DOM item[${relativeIndex}] with index ${absoluteIndex}:`, item.url.substring(0, 30));
                 
                 itemDiv.innerHTML = `${mediaContent}<button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${absoluteIndex})" style="display: none;">×</button>`;
                 itemDiv.addEventListener('click', (e) => {
@@ -1711,6 +1723,11 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             const showPhotos = document.getElementById('show-photos')?.checked ?? true;
             const showVideos = document.getElementById('show-videos')?.checked ?? true;
             
+            console.log('🔧 Applying filters:', { categoryFilter, showPhotos, showVideos });
+            
+            // Створюємо Set для відслідковування унікальних елементів
+            const seen = new Set();
+            
             filteredItems = portfolioItems.filter(item => {
                 // Фільтр по категорії
                 if (categoryFilter !== 'all' && item.category !== categoryFilter) return false;
@@ -1722,8 +1739,18 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                     if (mediaType === 'videos' && !showVideos) return false;
                 }
                 
+                // Перевірка на унікальність (запобігаємо дублям у filteredItems)
+                const uniqueKey = `${item.url}_${item.category}_${item.uploadedAt}`;
+                if (seen.has(uniqueKey)) {
+                    console.log('🗑️ Filtered out duplicate in applyCurrentFilters:', item.url.substring(0, 30));
+                    return false;
+                }
+                seen.add(uniqueKey);
+                
                 return true;
             });
+            
+            console.log('✅ Filtered items:', filteredItems.length, 'from', portfolioItems.length);
         }
         
         function updateLoadMoreButton() {
