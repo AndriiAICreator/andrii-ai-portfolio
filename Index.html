@@ -1666,13 +1666,22 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             const fragment = document.createDocumentFragment();
             
             itemsToShow.forEach((item, relativeIndex) => {
-                const absoluteIndex = portfolioItems.indexOf(item);
+                // Знаходимо правильний індекс в оригінальному масиві
+                const absoluteIndex = portfolioItems.findIndex(originalItem => 
+                    originalItem.url === item.url && 
+                    originalItem.category === item.category && 
+                    originalItem.uploadedAt === item.uploadedAt
+                );
+                
                 const mediaContent = createMediaContent(item);
                 const itemDiv = document.createElement('div');
                 itemDiv.className = `portfolio-item cursor-pointer relative ${item.category} ${getMediaType(item)}`;
                 itemDiv.dataset.index = absoluteIndex;
-                itemDiv.style.animationDelay = `${relativeIndex * 60}ms`; // Зменшено з 100ms до 60ms
-                // Видалено itemDiv.style.opacity = '0'; оскільки тепер використовуємо класи
+                itemDiv.style.animationDelay = `${relativeIndex * 60}ms`;
+                
+                // Додаємо унікальний ідентифікатор для кращого відслідковування
+                itemDiv.dataset.itemId = `${item.category}_${item.url.substring(0, 20)}`;
+                
                 itemDiv.innerHTML = `${mediaContent}<button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${absoluteIndex})" style="display: none;">×</button>`;
                 itemDiv.addEventListener('click', (e) => {
                     if (!e.target.classList.contains('delete-btn')) { openLightbox(absoluteIndex); }
@@ -2171,6 +2180,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             console.log('- portfolioItems.length:', portfolioItems.length);
             console.log('- filteredItems.length:', filteredItems.length);
             console.log('- currentlyShown:', currentlyShown);
+            console.log('- sortedOnce:', sortedOnce);
             
             // 2. Перевіряємо DOM елементи
             console.log('\n🏗️ DOM Analysis:');
@@ -2198,7 +2208,12 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 else if (video) url = video.querySelector('source')?.src || 'video';
                 else if (iframe) url = iframe.src;
                 
-                urlsInDOM.push({ index, url: url.substring(0, 50) + '...' });
+                urlsInDOM.push({ 
+                    domIndex: index, 
+                    dataIndex: item.dataset.index,
+                    itemId: item.dataset.itemId,
+                    url: url.substring(0, 50) + '...' 
+                });
             });
             
             const urlCounts = {};
@@ -2212,11 +2227,21 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 console.log(`  ❌ ${url} appears ${count} times`);
             });
             
-            // 5. Перевіряємо індекси
-            console.log('\n📍 Index Analysis:');
-            domItems.forEach((item, domIndex) => {
-                const dataIndex = item.dataset.index;
-                console.log(`DOM[${domIndex}] -> data-index: ${dataIndex}`);
+            // 5. Детальний аналіз індексів
+            console.log('\n📍 Detailed Index Analysis:');
+            urlsInDOM.forEach((item, domIndex) => {
+                console.log(`DOM[${domIndex}] -> data-index: ${item.dataIndex}, itemId: ${item.itemId}`);
+            });
+            
+            // 6. Перевіряємо порядок filteredItems vs portfolioItems
+            console.log('\n🔄 Order Analysis:');
+            console.log('First 5 filteredItems URLs:');
+            filteredItems.slice(0, 5).forEach((item, index) => {
+                console.log(`  Filtered[${index}]: ${item.url.substring(0, 30)}...`);
+            });
+            console.log('First 5 portfolioItems URLs:');
+            portfolioItems.slice(0, 5).forEach((item, index) => {
+                console.log(`  Portfolio[${index}]: ${item.url.substring(0, 30)}...`);
             });
             
             return {
@@ -2224,7 +2249,8 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 filteredItems: filteredItems.length,
                 domItems: domItems.length,
                 domDuplicates: domDuplicates.length,
-                currentlyShown: currentlyShown
+                currentlyShown: currentlyShown,
+                sortedOnce: sortedOnce
             };
         }
 
