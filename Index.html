@@ -2161,6 +2161,73 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         }
 
         // Додаємо глобальну функцію для діагностики дублікатів
+        // Діагностична функція для перевірки проблем з рендерингом
+        window.debugPortfolioRendering = function() {
+            console.log('🔍 DEBUG: Portfolio Rendering Analysis');
+            console.log('='.repeat(50));
+            
+            // 1. Перевіряємо дані
+            console.log('📊 Data Analysis:');
+            console.log('- portfolioItems.length:', portfolioItems.length);
+            console.log('- filteredItems.length:', filteredItems.length);
+            console.log('- currentlyShown:', currentlyShown);
+            
+            // 2. Перевіряємо DOM елементи
+            console.log('\n🏗️ DOM Analysis:');
+            const grid = document.getElementById('portfolio-grid');
+            const domItems = grid ? grid.querySelectorAll('.portfolio-item') : [];
+            console.log('- DOM portfolio items count:', domItems.length);
+            console.log('- Grid innerHTML length:', grid ? grid.innerHTML.length : 'Grid not found');
+            
+            // 3. Перевіряємо фільтри
+            console.log('\n🔧 Filter Analysis:');
+            const activeFilter = document.querySelector('.portfolio-filter.active');
+            console.log('- Active filter:', activeFilter ? activeFilter.dataset.filter : 'No active filter');
+            console.log('- Show photos:', document.getElementById('show-photos')?.checked);
+            console.log('- Show videos:', document.getElementById('show-videos')?.checked);
+            
+            // 4. Перевіряємо можливі дублі в DOM
+            console.log('\n🔄 DOM Duplication Check:');
+            const urlsInDOM = [];
+            domItems.forEach((item, index) => {
+                const img = item.querySelector('img');
+                const video = item.querySelector('video');
+                const iframe = item.querySelector('iframe');
+                let url = 'unknown';
+                if (img) url = img.src;
+                else if (video) url = video.querySelector('source')?.src || 'video';
+                else if (iframe) url = iframe.src;
+                
+                urlsInDOM.push({ index, url: url.substring(0, 50) + '...' });
+            });
+            
+            const urlCounts = {};
+            urlsInDOM.forEach(item => {
+                urlCounts[item.url] = (urlCounts[item.url] || 0) + 1;
+            });
+            
+            const domDuplicates = Object.entries(urlCounts).filter(([url, count]) => count > 1);
+            console.log('- DOM duplicates found:', domDuplicates.length);
+            domDuplicates.forEach(([url, count]) => {
+                console.log(`  ❌ ${url} appears ${count} times`);
+            });
+            
+            // 5. Перевіряємо індекси
+            console.log('\n📍 Index Analysis:');
+            domItems.forEach((item, domIndex) => {
+                const dataIndex = item.dataset.index;
+                console.log(`DOM[${domIndex}] -> data-index: ${dataIndex}`);
+            });
+            
+            return {
+                dataItems: portfolioItems.length,
+                filteredItems: filteredItems.length,
+                domItems: domItems.length,
+                domDuplicates: domDuplicates.length,
+                currentlyShown: currentlyShown
+            };
+        }
+
         window.checkDuplicates = function() {
             console.log('📊 Portfolio Items Analysis:');
             console.log('Total items:', portfolioItems.length);
