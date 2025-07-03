@@ -546,6 +546,9 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             <button onclick="testDataLoad()" class="w-full bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-sync mr-2"></i>Test Data Load
             </button>
+            <button onclick="removeDuplicatesFromPortfolio()" class="w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-all duration-300 hover:scale-105">
+                <i class="fas fa-copy mr-2"></i>Remove Duplicates
+            </button>
             <button id="clear-portfolio-btn" class="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-trash mr-2"></i>Clear All Portfolio
             </button>
@@ -1349,6 +1352,14 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                     portfolioItems = result.data.portfolioItems || [];
                     technologies = result.data.technologies || [];
                     contacts = result.data.contacts || [];
+                    
+                    // Автоматично видаляємо дублікати при завантаженні
+                    const hadDuplicates = removeDuplicates();
+                    if (hadDuplicates) {
+                        console.log('🔄 Auto-saving after duplicate removal...');
+                        await saveDataToAPI();
+                    }
+                    
                     console.log('✅ Loaded:', portfolioItems.length, 'portfolio,', technologies.length, 'tech,', contacts.length, 'contacts');
                     updateApiStatus('online');
                     return result.data;
@@ -1724,7 +1735,45 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         }
 
         window.removeTechnology = function(index) { technologies.splice(index, 1); saveData(); renderTechnologies(); showNotification('Technology removed', 'success'); }
-        window.removePortfolioItem = function(index) { portfolioItems.splice(index, 1); saveData(); renderPortfolio(); showNotification('Portfolio item removed', 'success'); }
+        // Функція для видалення дублікатів
+        function removeDuplicates() {
+            const seen = new Set();
+            const uniqueItems = [];
+            
+            portfolioItems.forEach(item => {
+                const key = `${item.url}_${item.category}_${item.mediaType}`;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    uniqueItems.push(item);
+                } else {
+                    console.log('🗑️ Removing duplicate:', item.url?.substring(0, 50));
+                }
+            });
+            
+            const removedCount = portfolioItems.length - uniqueItems.length;
+            portfolioItems = uniqueItems;
+            
+            if (removedCount > 0) {
+                console.log(`✅ Removed ${removedCount} duplicates`);
+                showNotification(`Видалено ${removedCount} дублікатів`, 'success');
+                return true;
+            }
+            return false;
+        }
+
+        window.removePortfolioItem = function(index) { 
+            if (index >= 0 && index < portfolioItems.length) {
+                const item = portfolioItems[index];
+                console.log('🗑️ Removing item at index', index, ':', item.url?.substring(0, 50));
+                portfolioItems.splice(index, 1); 
+                saveData(); 
+                renderPortfolio(true); // Повне перезавантаження для правильних індексів
+                showNotification('Portfolio item removed', 'success'); 
+            } else {
+                console.error('❌ Invalid index for removal:', index);
+                showNotification('Помилка видалення елемента', 'error');
+            }
+        }
 
         const adminToggle = document.getElementById('admin-toggle');
         if (adminToggle) { adminToggle.addEventListener('click', function() { if (!isAdminMode) { openPasswordModal(); } else { toggleAdminMode(false); } }); }
@@ -1733,7 +1782,16 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         if (passwordForm) { passwordForm.addEventListener('submit', function(e) { e.preventDefault(); const password = document.getElementById('admin-password').value; if (password === ADMIN_PASSWORD) { toggleAdminMode(true); closePasswordModal(); } else { showNotification('Incorrect password', 'error'); } }); }
 
         const techForm = document.getElementById('tech-form');
-        if (techForm) { techForm.addEventListener('submit', function(e) { e.preventDefault(); const name = document.getElementById('tech-name').value; const emoji = document.getElementById('tech-emoji').value; technologies.push({ name, emoji }); saveData(); renderTechnologies(); closeTechModal(); showNotification('Technology added successfully', 'success'); }); }
+        if (techForm) { techForm.addEventListener('submit', function(e) { e.preventDefault(); const name = document.getElementById('tech-name').value; const emoji = document.getElementById('tech-emoji').value; 
+        
+        // Перевіряємо чи не існує вже така технологія
+        const existingTech = technologies.find(tech => tech.name.toLowerCase() === name.toLowerCase());
+        if (existingTech) {
+            showNotification('❌ Така технологія вже існує!', 'error');
+            return;
+        }
+        
+        technologies.push({ name, emoji }); saveData(); renderTechnologies(); closeTechModal(); showNotification('Technology added successfully', 'success'); }); }
 
         const portfolioForm = document.getElementById('portfolio-form');
         if (portfolioForm) {
@@ -1750,6 +1808,18 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                         if (file.size > 50 * 1024 * 1024) { showNotification('❌ Файл занадто великий. Максимум 50MB.', 'error'); return; }
                         finalUrl = await uploadFileToAPI(file, category);
                     } else if (!urlInput) { showNotification('❌ Введіть URL або виберіть файл', 'error'); return; }
+                    // Перевіряємо чи не існує вже такий елемент
+                    const existingItem = portfolioItems.find(item => 
+                        item.url === finalUrl && 
+                        item.category === category && 
+                        item.mediaType === mediaType
+                    );
+                    
+                    if (existingItem) {
+                        showNotification('❌ Такий елемент вже існує в портфоліо!', 'error');
+                        return;
+                    }
+                    
                     // Додаємо новий елемент НА ПОЧАТОК масиву
                     portfolioItems.unshift({ category, mediaType, url: finalUrl, uploadedAt: new Date().toISOString(), isUploaded: !!fileInput.files[0] });
                     await saveData();
@@ -1765,7 +1835,18 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         }
 
         const contactFormModal = document.getElementById('contact-form-modal');
-        if (contactFormModal) { contactFormModal.addEventListener('submit', function(e) { e.preventDefault(); const platform = document.getElementById('contact-platform').value; const label = document.getElementById('contact-label').value; const url = document.getElementById('contact-url').value; const icon = getContactIcon(platform); contacts.push({ platform, label, url, icon }); saveData(); renderContacts(); closeContactModal(); showNotification('Contact added successfully', 'success'); }); }
+        if (contactFormModal) { contactFormModal.addEventListener('submit', function(e) { e.preventDefault(); const platform = document.getElementById('contact-platform').value; const label = document.getElementById('contact-label').value; const url = document.getElementById('contact-url').value; const icon = getContactIcon(platform); 
+        
+        // Перевіряємо чи не існує вже такий контакт
+        const existingContact = contacts.find(contact => 
+            contact.platform === platform || contact.url === url
+        );
+        if (existingContact) {
+            showNotification('❌ Контакт для цієї платформи або з таким URL вже існує!', 'error');
+            return;
+        }
+        
+        contacts.push({ platform, label, url, icon }); saveData(); renderContacts(); closeContactModal(); showNotification('Contact added successfully', 'success'); }); }
 
         function filterPortfolio() { 
             currentlyShown = 0; 
@@ -2062,6 +2143,78 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 console.error('❌ Test failed:', error);
                 showNotification('❌ Тест не пройшов: ' + error.message, 'error');
             }
+        }
+        
+        window.removeDuplicatesFromPortfolio = async function() {
+            try {
+                const hadDuplicates = removeDuplicates();
+                if (hadDuplicates) {
+                    await saveData();
+                    renderPortfolio(true);
+                } else {
+                    showNotification('Дублікати не знайдені', 'success');
+                }
+            } catch (error) {
+                console.error('❌ Error removing duplicates:', error);
+                showNotification('Помилка видалення дублікатів', 'error');
+            }
+        }
+
+        // Додаємо глобальну функцію для діагностики дублікатів
+        window.checkDuplicates = function() {
+            console.log('📊 Portfolio Items Analysis:');
+            console.log('Total items:', portfolioItems.length);
+
+            // Перевіримо дублювання по URL
+            const urlCounts = {};
+            portfolioItems.forEach((item, index) => {
+                const url = item.url;
+                if (!urlCounts[url]) {
+                    urlCounts[url] = [];
+                }
+                urlCounts[url].push(index);
+            });
+
+            const duplicates = Object.entries(urlCounts).filter(([url, indices]) => indices.length > 1);
+
+            console.log('🔍 Duplicate URLs found:', duplicates.length);
+            duplicates.forEach(([url, indices]) => {
+                console.log(`❌ Duplicate URL: ${url}`);
+                console.log(`   Found at indices: ${indices.join(', ')}`);
+                indices.forEach(index => {
+                    console.log(`   Item ${index}:`, portfolioItems[index]);
+                });
+            });
+
+            // Перевіримо дублювання по комбінації category + url
+            const categoryUrlCombos = {};
+            portfolioItems.forEach((item, index) => {
+                const combo = `${item.category}_${item.url}`;
+                if (!categoryUrlCombos[combo]) {
+                    categoryUrlCombos[combo] = [];
+                }
+                categoryUrlCombos[combo].push(index);
+            });
+
+            const categoryDuplicates = Object.entries(categoryUrlCombos).filter(([combo, indices]) => indices.length > 1);
+            console.log('🔍 Duplicate category+URL combinations:', categoryDuplicates.length);
+
+            // Перевіримо структуру масиву
+            console.log('📋 First 3 items structure:');
+            portfolioItems.slice(0, 3).forEach((item, index) => {
+                console.log(`Item ${index}:`, {
+                    category: item.category,
+                    mediaType: item.mediaType,
+                    url: item.url ? item.url.substring(0, 50) + '...' : 'No URL',
+                    uploadedAt: item.uploadedAt
+                });
+            });
+
+            return {
+                totalItems: portfolioItems.length,
+                duplicateUrls: duplicates.length,
+                duplicateCombo: categoryDuplicates.length
+            };
         }
 
         console.log('🚀 Starting Andrii AI Portfolio...');
