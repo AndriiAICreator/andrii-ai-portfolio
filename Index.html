@@ -1536,17 +1536,18 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         let currentLightboxIndex = 0;
         let lightboxItems = [];
 
-        function openLightbox(index) {
-            const currentFilter = document.querySelector('.portfolio-filter.active').dataset.filter;
-            const currentCategory = document.getElementById('category-select').value;
-            lightboxItems = portfolioItems.filter(item => {
-                if (currentFilter !== 'all' && getMediaType(item) !== currentFilter) return false;
-                if (currentCategory !== 'all' && item.category !== currentCategory) return false;
-                return true;
-            });
-            const originalItem = portfolioItems[index];
-            currentLightboxIndex = lightboxItems.findIndex(item => item === originalItem);
-            if (currentLightboxIndex === -1) { currentLightboxIndex = 0; }
+        function openLightbox(filteredIndex) {
+            // Використовуємо вже готовий відфільтрований масив
+            lightboxItems = filteredItems;
+            currentLightboxIndex = filteredIndex;
+            
+            if (currentLightboxIndex < 0 || currentLightboxIndex >= lightboxItems.length) {
+                console.error("❌ Invalid lightbox index:", filteredIndex);
+                currentLightboxIndex = 0;
+            }
+            
+            console.log(`🖼️ Opening lightbox for filtered index ${filteredIndex} of ${lightboxItems.length} items`);
+            
             updateLightboxContent();
             updateLightboxNavigation();
             document.getElementById('lightbox').classList.add('active');
@@ -1645,14 +1646,14 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 sortedOnce = false;
             }
             
-            if (portfolioItems.length === 0) {
+            // Застосовуємо фільтри
+            applyCurrentFilters();
+            
+            if (filteredItems.length === 0) {
                 grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 3rem 0;"><i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i><p class="text-gray-500 text-lg">No portfolio items yet</p><p class="text-gray-400">Add your first work to get started</p></div>`;
                 updateLoadMoreButton();
                 return;
             }
-            
-            // Застосовуємо фільтри
-            applyCurrentFilters();
             
             // Сортуємо тільки при необхідності
             if (!sortedOnce || reset) {
@@ -1665,54 +1666,24 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             // Створюємо DocumentFragment для кращої продуктивності
             const fragment = document.createDocumentFragment();
             
-            // Створюємо Set для відслідковування доданих елементів
-            const addedIndexes = new Set();
-            
             itemsToShow.forEach((item, relativeIndex) => {
-                // Створюємо унікальний ключ для елемента
-                const uniqueKey = `${item.url}_${item.category}_${item.uploadedAt}`;
-                
-                // Знаходимо ВСІХ кандидатів з таким же ключем
-                const candidateIndexes = [];
-                portfolioItems.forEach((originalItem, index) => {
-                    const originalKey = `${originalItem.url}_${originalItem.category}_${originalItem.uploadedAt}`;
-                    if (originalKey === uniqueKey) {
-                        candidateIndexes.push(index);
-                    }
-                });
-                
-                // Берємо ПЕРШИЙ індекс (найвищий пріоритет)
-                const absoluteIndex = candidateIndexes[0];
-                
-                if (absoluteIndex === undefined) {
-                    console.error('❌ Could not find index for item:', item.url.substring(0, 30));
-                    return;
-                }
-                
-                // Перевіряємо чи не додавали вже цей індекс
-                if (addedIndexes.has(absoluteIndex)) {
-                    console.log(`🚫 Skipping duplicate index ${absoluteIndex} for item:`, item.url.substring(0, 30));
-                    console.log(`   Candidates found:`, candidateIndexes);
-                    return;
-                }
-                addedIndexes.add(absoluteIndex);
+                // Використовуємо індекс у відфільтрованому списку - це набагато надійніше
+                const filteredIndex = currentlyShown + relativeIndex;
                 
                 const mediaContent = createMediaContent(item);
                 const itemDiv = document.createElement('div');
                 itemDiv.className = `portfolio-item cursor-pointer relative ${item.category} ${getMediaType(item)}`;
-                itemDiv.dataset.index = absoluteIndex;
+                itemDiv.dataset.index = filteredIndex; // Тепер використовуємо індекс з filteredItems
                 itemDiv.style.animationDelay = `${relativeIndex * 60}ms`;
                 
-                // Додаємо унікальний ідентифікатор для кращого відслідковування
-                itemDiv.dataset.itemId = uniqueKey;
+                // Додаємо унікальний ідентифікатор
+                itemDiv.dataset.itemId = `${item.category}_${item.url.substring(0, 20)}_${item.uploadedAt}`;
                 
-                console.log(`➕ Adding DOM item[${relativeIndex}] with index ${absoluteIndex}:`, item.url.substring(0, 30));
-                console.log(`   Unique key: ${uniqueKey}`);
-                console.log(`   All candidates: [${candidateIndexes.join(', ')}]`);
+                console.log(`➕ Adding DOM item[${relativeIndex}] with filtered index ${filteredIndex}:`, item.url.substring(0, 30));
                 
-                itemDiv.innerHTML = `${mediaContent}<button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(${absoluteIndex})" style="display: none;">×</button>`;
+                itemDiv.innerHTML = `${mediaContent}<button class="delete-btn absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 text-sm hover:bg-red-600 flex items-center justify-center admin-only" onclick="removePortfolioItem(event, ${filteredIndex})" style="display: none;">×</button>`;
                 itemDiv.addEventListener('click', (e) => {
-                    if (!e.target.classList.contains('delete-btn')) { openLightbox(absoluteIndex); }
+                    if (!e.target.closest('.delete-btn')) { openLightbox(filteredIndex); }
                 });
                 fragment.appendChild(itemDiv);
             });
@@ -1721,7 +1692,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             grid.appendChild(fragment);
             currentlyShown += itemsToShow.length;
             
-            // Оптимізована анімація появи - використовуємо класи замість стилів
+            // Оптимізована анімація появи
             requestAnimationFrame(() => {
                 const newItems = grid.querySelectorAll('.portfolio-item:not(.visible)');
                 newItems.forEach((item, index) => {
@@ -1813,17 +1784,37 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             return false;
         }
 
-        window.removePortfolioItem = function(index) { 
-            if (index >= 0 && index < portfolioItems.length) {
-                const item = portfolioItems[index];
-                console.log('🗑️ Removing item at index', index, ':', item.url?.substring(0, 50));
-                portfolioItems.splice(index, 1); 
-                saveData(); 
-                renderPortfolio(true); // Повне перезавантаження для правильних індексів
-                showNotification('Portfolio item removed', 'success'); 
-            } else {
-                console.error('❌ Invalid index for removal:', index);
-                showNotification('Помилка видалення елемента', 'error');
+        window.removePortfolioItem = function(event, filteredIndex) {
+            event.stopPropagation(); // Зупиняємо клік, щоб не відкрився лайтбокс
+            
+            if (confirm('Ви впевнені, що хочете видалити цей елемент?')) {
+                // Беремо елемент з відфільтрованого списку
+                const itemToRemove = filteredItems[filteredIndex];
+                if (!itemToRemove) {
+                    console.error('❌ Item not found at filtered index:', filteredIndex);
+                    showNotification('Помилка: елемент не знайдено', 'error');
+                    return;
+                }
+                
+                console.log('🗑️ Removing item from filtered index', filteredIndex, ':', itemToRemove.url?.substring(0, 50));
+                
+                // Знаходимо цей же елемент в основному масиві portfolioItems
+                const mainIndex = portfolioItems.findIndex(pItem => 
+                    pItem.url === itemToRemove.url && 
+                    pItem.uploadedAt === itemToRemove.uploadedAt &&
+                    pItem.category === itemToRemove.category
+                );
+                
+                if (mainIndex !== -1) {
+                    console.log('🗑️ Found in main array at index', mainIndex, 'removing...');
+                    portfolioItems.splice(mainIndex, 1);
+                    saveData();
+                    renderPortfolio(true); // Повне перезавантаження
+                    showNotification('Елемент видалено', 'success');
+                } else {
+                    console.error('❌ Could not find item in main portfolioItems array');
+                    showNotification('Помилка видалення. Спробуйте оновити сторінку.', 'error');
+                }
             }
         }
 
