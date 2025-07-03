@@ -549,6 +549,9 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             <button onclick="removeDuplicatesFromPortfolio()" class="w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-copy mr-2"></i>Remove Duplicates
             </button>
+            <button onclick="fixDateDuplicates()" class="w-full bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-all duration-300 hover:scale-105">
+                <i class="fas fa-clock mr-2"></i>Fix Date Duplicates
+            </button>
             <button id="clear-portfolio-btn" class="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-trash mr-2"></i>Clear All Portfolio
             </button>
@@ -1760,28 +1763,46 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         window.removeTechnology = function(index) { technologies.splice(index, 1); saveData(); renderTechnologies(); showNotification('Technology removed', 'success'); }
         // Функція для видалення дублікатів
         function removeDuplicates() {
+            console.log('🔍 Checking for duplicates...');
             const seen = new Set();
+            const datesSeen = new Set();
             const uniqueItems = [];
+            let removedCount = 0;
             
-            portfolioItems.forEach(item => {
-                const key = `${item.url}_${item.category}_${item.mediaType}`;
-                if (!seen.has(key)) {
-                    seen.add(key);
-                    uniqueItems.push(item);
-                } else {
-                    console.log('🗑️ Removing duplicate:', item.url?.substring(0, 50));
+            portfolioItems.forEach((item, index) => {
+                // Перевіряємо дублікати по URL + category + mediaType
+                const urlKey = `${item.url}_${item.category}_${item.mediaType}`;
+                
+                // Перевіряємо дублікати по uploadedAt (дата)
+                const dateKey = item.uploadedAt;
+                
+                if (seen.has(urlKey)) {
+                    console.log(`🗑️ Removing URL duplicate [${index}]:`, item.url?.substring(0, 50));
+                    removedCount++;
+                    return;
                 }
+                
+                if (datesSeen.has(dateKey)) {
+                    console.log(`🗑️ Removing date duplicate [${index}]:`, item.url?.substring(0, 50), 'date:', dateKey);
+                    removedCount++;
+                    return;
+                }
+                
+                seen.add(urlKey);
+                datesSeen.add(dateKey);
+                uniqueItems.push(item);
             });
             
-            const removedCount = portfolioItems.length - uniqueItems.length;
             portfolioItems = uniqueItems;
             
             if (removedCount > 0) {
-                console.log(`✅ Removed ${removedCount} duplicates`);
+                console.log(`✅ Removed ${removedCount} duplicates (URL + date)`);
                 showNotification(`Видалено ${removedCount} дублікатів`, 'success');
                 return true;
+            } else {
+                console.log('✅ No duplicates found');
+                return false;
             }
-            return false;
         }
 
         window.removePortfolioItem = function(event, filteredIndex) {
@@ -1863,12 +1884,24 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                         return;
                     }
                     
-                    // Створюємо новий елемент з унікальною датою
+                    // Створюємо ГАРАНТОВАНО унікальну дату
+                    let uniqueDate = new Date().toISOString();
+                    
+                    // Перевіряємо чи немає елементів з такою ж датою
+                    while (portfolioItems.some(item => item.uploadedAt === uniqueDate)) {
+                        // Додаємо 1 мілісекунду якщо дата вже існує
+                        const date = new Date(uniqueDate);
+                        date.setMilliseconds(date.getMilliseconds() + 1);
+                        uniqueDate = date.toISOString();
+                        console.log('⚠️ Date collision detected, using:', uniqueDate);
+                    }
+                    
+                    // Створюємо новий елемент з гарантовано унікальною датою
                     const newItem = {
                         category,
                         mediaType,
                         url: finalUrl,
-                        uploadedAt: new Date().toISOString(),
+                        uploadedAt: uniqueDate,
                         isUploaded: !!fileInput.files[0]
                     };
                     
@@ -2222,6 +2255,46 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             } catch (error) {
                 console.error('❌ Error removing duplicates:', error);
                 showNotification('Помилка видалення дублікатів', 'error');
+            }
+        }
+        
+        // Функція для виправлення існуючих дублікатів дат
+        window.fixDateDuplicates = async function() {
+            try {
+                console.log('🔧 Fixing date duplicates...');
+                const datesSeen = new Set();
+                let fixed = 0;
+                
+                portfolioItems.forEach((item, index) => {
+                    if (datesSeen.has(item.uploadedAt)) {
+                        // Генеруємо нову унікальну дату
+                        let newDate = new Date(item.uploadedAt);
+                        newDate.setMilliseconds(newDate.getMilliseconds() + fixed + 1);
+                        
+                        while (datesSeen.has(newDate.toISOString())) {
+                            newDate.setMilliseconds(newDate.getMilliseconds() + 1);
+                        }
+                        
+                        console.log(`🔧 Fixed date for item [${index}]:`, item.url?.substring(0, 30), 
+                                  'from:', item.uploadedAt, 'to:', newDate.toISOString());
+                        
+                        item.uploadedAt = newDate.toISOString();
+                        fixed++;
+                    }
+                    datesSeen.add(item.uploadedAt);
+                });
+                
+                if (fixed > 0) {
+                    console.log(`✅ Fixed ${fixed} date duplicates`);
+                    showNotification(`Виправлено ${fixed} дублікатів дат`, 'success');
+                    await saveData();
+                    renderPortfolio(true);
+                } else {
+                    showNotification('Дублікати дат не знайдені', 'success');
+                }
+            } catch (error) {
+                console.error('❌ Error fixing date duplicates:', error);
+                showNotification('Помилка виправлення дублікатів дат', 'error');
             }
         }
 
