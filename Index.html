@@ -982,23 +982,30 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
 
             <!-- Portfolio Filter -->
             <div class="flex flex-wrap justify-center gap-4 mb-8">
-    <button class="portfolio-filter active px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" data-filter="all" data-translate="filter-all">All</button>
-    <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="photos" data-translate="filter-photos">📸 Photos</button>
-    <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="videos" data-translate="filter-videos">🎬 Videos</button>
-</div>
+                <button class="portfolio-filter active px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" data-filter="all" data-translate="filter-all">Всі роботи</button>
+                <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="avatars" data-translate="filter-avatars">👤 AI Аватари</button>
+                <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="image-generation" data-translate="filter-image-gen">🎨 Генерація зображень</button>
+                <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="video-creation" data-translate="filter-video-create">🎬 Генерація відео</button>
+                <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="ecommerce" data-translate="filter-ecommerce">🛒 E-commerce</button>
+                <button class="portfolio-filter px-6 py-3 rounded-full bg-gray-800 text-gray-300 shadow-md hover:shadow-lg border-2 border-gray-600 hover:border-purple-400 hover:text-white transform hover:scale-105 transition-all duration-300" data-filter="virtual-shoots" data-translate="filter-virtual-shoots">📸 Віртуальні фотосесії</button>
+            </div>
             
-            <!-- Category Filter (only shows when "All" is selected) -->
-         <div id="category-filter" class="flex flex-wrap justify-center gap-2 mb-12">
-    <label class="text-sm font-medium text-gray-300 mr-4">Category:</label>
-    <select id="category-select" class="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-sm text-white focus:border-purple-400 focus:outline-none">
-        <option value="all" data-translate="category-all">🌐 All Categories</option>
-        <option value="avatars" data-translate="category-avatars">👤 AI Avatars</option>
-        <option value="image-generation" data-translate="category-image-gen">🎨 Image Generation</option>
-        <option value="video-creation" data-translate="category-video-create">🎬 Video Creation</option>
-        <option value="ecommerce" data-translate="category-ecommerce">🛒 E-commerce</option>
-        <option value="virtual-shoots" data-translate="category-virtual-shoots">📸 Virtual Shoots</option>
-    </select>
-</div>
+            <!-- Category Description and Media Type Filter -->
+            <div id="category-info" class="mb-8 text-center">
+                <!-- Category description will be shown here -->
+            </div>
+            
+            <!-- Media Type Filter (only for categories with both photo and video) -->
+            <div id="media-type-filter" class="flex justify-center gap-6 mb-8" style="display: none;">
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" id="show-photos" checked class="w-4 h-4 text-purple-600 bg-gray-800 border-gray-600 rounded focus:ring-purple-500 focus:ring-2">
+                    <span class="text-white font-medium" data-translate="show-photos">📸 Показати фото</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" id="show-videos" checked class="w-4 h-4 text-purple-600 bg-gray-800 border-gray-600 rounded focus:ring-purple-500 focus:ring-2">
+                    <span class="text-white font-medium" data-translate="show-videos">🎬 Показати відео</span>
+                </label>
+            </div>
 
             <!-- Portfolio Grid -->
             <div id="portfolio-grid" class="portfolio-grid">
@@ -1192,9 +1199,14 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 'contact-title': 'Зв\'яжіться зі мною', 'contact-subtitle': 'Готовий втілити ваші ідеї в життя',
                 'footer-text': 'Втілюю ваші ідеї за допомогою штучного інтелекту', 'footer-rights': 'Всі права захищені',
                 'load-more-portfolio': '📸 Завантажити ще',
-                'filter-all': 'Всі', 'filter-photos': '📸 Фото', 'filter-videos': '🎬 Відео',
-                'category-all': '🌐 Усі категорії', 'category-avatars': '👤 AI Аватари', 'category-image-gen': '🎨 Генерація зображень',
-                'category-video-create': '🎬 Створення відео', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Віртуальні фотосесії'
+                'filter-all': 'Всі роботи', 'filter-avatars': '👤 AI Аватари', 'filter-image-gen': '🎨 Генерація зображень',
+                'filter-video-create': '🎬 Генерація відео', 'filter-ecommerce': '🛒 E-commerce', 'filter-virtual-shoots': '📸 Віртуальні фотосесії',
+                'show-photos': '📸 Показати фото', 'show-videos': '🎬 Показати відео',
+                'desc-avatars': 'Створюю реалістичних AI-ведучих та персонажів для вашого бізнесу. Вони ідеально підходять для навчальних відео, презентацій та рекламних кампаній у соцмережах. Ваш цифровий представник ніколи не втомлюється, не хворіє і готовий працювати 24/7, заощаджуючи ваш бюджет на зйомках та акторах.',
+                'desc-image-generation': 'Перетворюю ваші найсміливіші ідеї на унікальні зображення. Потрібен кіт-космонавт у стилі Ван Гога чи фотореалістичний портрет неіснуючої людини? Я створю для вас будь-який арт: від ілюстрацій для сайту та соцмереж до складних концепт-артів для ігор та книг.',
+                'desc-virtual-shoots': 'Створіть нескінченну кількість професійних фотографій для себе чи свого експерта без необхідності залишати дім. На основі кількох ваших знімків я навчаю персональну AI-модель, яка може згенерувати вас у будь-якому образі, стилі одягу та локації — від ділового портрета до фото з відпустки на Балі.',
+                'desc-ecommerce': 'Професійні рекламні матеріали для вашого бренду "під ключ". Створюю як фотореалістичні зображення ваших товарів у будь-якому оточенні, так і динамічні відеокреативи для соцмереж та промо-кампаній. Покажіть ваш продукт на моделях, в екзотичних локаціях чи в дії — без залучення знімальної групи та фотостудії.',
+                'desc-video-creation': 'Втілюю будь-які творчі відео-ідеї. Це може бути унікальне відео-привітання для близької людини, анімація вигаданих персонажів для вашого блогу чи каналу, або просто красиве, атмосферне відео на будь-яку тему — від космосу до фентезі. Ваша фантазія — єдине обмеження.'
             },
             en: {
                 'nav-about': 'About', 'nav-services': 'Services', 'nav-portfolio': 'Portfolio', 'nav-contact': 'Contact',
@@ -1224,9 +1236,14 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 'contact-title': 'Contact Me', 'contact-subtitle': 'Ready to bring your ideas to life',
                 'load-more-portfolio': '📸 Load More Portfolio', 'footer-text': 'Bringing your ideas to life with artificial intelligence',
                 'footer-rights': 'All rights reserved',
-                'filter-all': 'All', 'filter-photos': '📸 Photos', 'filter-videos': '🎬 Videos',
-                'category-all': '🌐 All Categories', 'category-avatars': '👤 AI Avatars', 'category-image-gen': '🎨 Image Generation',
-                'category-video-create': '🎬 Video Creation', 'category-ecommerce': '🛒 E-commerce', 'category-virtual-shoots': '📸 Virtual Shoots'
+                'filter-all': 'All Works', 'filter-avatars': '👤 AI Avatars', 'filter-image-gen': '🎨 Image Generation',
+                'filter-video-create': '🎬 Video Generation', 'filter-ecommerce': '🛒 E-commerce', 'filter-virtual-shoots': '📸 Virtual Shoots',
+                'show-photos': '📸 Show Photos', 'show-videos': '🎬 Show Videos',
+                'desc-avatars': 'I create realistic AI hosts and characters for your business. They are perfect for educational videos, presentations and advertising campaigns on social media. Your digital representative never gets tired, doesn\'t get sick and is ready to work 24/7, saving your budget on filming and actors.',
+                'desc-image-generation': 'I turn your wildest ideas into unique images. Need a space cat in Van Gogh style or a photorealistic portrait of a non-existent person? I will create any art for you: from illustrations for websites and social media to complex concept art for games and books.',
+                'desc-virtual-shoots': 'Create an endless number of professional photos for yourself or your expert without having to leave home. Based on a few of your shots, I train a personal AI model that can generate you in any look, clothing style and location - from a business portrait to vacation photos in Bali.',
+                'desc-ecommerce': 'Professional advertising materials for your brand "turnkey". I create both photorealistic images of your products in any environment, and dynamic video creatives for social media and promo campaigns. Show your product on models, in exotic locations or in action - without involving a film crew and photo studio.',
+                'desc-video-creation': 'I bring any creative video ideas to life. It can be a unique video greeting for a loved one, animation of fictional characters for your blog or channel, or just a beautiful, atmospheric video on any topic - from space to fantasy. Your imagination is the only limit.'
             }
         };
 
@@ -1262,6 +1279,10 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             };
             document.title = titles[lang];
             document.querySelector('meta[name="description"]').content = descriptions[lang];
+            
+            // Оновлюємо опис категорії при зміні мови
+            updateCategoryInfo();
+            
             document.body.classList.add('fade-in');
             setTimeout(() => document.body.classList.remove('fade-in'), 500);
         }
@@ -1666,11 +1687,21 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         }
         
         function applyCurrentFilters() {
-            const mediaFilter = document.querySelector('.portfolio-filter.active')?.dataset.filter || 'all';
-            const categoryFilter = document.getElementById('category-select')?.value || 'all';
+            const categoryFilter = document.querySelector('.portfolio-filter.active')?.dataset.filter || 'all';
+            const showPhotos = document.getElementById('show-photos')?.checked ?? true;
+            const showVideos = document.getElementById('show-videos')?.checked ?? true;
+            
             filteredItems = portfolioItems.filter(item => {
-                if (mediaFilter !== 'all' && getMediaType(item) !== mediaFilter) return false;
-                if (mediaFilter === 'all' && categoryFilter !== 'all' && item.category !== categoryFilter) return false;
+                // Фільтр по категорії
+                if (categoryFilter !== 'all' && item.category !== categoryFilter) return false;
+                
+                // Фільтр по типу медіа (тільки для категорій з фото та відео)
+                if (categoryFilter === 'avatars' || categoryFilter === 'ecommerce') {
+                    const mediaType = getMediaType(item);
+                    if (mediaType === 'photos' && !showPhotos) return false;
+                    if (mediaType === 'videos' && !showVideos) return false;
+                }
+                
                 return true;
             });
         }
@@ -1739,7 +1770,129 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         function filterPortfolio() { 
             currentlyShown = 0; 
             sortedOnce = false; // Скидаємо флаг при зміні фільтрів
+            updateCategoryInfo();
+            updateMediaTypeFilter();
             renderPortfolio(true); 
+        }
+        
+        function updateCategoryInfo() {
+            const categoryFilter = document.querySelector('.portfolio-filter.active')?.dataset.filter || 'all';
+            const categoryInfo = document.getElementById('category-info');
+            
+            if (categoryFilter === 'all') {
+                categoryInfo.innerHTML = '';
+                return;
+            }
+            
+            // Іконки та назви для кожної категорії
+            const categoryIcons = {
+                'avatars': '👤',
+                'image-generation': '🎨',
+                'virtual-shoots': '📸',
+                'ecommerce': '🛒',
+                'video-creation': '🎬'
+            };
+            
+            const categoryTitles = {
+                uk: {
+                    'avatars': 'AI Аватари',
+                    'image-generation': 'Генерація зображень',
+                    'virtual-shoots': 'Віртуальні фотосесії',
+                    'ecommerce': 'E-commerce',
+                    'video-creation': 'Генерація відео'
+                },
+                en: {
+                    'avatars': 'AI Avatars',
+                    'image-generation': 'Image Generation',
+                    'virtual-shoots': 'Virtual Shoots',
+                    'ecommerce': 'E-commerce',
+                    'video-creation': 'Video Generation'
+                }
+            };
+            
+            const descriptions = {
+                uk: {
+                    'avatars': 'Створюю реалістичних AI-ведучих та персонажів для вашого бізнесу. Вони ідеально підходять для навчальних відео, презентацій та рекламних кампаній у соцмережах. Ваш цифровий представник ніколи не втомлюється, не хворіє і готовий працювати 24/7, заощаджуючи ваш бюджет на зйомках та акторах.',
+                    'image-generation': 'Перетворюю ваші найсміливіші ідеї на унікальні зображення. Потрібен кіт-космонавт у стилі Ван Гога чи фотореалістичний портрет неіснуючої людини? Я створю для вас будь-який арт: від ілюстрацій для сайту та соцмереж до складних концепт-артів для ігор та книг.',
+                    'virtual-shoots': 'Створіть нескінченну кількість професійних фотографій для себе чи свого експерта без необхідності залишати дім. На основі кількох ваших знімків я навчаю персональну AI-модель, яка може згенерувати вас у будь-якому образі, стилі одягу та локації — від ділового портрета до фото з відпустки на Балі.',
+                    'ecommerce': 'Професійні рекламні матеріали для вашого бренду "під ключ". Створюю як фотореалістичні зображення ваших товарів у будь-якому оточенні, так і динамічні відеокреативи для соцмереж та промо-кампаній. Покажіть ваш продукт на моделях, в екзотичних локаціях чи в дії — без залучення знімальної групи та фотостудії.',
+                    'video-creation': 'Втілюю будь-які творчі відео-ідеї. Це може бути унікальне відео-привітання для близької людини, анімація вигаданих персонажів для вашого блогу чи каналу, або просто красиве, атмосферне відео на будь-яку тему — від космосу до фентезі. Ваша фантазія — єдине обмеження.'
+                },
+                en: {
+                    'avatars': 'I create realistic AI hosts and characters for your business. They are perfect for educational videos, presentations and advertising campaigns on social media. Your digital representative never gets tired, doesn\'t get sick and is ready to work 24/7, saving your budget on filming and actors.',
+                    'image-generation': 'I turn your wildest ideas into unique images. Need a space cat in Van Gogh style or a photorealistic portrait of a non-existent person? I will create any art for you: from illustrations for websites and social media to complex concept art for games and books.',
+                    'virtual-shoots': 'Create an endless number of professional photos for yourself or your expert without having to leave home. Based on a few of your shots, I train a personal AI model that can generate you in any look, clothing style and location - from a business portrait to vacation photos in Bali.',
+                    'ecommerce': 'Professional advertising materials for your brand "turnkey". I create both photorealistic images of your products in any environment, and dynamic video creatives for social media and promo campaigns. Show your product on models, in exotic locations or in action - without involving a film crew and photo studio.',
+                    'video-creation': 'I bring any creative video ideas to life. It can be a unique video greeting for a loved one, animation of fictional characters for your blog or channel, or just a beautiful, atmospheric video on any topic - from space to fantasy. Your imagination is the only limit.'
+                }
+            };
+            
+            const icon = categoryIcons[categoryFilter];
+            const title = categoryTitles[currentLang]?.[categoryFilter];
+            const description = descriptions[currentLang]?.[categoryFilter];
+            
+            if (description && title && icon) {
+                // Градієнти для різних категорій
+                const categoryGradients = {
+                    'avatars': 'from-blue-500/20 to-purple-500/20',
+                    'image-generation': 'from-purple-500/20 to-pink-500/20',
+                    'virtual-shoots': 'from-pink-500/20 to-rose-500/20',
+                    'ecommerce': 'from-indigo-500/20 to-blue-500/20',
+                    'video-creation': 'from-orange-500/20 to-red-500/20'
+                };
+                
+                const categoryIconGradients = {
+                    'avatars': 'from-blue-500 to-purple-600',
+                    'image-generation': 'from-purple-500 to-pink-600',
+                    'virtual-shoots': 'from-pink-500 to-rose-600',
+                    'ecommerce': 'from-indigo-500 to-blue-600',
+                    'video-creation': 'from-orange-500 to-red-600'
+                };
+                
+                const gradient = categoryGradients[categoryFilter] || 'from-purple-500/20 to-pink-500/20';
+                const iconGradient = categoryIconGradients[categoryFilter] || 'from-purple-500 to-pink-600';
+                
+                categoryInfo.innerHTML = `
+                    <div class="epic-card p-8 rounded-3xl max-w-4xl mx-auto relative group overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
+                        <!-- Фоновий градієнт при hover -->
+                        <div class="absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                        
+                        <!-- Контент -->
+                        <div class="relative z-10">
+                            <!-- Заголовок з іконкою -->
+                            <div class="flex items-center justify-center mb-6">
+                                <div class="w-16 h-16 bg-gradient-to-br ${iconGradient} rounded-2xl flex items-center justify-center mr-4 glow-box group-hover:scale-110 transition-transform duration-500">
+                                    <span class="text-3xl">${icon}</span>
+                                </div>
+                                <h3 class="text-2xl md:text-3xl font-bold text-white group-hover:text-cyan-300 transition-colors duration-300">
+                                    ${title}
+                                </h3>
+                            </div>
+                            
+                            <!-- Опис -->
+                            <p class="text-lg md:text-xl text-gray-300 leading-relaxed text-center group-hover:text-gray-200 transition-colors duration-300">
+                                ${description}
+                            </p>
+                        </div>
+                        
+                        <!-- Декоративні елементи -->
+                        <div class="absolute top-4 right-4 w-2 h-2 bg-purple-400 rounded-full opacity-60 animate-pulse"></div>
+                        <div class="absolute bottom-4 left-4 w-3 h-3 bg-pink-400 rounded-full opacity-40 animate-ping"></div>
+                    </div>
+                `;
+            }
+        }
+        
+        function updateMediaTypeFilter() {
+            const categoryFilter = document.querySelector('.portfolio-filter.active')?.dataset.filter || 'all';
+            const mediaTypeFilter = document.getElementById('media-type-filter');
+            
+            // Показуємо фільтр тільки для категорій з фото та відео
+            if (categoryFilter === 'avatars' || categoryFilter === 'ecommerce') {
+                mediaTypeFilter.style.display = 'flex';
+            } else {
+                mediaTypeFilter.style.display = 'none';
+            }
         }
 
         document.querySelectorAll('.portfolio-filter').forEach(button => {
@@ -1750,14 +1903,23 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 });
                 this.classList.add('active', 'bg-gradient-to-r', 'from-purple-500', 'to-pink-500', 'text-white');
                 this.classList.remove('bg-gray-800', 'text-gray-300', 'border-gray-600');
-                const categoryFilterDiv = document.getElementById('category-filter');
-                if (this.dataset.filter === 'all') { categoryFilterDiv.style.display = 'flex'; } else { categoryFilterDiv.style.display = 'none'; document.getElementById('category-select').value = 'all'; }
                 filterPortfolio();
             });
         });
+        
+        // Додаємо обробники для чекбоксів медіа-типів
+        const showPhotosCheckbox = document.getElementById('show-photos');
+        const showVideosCheckbox = document.getElementById('show-videos');
+        
+        if (showPhotosCheckbox) {
+            showPhotosCheckbox.addEventListener('change', filterPortfolio);
+        }
+        
+        if (showVideosCheckbox) {
+            showVideosCheckbox.addEventListener('change', filterPortfolio);
+        }
 
-        const categorySelect = document.getElementById('category-select');
-        if (categorySelect) { categorySelect.addEventListener('change', filterPortfolio); }
+        // Видалено старий categorySelect обробник, оскільки тепер використовуємо кнопки замість dropdown
 
         const addTechBtn = document.getElementById('add-technology-btn');
         if (addTechBtn) { addTechBtn.addEventListener('click', openTechModal); }
@@ -1907,6 +2069,8 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         loadDataFromAPI().then((data) => {
             console.log('✅ Data loaded successfully');
             renderTechnologies();
+            updateCategoryInfo(); // Ініціалізуємо опис категорії
+            updateMediaTypeFilter(); // Ініціалізуємо фільтр медіа-типів
             renderPortfolio(true);
             renderContacts();
             setTimeout(() => initializeLoadMoreButton(), 100);
@@ -1914,6 +2078,8 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         }).catch((error) => {
             console.error('⚠️ Using offline mode:', error);
             renderTechnologies();
+            updateCategoryInfo();
+            updateMediaTypeFilter();
             renderPortfolio(true);
             renderContacts();
             setTimeout(() => initializeLoadMoreButton(), 100);
