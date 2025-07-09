@@ -519,6 +519,21 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
         }
         
+        .video-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
+        
         .close-video {
             position: absolute;
             top: -70px;
@@ -2698,11 +2713,41 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
         function initRobotInteraction() {
             const robotIcon = document.getElementById('robot-icon');
             const robotSpeech = document.getElementById('robot-speech');
+            let isVideoOpening = false;
             
             if (robotIcon && robotSpeech) {
                 // Обробник кліку для робота та підказки
                 const handleRobotClick = () => {
-                    openWelcomeVideo();
+                    // Перевіряємо чи відео вже відкривається
+                    if (isVideoOpening) {
+                        console.log('⏳ Відео вже відкривається, зачекайте...');
+                        return;
+                    }
+                    
+                    // Перевіряємо чи відео вже відкрито
+                    if (document.getElementById('welcome-video-lightbox')) {
+                        console.log('📹 Відео вже відкрито');
+                        return;
+                    }
+                    
+                    isVideoOpening = true;
+                    
+                    // Показуємо тимчасову підказку
+                    robotSpeech.style.animation = 'none';
+                    robotSpeech.querySelector('div').innerHTML = '⏳ Завантаження...';
+                    
+                    try {
+                        openWelcomeVideo();
+                    } catch (error) {
+                        console.error('❌ Помилка відкриття відео:', error);
+                    }
+                    
+                    // Повертаємо звичайну підказку через 2 секунди
+                    setTimeout(() => {
+                        isVideoOpening = false;
+                        robotSpeech.style.animation = 'gentle-bounce 3s ease-in-out infinite';
+                        robotSpeech.querySelector('div').innerHTML = '💬 Клікни для знайомства!';
+                    }, 2000);
                 };
                 
                 robotIcon.addEventListener('click', handleRobotClick);
@@ -2713,8 +2758,24 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             }
         }
         
-        // Глобальна функція для закриття відео (потрібна для onclick)
+        // Функція приховування завантажувача відео
+        function hideVideoLoader() {
+            const loader = document.getElementById('video-loader');
+            const iframe = document.getElementById('welcome-video-iframe');
+            
+            if (loader && iframe) {
+                loader.style.opacity = '0';
+                iframe.style.opacity = '1';
+                
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 300);
+            }
+        }
+        
+        // Глобальні функції для onclick
         window.closeWelcomeVideo = closeWelcomeVideo;
+        window.hideVideoLoader = hideVideoLoader;
         
         // Функція відкриття відео
         function openWelcomeVideo() {
@@ -2723,12 +2784,37 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             videoLightbox.id = 'welcome-video-lightbox';
             videoLightbox.innerHTML = `
                 <div class="video-container">
-                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/euV47SuXnLo?autoplay=1&modestbranding=1&rel=0&showinfo=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 12px;"></iframe>
+                    <!-- Індикатор завантаження -->
+                    <div class="video-loader" id="video-loader">
+                        <div class="flex flex-col items-center justify-center h-full">
+                            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-white mb-4"></div>
+                            <p class="text-white text-lg">Завантаження відео...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- YouTube iframe -->
+                    <iframe 
+                        id="welcome-video-iframe"
+                        width="100%" 
+                        height="100%" 
+                        src="https://www.youtube.com/embed/euV47SuXnLo?autoplay=1&modestbranding=1&rel=0&showinfo=0" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen 
+                        style="border-radius: 12px; opacity: 0; transition: opacity 0.3s ease;"
+                        onload="hideVideoLoader()"
+                    ></iframe>
+                    
                     <button class="close-video" onclick="closeWelcomeVideo()">×</button>
                 </div>
             `;
             document.body.appendChild(videoLightbox);
             document.body.style.overflow = 'hidden';
+            
+            // Резервний таймер на випадок, якщо onload не спрацює
+            setTimeout(() => {
+                hideVideoLoader();
+            }, 3000);
         }
         
         // Функція закриття відео
