@@ -2705,10 +2705,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             videoLightbox.id = 'welcome-video-lightbox';
             videoLightbox.innerHTML = `
                 <div class="video-container">
-                    <video controls autoplay>
-                        <source src="https://github.com/AndriiAICreator/andrii-ai-portfolio/raw/main/welcome.mp4" type="video/mp4">
-                        Ваш браузер не підтримує відео.
-                    </video>
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/euV47SuXnLo?autoplay=1&modestbranding=1&rel=0&showinfo=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 12px;"></iframe>
                     <button class="close-video" onclick="closeWelcomeVideo()">×</button>
                 </div>
             `;
