@@ -420,6 +420,145 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             scroll-behavior: smooth;
         }
         
+        /* Анімація для підказки робота */
+        .robot-speech-bubble {
+            animation: gentle-bounce 3s ease-in-out infinite;
+            opacity: 1;
+            animation-delay: 0.5s;
+            animation-fill-mode: forwards;
+            transition: all 0.3s ease;
+        }
+        
+        @keyframes gentle-bounce {
+            0%, 100% {
+                transform: translateY(0px);
+                opacity: 1;
+            }
+            25% {
+                transform: translateY(-8px);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-4px);
+                opacity: 1;
+            }
+            75% {
+                transform: translateY(-2px);
+                opacity: 1;
+            }
+        }
+        
+        .robot-speech-bubble:hover {
+            animation-play-state: paused;
+            transform: translateY(-5px) scale(1.05) !important;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+        
+        /* Стани підказки */
+        .robot-speech-bubble.hidden {
+            opacity: 0;
+            transform: translateY(20px) scale(0.8);
+            pointer-events: none;
+        }
+        
+        .robot-speech-bubble.visible {
+            opacity: 1;
+            transform: translateY(0px) scale(1);
+            pointer-events: auto;
+        }
+        
+        /* Пульсуючий ефект для робота (адаптований під менший розмір) */
+        #robot-icon::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            background: linear-gradient(45deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3));
+            border-radius: 50%;
+            animation: robot-pulse 2s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes robot-pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.3;
+            }
+        }
+        
+        /* Стилі для welcome відео лайтбоксу */
+        .video-lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .video-container {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .close-video {
+            position: absolute;
+            top: -60px;
+            right: -10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .close-video:hover {
+            background: rgba(255, 68, 68, 0.8);
+            border-color: #ff4444;
+            transform: scale(1.1);
+        }
+        
+        /* Мобільні стилі для відео */
+        @media (max-width: 768px) {
+            .video-container {
+                max-width: 95vw;
+                max-height: 85vh;
+            }
+            
+            .close-video {
+                top: -50px;
+                right: 0px;
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+        }
+        
         * {
             box-sizing: border-box;
         }
@@ -724,12 +863,22 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
     <section class="gradient-bg text-white py-20 mt-16 relative min-h-screen flex items-center">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center">
-                <div class="floating mb-8">
-                    <div class="w-40 h-40 mx-auto bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 rounded-full flex items-center justify-center shadow-2xl glow-box relative">
+                <div class="floating mb-8 relative">
+                    <!-- Робот (зменшений) -->
+                    <div class="w-32 h-32 mx-auto bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 rounded-full flex items-center justify-center shadow-2xl glow-box relative cursor-pointer hover:scale-110 transition-all duration-300 group mb-4" id="robot-icon">
                         <div class="absolute inset-2 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-                            <i class="fas fa-robot text-6xl text-white neon-text"></i>
+                            <i class="fas fa-robot text-5xl text-white neon-text group-hover:text-cyan-300 transition-colors duration-300"></i>
                         </div>
                         <div class="absolute -inset-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full opacity-30 blur-lg animate-pulse"></div>
+                    </div>
+                    
+                    <!-- Підказка робота (внизу) -->
+                    <div class="robot-speech-bubble relative mx-auto w-fit bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-2xl shadow-lg animate-bounce-gentle cursor-pointer z-50" id="robot-speech">
+                        <!-- Стрілочка вгору -->
+                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-purple-600"></div>
+                        <div class="text-sm font-medium text-center whitespace-nowrap" data-translate="robot-speech-text">
+                            💬 Клікни для знайомства!
+                        </div>
                     </div>
                 </div>
                 <div class="bg-black/30 backdrop-blur-md rounded-3xl p-8 mx-auto max-w-5xl border border-white/20">
@@ -1257,6 +1406,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 'work-step5-desc': 'Після затвердження драфту я доводжу проєкт до фінального вигляду: виконую чистий монтаж, працюю зі звуком, кольором та оптимізую контент під конкретні платформи (соцмережі, сайт, реклама).',
                 'work-step6-title': '6. Передача результату',
                 'work-step6-desc': 'Ви отримуєте готові файли у всіх необхідних форматах через зручний для вас сервіс (Google Drive, WeTransfer тощо). Я завжди готовий надати додаткові версії чи адаптації, якщо це буде потрібно.',
+                'robot-speech-text': '💬 Клікни для знайомства!',
                 'services-title': 'Мої Послуги', 'services-subtitle': 'Професійні AI рішення для вашого бізнесу',
                 'service-avatars-title': '👤 AI Аватари', 'service-avatars-desc': 'Створюю реалістичні AI аватари для бізнесу, реклами, презентацій, соцмереж, ігор, додатків та будь-яких інших потреб.',
                 'service-avatars-1': 'Корпоративні представники', 'service-avatars-2': 'Персонажі для соцмереж', 'service-avatars-3': 'Аватари для ігор та додатків', 'service-avatars-4': 'Віртуальні ведучі',
@@ -1305,6 +1455,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                 'work-step5-desc': 'Once the draft is approved, I finalize the project: performing clean edits, managing sound and color, and optimizing the content for specific platforms (social media, websites, ads).',
                 'work-step6-title': '6. Delivery of Results',
                 'work-step6-desc': 'You receive the finished files in all necessary formats via a convenient service (Google Drive, WeTransfer, etc.). I am always ready to provide additional versions or adaptations if needed.',
+                'robot-speech-text': '💬 Click to meet me!',
                 'services-title': 'My Services', 'services-subtitle': 'Professional AI solutions for your business',
                 'service-avatars-title': '👤 AI Avatars', 'service-avatars-desc': 'I create realistic AI avatars for business, advertising, presentations, social media, games, apps and any other needs.',
                 'service-avatars-1': 'Corporate representatives', 'service-avatars-2': 'Social media characters', 'service-avatars-3': 'Gaming and app avatars', 'service-avatars-4': 'Virtual hosts',
@@ -2525,6 +2676,56 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             };
         }
 
+        // Функціональність робота з підказкою
+        function initRobotInteraction() {
+            const robotIcon = document.getElementById('robot-icon');
+            const robotSpeech = document.getElementById('robot-speech');
+            
+            if (robotIcon && robotSpeech) {
+                // Обробник кліку для робота та підказки
+                const handleRobotClick = () => {
+                    openWelcomeVideo();
+                };
+                
+                robotIcon.addEventListener('click', handleRobotClick);
+                robotSpeech.addEventListener('click', handleRobotClick);
+                
+                // Підказка завжди показується
+                robotSpeech.classList.add('visible');
+            }
+        }
+        
+        // Глобальна функція для закриття відео (потрібна для onclick)
+        window.closeWelcomeVideo = closeWelcomeVideo;
+        
+        // Функція відкриття відео
+        function openWelcomeVideo() {
+            const videoLightbox = document.createElement('div');
+            videoLightbox.className = 'video-lightbox active';
+            videoLightbox.id = 'welcome-video-lightbox';
+            videoLightbox.innerHTML = `
+                <div class="video-container">
+                    <video controls autoplay>
+                        <source src="https://github.com/AndriiAICreator/andrii-ai-portfolio/raw/main/welcome.mp4" type="video/mp4">
+                        Ваш браузер не підтримує відео.
+                    </video>
+                    <button class="close-video" onclick="closeWelcomeVideo()">×</button>
+                </div>
+            `;
+            document.body.appendChild(videoLightbox);
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Функція закриття відео
+        function closeWelcomeVideo() {
+            const videoLightbox = document.getElementById('welcome-video-lightbox');
+            if (videoLightbox) {
+                videoLightbox.remove();
+                document.body.style.overflow = 'auto';
+            }
+            // Підказка залишається на місці - не потрібно її повертати
+        }
+
         console.log('🚀 Starting Andrii AI Portfolio...');
         updateLanguage(currentLang);
         loadDataFromAPI().then((data) => {
@@ -2534,6 +2735,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             updateMediaTypeFilter(); // Ініціалізуємо фільтр медіа-типів
             renderPortfolio(true);
             renderContacts();
+            initRobotInteraction();
             setTimeout(() => initializeLoadMoreButton(), 100);
             console.log('🎉 Portfolio loaded!');
         }).catch((error) => {
@@ -2543,6 +2745,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             updateMediaTypeFilter();
             renderPortfolio(true);
             renderContacts();
+            initRobotInteraction();
             setTimeout(() => initializeLoadMoreButton(), 100);
             console.log('💻 Portfolio loaded in offline mode');
         });
