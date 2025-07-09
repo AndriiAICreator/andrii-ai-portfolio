@@ -909,9 +909,7 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                     <div class="robot-speech-bubble relative mx-auto w-fit bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-2xl shadow-lg animate-bounce-gentle cursor-pointer z-50" id="robot-speech">
                         <!-- Стрілочка вгору -->
                         <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-purple-600"></div>
-                        <div class="text-sm font-medium text-center whitespace-nowrap" data-translate="robot-speech-text">
-                            💬 Клікни для знайомства!
-                        </div>
+                        <div class="text-sm font-medium text-center whitespace-nowrap" data-translate="robot-speech-text"></div>
                     </div>
                 </div>
                 <div class="bg-black/30 backdrop-blur-md rounded-3xl p-8 mx-auto max-w-5xl border border-white/20">
@@ -2716,6 +2714,20 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
             let isVideoOpening = false;
             
             if (robotIcon && robotSpeech) {
+                // КРИТИЧНО: Повністю очищуємо та встановлюємо тільки правильний текст
+                const speechDiv = robotSpeech.querySelector('div[data-translate="robot-speech-text"]');
+                if (speechDiv) {
+                    // Повністю очищуємо все, що може бути в елементі
+                    speechDiv.innerHTML = '';
+                    speechDiv.textContent = '';
+                    
+                    // Встановлюємо правильний текст відповідно до поточної мови
+                    const correctText = translations[currentLang]?.['robot-speech-text'] || '💬 Клікни для знайомства!';
+                    speechDiv.textContent = correctText;
+                    
+                    console.log('🤖 Robot speech initialized with:', correctText);
+                    console.log('🌐 Current language:', currentLang);
+                }
                 // Обробник кліку для робота та підказки
                 const handleRobotClick = () => {
                     // Перевіряємо чи відео вже відкривається
@@ -2734,7 +2746,15 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                     
                     // Показуємо тимчасову підказку
                     robotSpeech.style.animation = 'none';
-                    robotSpeech.querySelector('div').innerHTML = '⏳ Завантаження...';
+                    
+                    // Повністю очищуємо та встановлюємо статус завантаження
+                    const speechDiv = robotSpeech.querySelector('div[data-translate="robot-speech-text"]');
+                    if (speechDiv) {
+                        speechDiv.innerHTML = '';
+                        speechDiv.textContent = '';
+                        const loadingText = currentLang === 'uk' ? '⏳ Завантаження...' : '⏳ Loading...';
+                        speechDiv.textContent = loadingText;
+                    }
                     
                     try {
                         openWelcomeVideo();
@@ -2746,7 +2766,15 @@ body:has(a:hover, button:hover, .portfolio-item:hover) #spotlight-overlay {
                     setTimeout(() => {
                         isVideoOpening = false;
                         robotSpeech.style.animation = 'gentle-bounce 3s ease-in-out infinite';
-                        robotSpeech.querySelector('div').innerHTML = '💬 Клікни для знайомства!';
+                        
+                        // Повністю очищуємо та встановлюємо правильний текст
+                        const speechDiv = robotSpeech.querySelector('div[data-translate="robot-speech-text"]');
+                        if (speechDiv) {
+                            speechDiv.innerHTML = '';
+                            speechDiv.textContent = '';
+                            const correctText = translations[currentLang]?.['robot-speech-text'] || '💬 Клікни для знайомства!';
+                            speechDiv.textContent = correctText;
+                        }
                     }, 2000);
                 };
                 
